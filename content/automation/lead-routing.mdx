@@ -1,0 +1,63 @@
+---
+title: "Automated lead-routing system for a real-estate agency"
+client: "[CLIENT NAME]"
+lane: "automation"
+summary: "Every enquiry gets sorted, scored and answered within minutes — without anyone watching the inbox."
+role: "Built and deployed"
+year: "2025"
+date: "2025-06-01"
+order: 1
+featured: true
+# cover: "/case-studies/lead-routing/cover.jpg"
+# video: "https://www.loom.com/embed/XXXXXXXX"
+tools: ["n8n", "Make.com", "Supabase", "WhatsApp Cloud API"]
+metrics:
+  - label: "Response time"
+    value: "[12h] → [4 min]"
+  - label: "Leads handled/mo"
+    value: "[300]+"
+  - label: "Manual sorting"
+    value: "[0 hrs]/week"
+---
+
+## The problem
+
+[CLIENT NAME] was getting enquiries from four places at once — Facebook lead
+forms, WhatsApp, the website contact form, and Instagram DMs — and all four
+landed in different places. Nobody owned the inbox, so the average enquiry sat
+for about [12 hours] before a human saw it. Serious buyers had already booked a
+viewing with someone else by then.
+
+## What I built
+
+A single intake pipeline. Every enquiry, whatever channel it arrives on, gets
+pushed into one **n8n** workflow. That workflow cleans the data, writes the lead
+into a **Supabase** table, and scores it against a simple set of rules the team
+agreed on — budget band, location, and whether the person named a timeline.
+
+High-scoring leads trigger an instant WhatsApp acknowledgement through the
+**WhatsApp Cloud API** and a notification to the agent on duty. Everything else
+goes into a nurture sequence. A daily digest lands in the sales lead's inbox at
+8am with what came in and what still needs a human.
+
+## How it works, explained simply
+
+Think of it as a receptionist who never sleeps.
+
+Every message that arrives gets handed to the same person at the front desk, no
+matter which door it came through. That receptionist writes the visitor's
+details in one book, so nothing is lost. Then they ask two or three quick
+questions to work out how ready the visitor is to buy. Ready buyers get walked
+straight to an agent; everyone else gets a polite note and a follow-up later.
+
+The only difference is that this receptionist answers in four minutes, at 2am,
+on a public holiday.
+
+## The outcome
+
+Response time dropped from about [12 hours] to under [4 minutes], and the team
+stopped spending [roughly a morning a week] copying leads between tabs. The
+sales lead can now see, in one table, where every enquiry came from and what
+happened to it — which is the part they say changed how they plan their week.
+
+[ADD: what the client said, or the single number they care about most.]
