@@ -8,19 +8,26 @@
    ========================================================================== */
 
 @theme {
-  /* --- Colour ----------------------------------------------------------- */
+  /* --- Colour: LIGHT (the default) -------------------------------------- */
   --color-paper: #faf7f1; /* page background, warm off-white          */
   --color-ink: #1c1b18; /* primary text, warm near-black            */
-  --color-muted: #6e6a62; /* secondary text — 5.09:1 on paper (AA)    */
+  --color-muted: #6e6a62; /* secondary text — 5.03:1 on paper (AA)    */
   --color-hairline: #e6e0d4; /* borders, dividers                        */
   /* CONTRAST RULE — verified against #FAF7F1 paper and #FFFFFF card:
-     --accent is 4.13:1, which clears AA for large text only, so it is used
+     --accent is 4.09:1, which clears AA for large text only, so it is used
      ONLY at 26px and above (comfortably past the 24px/18pt threshold).
-     Anything smaller uses --accent-strong at 5.79:1, which clears AA for
-     normal text at any size. */
-  --color-accent: #b5641a; /* 4.13:1 — display sizes (≥26px) only      */
-  --color-accent-strong: #8f4e14; /* 5.79:1 — safe at any size                */
+     Anything smaller uses --accent-strong at 6.01:1, which clears AA for
+     normal text at any size. The same rule holds in dark mode, where both
+     have more headroom still. */
+  --color-accent: #b5641a; /* 4.09:1 — display sizes (≥26px) only      */
+  --color-accent-strong: #8f4e14; /* 6.01:1 — safe at any size                */
   --color-card: #ffffff; /* raised surfaces                          */
+  /* Label colour for text sitting ON an accent fill (buttons, selection).
+     It must flip with the theme: white works on light mode's dark ochre,
+     but dark mode's ochre is light, so white would fail there. */
+  --color-on-accent: #ffffff; /* 6.01:1 on --accent-strong                */
+  --color-code-bg: #1c1b18; /* code blocks stay inverted vs the page    */
+  --color-code-fg: #faf7f1;
 
   /* --- Type ------------------------------------------------------------- */
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
@@ -34,6 +41,43 @@
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
+
+  /* --- Elevation (tokenised so it can lift on dark surfaces) ------------ */
+  --shadow-lift: 0 12px 28px -18px rgb(28 27 24 / 0.45);
+  --shadow-button: 0 1px 2px rgb(28 27 24 / 0.12);
+}
+
+/* ==========================================================================
+   DARK THEME
+   Only the colour tokens change. Every utility in the app already resolves
+   through these variables, so nothing in any component needs a dark: variant.
+
+   `data-theme` is written onto <html> by the blocking script in app/layout.tsx
+   before first paint, so there is no flash of the wrong theme.
+   ========================================================================== */
+
+:root[data-theme="dark"] {
+  --color-paper: #17140f; /* warm brown-black, deliberately not #000   */
+  --color-ink: #f3eee4; /* 15.88:1 on paper                          */
+  --color-muted: #a8a093; /* 7.10:1 on paper                           */
+  --color-hairline: #332e26;
+  --color-accent: #e08c3c; /* 6.98:1 — same ochre hue, lifted for dark  */
+  --color-accent-strong: #f0a85e; /* 9.15:1 — the "strong" role inverts to lighter */
+  --color-card: #201c16; /* raised surface, slightly above paper      */
+  --color-on-accent: #17140f; /* 9.15:1 on --accent-strong                 */
+  --color-code-bg: #0f0d09; /* recessed rather than inverted             */
+  --color-code-fg: #f3eee4;
+
+  /* Shadows read as nothing on a dark ground — deepen them to compensate. */
+  --shadow-lift: 0 12px 28px -18px rgb(0 0 0 / 0.8);
+  --shadow-button: 0 1px 2px rgb(0 0 0 / 0.4);
+
+  /* Native UI (scrollbars, form controls, autofill) follows the theme. */
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 /* ==========================================================================
@@ -75,7 +119,7 @@
 
   ::selection {
     background: var(--color-accent);
-    color: #fff;
+    color: var(--color-on-accent);
   }
 }
 
@@ -84,6 +128,41 @@
    ========================================================================== */
 
 @layer components {
+  /* --- Theme toggle ------------------------------------------------------
+     The two icons are both in the DOM and swapped by CSS keyed on
+     [data-theme], so the button renders correctly on the very first paint
+     without React needing to know the theme. That keeps the component free
+     of hydration mismatches. Each icon shows the theme you'd switch TO. */
+  .theme-icon-moon {
+    display: block;
+  }
+
+  .theme-icon-sun {
+    display: none;
+  }
+
+  :root[data-theme="dark"] .theme-icon-moon {
+    display: none;
+  }
+
+  :root[data-theme="dark"] .theme-icon-sun {
+    display: block;
+  }
+
+  /* Cross-fade only while the theme is actually changing. The class is added
+     for ~200ms by the toggle, so there is no standing transition cost on the
+     rest of the site and no interference with hover states. */
+  .theme-transition,
+  .theme-transition *,
+  .theme-transition *::before,
+  .theme-transition *::after {
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease,
+      fill 180ms ease !important;
+  }
+
   /* Uppercase, letter-spaced eyebrow label (Inter). */
   .eyebrow {
     font-family: var(--font-sans);
@@ -176,8 +255,8 @@
   }
 
   .prose-editorial pre {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-code-bg);
+    color: var(--color-code-fg);
     padding: 1rem 1.25rem;
     border-radius: var(--radius-md);
     overflow-x: auto;

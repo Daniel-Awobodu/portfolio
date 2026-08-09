@@ -17,7 +17,7 @@ export default function CaseStudyCard({
   const topMetric = study.metrics[0];
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-md border border-hairline bg-card transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-[0_12px_28px_-18px_rgba(28,27,24,0.45)]">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-md border border-hairline bg-card transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lift">
       <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-hairline bg-paper">
         {study.cover ? (
           <Image

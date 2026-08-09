@@ -22,7 +22,7 @@ export default function LaneCard({
   linkLabel: string;
 }) {
   return (
-    <article className="group relative flex h-full flex-col rounded-md border border-hairline bg-card p-6 transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-[0_12px_28px_-18px_rgba(28,27,24,0.45)] sm:p-7">
+    <article className="group relative flex h-full flex-col rounded-md border border-hairline bg-card p-6 transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lift sm:p-7">
       <p className="eyebrow">{eyebrow}</p>
 
       <h3 className="mt-3 font-display text-2xl leading-tight font-semibold text-ink">

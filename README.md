@@ -44,9 +44,35 @@ npm run start   # then open http://localhost:3000
 | About page copy / fun facts                    | `app/about/page.tsx`                    |
 | How I Think page copy                          | `app/how-i-think/page.tsx`              |
 | Lane intros (Automation / Marketing)           | `lib/content.ts` (the `LANES` object)   |
-| Colours, fonts, spacing                        | `app/globals.css` (the `@theme` block)  |
+| Light colours, fonts, spacing                  | `app/globals.css` (the `@theme` block)  |
+| Dark colours                                   | `app/globals.css` (`[data-theme="dark"]`) |
 
 **Almost everything personal lives in `lib/site-config.ts`.** Start there.
+
+---
+
+## Light and dark mode
+
+There's a small sun/moon button in the top navigation. It switches the whole
+site between the warm light theme and a warm dark one.
+
+**How it decides which to show:** first visit follows the visitor's own device
+setting. Once they press the button, that choice is remembered and wins over the
+device setting from then on.
+
+**To change the dark colours,** edit the `:root[data-theme="dark"]` block near
+the top of `app/globals.css`. Nothing else needs touching — every colour in the
+site reads from those variables, so changing one value updates it everywhere.
+
+If you change any colour, check both themes still meet WCAG AA contrast.
+Roughly: body text needs 4.5:1 against its background, and large display text
+needs 3:1. https://webaim.org/resources/contrastchecker/ does the sums for you.
+
+> **One note on privacy:** remembering the theme uses a single browser
+> `localStorage` entry called `theme`, holding the word `light` or `dark`. It's
+> the only thing this site stores on a visitor's device — no analytics, no
+> cookies, no tracking. If you'd rather it stored nothing at all, say so and it
+> can be changed to reset on every visit.
 
 ---
 
@@ -80,7 +106,8 @@ There are no `.env` files and no other environment variables to set.
   HTML at build time.
 - **Tailwind CSS v4** — brand colours and fonts are defined once as CSS
   variables in `app/globals.css` and used through utility classes. No hex codes
-  in components.
+  in components. Dark mode just redefines those variables, so no component
+  needs a second set of styles.
 - **MDX files on disk** for case studies — no CMS, no database, no external
   service. Add a file, get a page.
 - **Fraunces + Inter** via `next/font`, self-hosted at build time.

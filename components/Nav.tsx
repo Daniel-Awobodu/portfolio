@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { navLinks, site } from "@/lib/site-config";
 import Container from "./Container";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -66,16 +67,21 @@ export default function Nav() {
             </ul>
           </nav>
 
-          {/* Mobile toggle */}
-          <button
-            ref={toggleRef}
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-sm text-ink transition-colors duration-150 hover:bg-hairline md:hidden"
-          >
+          {/* Right-hand cluster: theme switch, then the mobile menu button.
+              One toggle instance serves both breakpoints. */}
+          <div className="flex items-center gap-1">
+            <ThemeToggle className="-mr-1 md:mr-0" />
+
+            {/* Mobile menu button */}
+            <button
+              ref={toggleRef}
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-sm text-ink transition-colors duration-150 hover:bg-hairline md:hidden"
+            >
             <span aria-hidden="true" className="relative block h-4 w-5">
               <span
                 className={`absolute left-0 block h-px w-5 bg-current transition-transform duration-200 ${
@@ -92,8 +98,9 @@ export default function Nav() {
                   open ? "top-2 -rotate-45" : "top-3.5"
                 }`}
               />
-            </span>
-          </button>
+              </span>
+            </button>
+          </div>
         </div>
       </Container>
 

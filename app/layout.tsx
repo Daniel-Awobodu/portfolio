@@ -3,6 +3,7 @@ import { Fraunces, Inter } from "next/font/google";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import { site } from "@/lib/site-config";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 /**
@@ -63,7 +64,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  themeColor: "#FAF7F1",
+  // Mobile browser chrome follows the active theme.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FAF7F1" },
+    { media: "(prefers-color-scheme: dark)", color: "#17140F" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
@@ -74,7 +79,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+    // suppressHydrationWarning: the inline script below sets data-theme on
+    // <html> before React hydrates, so the attribute legitimately differs from
+    // the server-rendered markup. It is scoped to this element only.
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${fraunces.variable} ${inter.variable}`}
+    >
+      <head>
+        {/* Blocking and first in <head> — resolves the theme before anything
+            paints, so there is no flash of the wrong theme on load. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="flex min-h-dvh flex-col">
         <a
           href="#main"
