@@ -76,7 +76,7 @@ There are no `.env` files and no other environment variables to set.
 
 ## How the site is built
 
-- **Next.js 16** (App Router, TypeScript) — every page is pre-rendered to static
+- **Next.js 15** (App Router, TypeScript) — every page is pre-rendered to static
   HTML at build time.
 - **Tailwind CSS v4** — brand colours and fonts are defined once as CSS
   variables in `app/globals.css` and used through utility classes. No hex codes
