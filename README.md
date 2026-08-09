@@ -10,7 +10,7 @@ is made for that, not for looking clever.
 
 ---
 
-## Run it on your computer
+## Run it on your computer.
 
 You need [Node.js](https://nodejs.org) 20 or newer installed. Then, in a
 terminal, inside this folder:
