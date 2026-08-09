@@ -1,0 +1,239 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   BRAND SYSTEM — "Editorial Clarity"
+   Warm, premium, print-magazine-about-systems. One accent colour only.
+   Every token below is exposed by Tailwind v4 as a CSS variable on :root,
+   so components use utilities (bg-paper, text-ink...) and never raw hex.
+   ========================================================================== */
+
+@theme {
+  /* --- Colour ----------------------------------------------------------- */
+  --color-paper: #faf7f1; /* page background, warm off-white          */
+  --color-ink: #1c1b18; /* primary text, warm near-black            */
+  --color-muted: #6e6a62; /* secondary text — 5.09:1 on paper (AA)    */
+  --color-hairline: #e6e0d4; /* borders, dividers                        */
+  /* CONTRAST RULE — verified against #FAF7F1 paper and #FFFFFF card:
+     --accent is 4.13:1, which clears AA for large text only, so it is used
+     ONLY at 26px and above (comfortably past the 24px/18pt threshold).
+     Anything smaller uses --accent-strong at 5.79:1, which clears AA for
+     normal text at any size. */
+  --color-accent: #b5641a; /* 4.13:1 — display sizes (≥26px) only      */
+  --color-accent-strong: #8f4e14; /* 5.79:1 — safe at any size                */
+  --color-card: #ffffff; /* raised surfaces                          */
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Layout (drives max-w-shell / max-w-prose) ------------------------ */
+  --container-shell: 1100px; /* max content width  */
+  --container-prose: 680px; /* max reading width  */
+
+  /* --- Radius (small, not pill) ----------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Offset anchor targets so the sticky nav never covers a heading. */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  /* Visible, high-contrast focus ring on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent-strong);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #fff;
+  }
+}
+
+/* ==========================================================================
+   COMPONENT-LEVEL PRIMITIVES
+   ========================================================================== */
+
+@layer components {
+  /* Uppercase, letter-spaced eyebrow label (Inter). */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Long-form MDX body copy. Kept here so every case study renders
+     identically with zero per-file design work. */
+  .prose-editorial {
+    color: var(--color-ink);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .prose-editorial > * + * {
+    margin-top: 1.25em;
+  }
+
+  .prose-editorial h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 1.9rem);
+    font-weight: 500;
+    line-height: 1.2;
+    margin-top: 2.5em;
+    margin-bottom: -0.35em;
+  }
+
+  .prose-editorial h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 2em;
+    margin-bottom: -0.5em;
+  }
+
+  .prose-editorial a {
+    color: var(--color-accent-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .prose-editorial a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .prose-editorial strong {
+    font-weight: 600;
+  }
+
+  .prose-editorial ul,
+  .prose-editorial ol {
+    padding-left: 1.25rem;
+  }
+
+  .prose-editorial ul {
+    list-style: disc;
+  }
+
+  .prose-editorial ol {
+    list-style: decimal;
+  }
+
+  .prose-editorial li + li {
+    margin-top: 0.5em;
+  }
+
+  .prose-editorial li::marker {
+    color: var(--color-accent-strong);
+  }
+
+  .prose-editorial blockquote {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+    line-height: 1.35;
+    border-left: 2px solid var(--color-accent);
+    padding-left: 1.25rem;
+    color: var(--color-ink);
+  }
+
+  .prose-editorial code {
+    font-size: 0.9em;
+    background: var(--color-hairline);
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-xs);
+  }
+
+  .prose-editorial pre {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+  }
+
+  .prose-editorial pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+  }
+
+  .prose-editorial img {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-hairline);
+  }
+
+  .prose-editorial hr {
+    border: 0;
+    border-top: 1px solid var(--color-hairline);
+    margin-block: 2.5em;
+  }
+}
+
+/* ==========================================================================
+   MOTION — subtle entrances, fully disabled under prefers-reduced-motion.
+   Nothing here may delay reading the promise line.
+   ========================================================================== */
+
+@layer utilities {
+  .rise {
+    animation: rise 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

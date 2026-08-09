@@ -1,0 +1,62 @@
+---
+title: "An AI content pipeline that turns one idea into a week of posts"
+client: "[CLIENT NAME]"
+lane: "automation"
+summary: "One voice note in, a week of drafted, on-brand social posts out — reviewed by a human before anything publishes."
+role: "Designed and built"
+year: "2025"
+date: "2025-09-15"
+order: 2
+featured: true
+# cover: "/case-studies/content-pipeline/cover.jpg"
+# video: "https://www.loom.com/embed/XXXXXXXX"
+tools: ["n8n", "Claude API", "Airtable", "Buffer"]
+metrics:
+  - label: "Time per week on content"
+    value: "[6 hrs] → [45 min]"
+  - label: "Posts drafted/week"
+    value: "[12]"
+---
+
+## The problem
+
+[CLIENT NAME] knew exactly what they wanted to say and never had time to say it.
+Content happened in bursts — a good week, then three silent ones. Hiring a
+writer had not worked, because the writer did not have the founder's context and
+every draft came back needing a rewrite.
+
+## What I built
+
+A pipeline that starts with the one thing the founder will reliably do: talk.
+
+They record a voice note. **n8n** picks it up, transcribes it, and passes the
+transcript to the **Claude API** with a brief that holds their tone rules,
+their audience, and the formats that work on each platform. The model returns a
+set of drafts — a long-form post, a short one, a carousel outline, and a few
+hooks — which land in **Airtable** as cards.
+
+Nothing publishes automatically. The founder opens Airtable, approves or edits,
+and approved cards flow to **Buffer** for scheduling. The approval step is
+deliberate: this is a drafting system, not a ghostwriter.
+
+## How it works, explained simply
+
+Imagine an assistant sitting in on every conversation you have about your work.
+
+You talk for two minutes about something you noticed this week. The assistant
+takes notes, then writes up that idea several different ways — a long version, a
+short version, a version that opens with a question. They bring all of it back
+to your desk in a folder.
+
+You read the folder, cross out what does not sound like you, tick what does. The
+assistant then posts only the ticked ones, at the right times.
+
+You never stare at a blank page. You only ever edit.
+
+## The outcome
+
+Content time went from [about 6 hours] a week to [under 45 minutes], and — the
+part that actually mattered — publishing became consistent instead of bursty.
+Roughly [X out of 12] drafts get approved as-is each week.
+
+[ADD: engagement or reach change once you have a clean before/after.]
