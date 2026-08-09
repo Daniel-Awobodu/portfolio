@@ -45,42 +45,54 @@ export const site = {
  */
 export const contact = {
   /**
-   * WhatsApp: international format, digits only, no `+`, no spaces.
-   * Nigeria example: 2348012345678
+   * WhatsApp: international format, digits only — no `+`, no spaces, and no
+   * leading 0. The local number 0815 685 6758 becomes 234 815 685 6758.
    */
-  whatsapp: "https://wa.me/[MY_NUMBER]",
+  whatsapp: "https://wa.me/2348156856758",
 
-  /** Your email address. Keep the `mailto:` prefix. */
-  email: "mailto:[MY_EMAIL]",
+  /** Keep the `mailto:` prefix. */
+  email: "mailto:awobodudaniel@gmail.com",
 
-  /** Full URL, e.g. https://www.linkedin.com/in/danielawobodu */
-  linkedin: "[MY_LINKEDIN_URL]",
+  linkedin: "https://www.linkedin.com/in/daniel-awobodu",
 
-  /** Full URL, e.g. https://x.com/danielawobodu */
-  x: "[MY_X_URL]",
+  /** Handle @deemhorn. x.com works for old twitter.com links too. */
+  x: "https://x.com/deemhorn",
 } as const;
 
-/** Rendered as the row of contact buttons on /contact, home and the footer. */
+/**
+ * Rendered as labelled cards on /contact, /about and the home contact band,
+ * and as the icon row in the footer. `icon` selects the glyph in
+ * components/SocialIcon.tsx.
+ */
 export const contactLinks = [
   {
     label: "WhatsApp",
     href: contact.whatsapp,
     hint: "Fastest reply",
     external: true,
+    icon: "whatsapp",
   },
   {
     label: "Email",
     href: contact.email,
     hint: "For briefs and docs",
     external: false,
+    icon: "email",
   },
   {
     label: "LinkedIn",
     href: contact.linkedin,
     hint: "Let's connect",
     external: true,
+    icon: "linkedin",
   },
-  { label: "X", href: contact.x, hint: "I post builds here", external: true },
+  {
+    label: "X",
+    href: contact.x,
+    hint: "I post builds here",
+    external: true,
+    icon: "x",
+  },
 ] as const;
 
 /**

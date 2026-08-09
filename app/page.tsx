@@ -8,7 +8,6 @@ import { getCaseStudies, getProofMetrics, LANES } from "@/lib/content";
 import { site } from "@/lib/site-config";
 
 export default function HomePage() {
-  const automation = getCaseStudies("automation");
   const marketing = getCaseStudies("marketing");
   const proof = getProofMetrics();
 
@@ -90,16 +89,14 @@ export default function HomePage() {
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {/* Stated total of systems shipped, not the number of case studies
+              published — those are two different numbers on purpose. */}
           <LaneCard
             eyebrow={LANES.automation.eyebrow}
             title="Automation"
             description={LANES.automation.description}
-            stat={
-              automation.length > 0 ? `${automation.length}` : "New lane"
-            }
-            statLabel={
-              automation.length === 1 ? "system built" : "systems built"
-            }
+            stat="15+"
+            statLabel="systems built"
             href="/automation"
             linkLabel="View automation"
           />

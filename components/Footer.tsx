@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { contactLinks, navLinks, site } from "@/lib/site-config";
 import Container from "./Container";
+import SocialIcon from "./SocialIcon";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -39,7 +40,7 @@ export default function Footer() {
 
           <div>
             <p className="eyebrow">Elsewhere</p>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 flex flex-wrap gap-2.5">
               {contactLinks.map((link) => (
                 <li key={link.label}>
                   <a
@@ -47,9 +48,13 @@ export default function Footer() {
                     {...(link.external
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
-                    className="text-[0.9375rem] text-muted transition-colors duration-150 hover:text-accent-strong"
+                    /* The glyph carries no text, so the link needs an explicit
+                       accessible name — and a title for sighted hover. */
+                    aria-label={link.label}
+                    title={link.label}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-muted transition-all duration-150 ease-out hover:-translate-y-0.5 hover:border-accent hover:text-accent-strong"
                   >
-                    {link.label}
+                    <SocialIcon name={link.icon} />
                   </a>
                 </li>
               ))}

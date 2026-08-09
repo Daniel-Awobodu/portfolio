@@ -14,16 +14,16 @@ Work top to bottom. The first four sections are the ones that actually matter.
 
 Everything is in one file: **`lib/site-config.ts`**
 
-- [ ] **WhatsApp number** — replace `[MY_NUMBER]` in
-      `https://wa.me/[MY_NUMBER]`. International format, digits only, no `+`
-      and no spaces. A Nigerian number looks like `2348012345678`.
-- [ ] **Email** — replace `[MY_EMAIL]` in `mailto:[MY_EMAIL]`. Keep `mailto:`.
-- [ ] **LinkedIn** — replace `[MY_LINKEDIN_URL]` with the full URL, including
-      `https://`.
-- [ ] **X** — replace `[MY_X_URL]` with the full URL, including `https://`.
+- [x] **WhatsApp** — `https://wa.me/2348156856758`. Note the format: your local
+      `08156856758` becomes `2348156856758` (country code, no leading zero) —
+      that's what `wa.me` needs.
+- [x] **Email** — `mailto:awobodudaniel@gmail.com`
+- [x] **LinkedIn** — `https://www.linkedin.com/in/daniel-awobodu`
+- [x] **X** — `https://x.com/deemhorn` (from the handle @deemhorn)
 
-> Test all four after deploying. A broken WhatsApp link is the single most
-> expensive mistake on this site.
+- [ ] **Tap all four on a real phone after deploying.** A broken WhatsApp link
+      is the single most expensive mistake on this site, and it's the one thing
+      that can't be checked from a desktop browser.
 
 ## 2. The contact form
 
