@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { THEME_STORAGE_KEY, type Theme } from "@/lib/theme";
+import { THEME_COLORS, THEME_STORAGE_KEY, type Theme } from "@/lib/theme";
 
 /**
  * Light/dark switch for the top nav.
@@ -33,6 +33,11 @@ export default function ThemeToggle({
 
     root.dataset.theme = next;
     setTheme(next);
+
+    // Keep the browser chrome in step with the page.
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", THEME_COLORS[next]);
 
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, next);

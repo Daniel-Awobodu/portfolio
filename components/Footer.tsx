@@ -52,7 +52,9 @@ export default function Footer() {
                        accessible name — and a title for sighted hover. */
                     aria-label={link.label}
                     title={link.label}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-muted transition-all duration-150 ease-out hover:-translate-y-0.5 hover:border-accent hover:text-accent-strong"
+                    /* No hover text colour here — the glyph carries its own
+                       brand colour, so the ring does the hover work instead. */
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline transition-all duration-150 ease-out hover:-translate-y-0.5 hover:border-accent"
                   >
                     <SocialIcon name={link.icon} />
                   </a>

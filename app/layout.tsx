@@ -64,11 +64,22 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  // Mobile browser chrome follows the active theme.
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAF7F1" },
-    { media: "(prefers-color-scheme: dark)", color: "#17140F" },
-  ],
+  /**
+   * Declaring BOTH schemes is what stops Android Chrome and Samsung Internet
+   * applying their "force dark" filter on top of our own dark theme — without
+   * it they assume the page can't do dark and darken it themselves, which
+   * stacks with ours and comes out near-black.
+   */
+  colorScheme: "light dark",
+
+  /**
+   * A single value, not a prefers-color-scheme pair: the visitor's OS setting
+   * and the theme they actually chose can disagree, and a media-query pair
+   * would tint the browser chrome to the OS setting while the page showed the
+   * other theme. lib/theme.ts keeps this in sync with the live theme instead.
+   */
+  themeColor: "#FAF7F1",
+
   width: "device-width",
   initialScale: 1,
 };

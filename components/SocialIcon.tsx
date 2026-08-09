@@ -22,6 +22,18 @@ const PATHS: Record<SocialIconName, string[]> = {
   ],
 };
 
+/**
+ * Official brand colours, defined as tokens in globals.css so each one can
+ * flip in dark mode — X's mark inverts to white, LinkedIn lifts to its lighter
+ * dark-UI blue, and the generic envelope follows the site accent.
+ */
+const BRAND_COLOR: Record<SocialIconName, string> = {
+  whatsapp: "text-brand-whatsapp",
+  email: "text-brand-email",
+  linkedin: "text-brand-linkedin",
+  x: "text-brand-x",
+};
+
 export default function SocialIcon({
   name,
   className = "h-[18px] w-[18px]",
@@ -35,7 +47,7 @@ export default function SocialIcon({
       fill="currentColor"
       aria-hidden="true"
       focusable="false"
-      className={className}
+      className={`${BRAND_COLOR[name]} ${className}`}
     >
       {PATHS[name].map((d) => (
         <path key={d} d={d} />

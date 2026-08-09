@@ -29,6 +29,17 @@
   --color-code-bg: #1c1b18; /* code blocks stay inverted vs the page    */
   --color-code-fg: #faf7f1;
 
+  /* --- Brand colours for the social glyphs ------------------------------
+     Official marks, so they sit outside the site palette on purpose. Each has
+     a dark-mode counterpart below: X inverts (its logo is black on light and
+     white on dark by design) and LinkedIn lifts to the lighter blue LinkedIn
+     itself uses in dark UI. WCAG exempts logotypes from contrast minimums,
+     but these still clear 3:1 on their own ground. */
+  --color-brand-whatsapp: #1da851;
+  --color-brand-linkedin: #0a66c2;
+  --color-brand-x: #000000;
+  --color-brand-email: #b5641a; /* no brand mark — uses the site accent    */
+
   /* --- Type ------------------------------------------------------------- */
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -67,6 +78,11 @@
   --color-on-accent: #17140f; /* 9.15:1 on --accent-strong                 */
   --color-code-bg: #0f0d09; /* recessed rather than inverted             */
   --color-code-fg: #f3eee4;
+
+  --color-brand-whatsapp: #25d366; /* WhatsApp's brighter green reads better here */
+  --color-brand-linkedin: #70b5f9; /* LinkedIn's own dark-UI blue                 */
+  --color-brand-x: #ffffff; /* X's mark inverts on dark by design          */
+  --color-brand-email: #e08c3c;
 
   /* Shadows read as nothing on a dark ground — deepen them to compensate. */
   --shadow-lift: 0 12px 28px -18px rgb(0 0 0 / 0.8);
