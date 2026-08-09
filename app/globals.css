@@ -63,33 +63,96 @@
    Only the colour tokens change. Every utility in the app already resolves
    through these variables, so nothing in any component needs a dark: variant.
 
-   `data-theme` is written onto <html> by the blocking script in app/layout.tsx
-   before first paint, so there is no flash of the wrong theme.
+   The palette is applied by TWO selectors, and both are load-bearing:
+
+   1. @media (prefers-color-scheme: dark) — covers a visitor whose device is
+      dark and who has not explicitly chosen light.
+
+      This block is also the signal Samsung Internet and Chrome look for when
+      deciding whether a page has its own dark mode. Without a real
+      prefers-color-scheme rule in the stylesheet they assume it does not, and
+      run their own force-dark filter over the page — which inverted BOTH our
+      themes on Samsung, so "light" came out dark and "dark" came out wrong.
+      The color-scheme meta tag alone did not satisfy Samsung Internet.
+
+      It also means the correct theme renders with JavaScript disabled.
+
+   2. [data-theme="dark"] — an explicit choice from the toggle, which has to
+      beat the device setting. `:not([data-theme="light"])` on the media block
+      is what lets an explicit light choice win on a dark device.
+
+   The values live once in the --dark-* set below, so changing a colour is a
+   one-line edit even though the mapping appears twice.
    ========================================================================== */
 
-:root[data-theme="dark"] {
-  --color-paper: #17140f; /* warm brown-black, deliberately not #000   */
-  --color-ink: #f3eee4; /* 15.88:1 on paper                          */
-  --color-muted: #a8a093; /* 7.10:1 on paper                           */
-  --color-hairline: #332e26;
-  --color-accent: #e08c3c; /* 6.98:1 — same ochre hue, lifted for dark  */
-  --color-accent-strong: #f0a85e; /* 9.15:1 — the "strong" role inverts to lighter */
-  --color-card: #201c16; /* raised surface, slightly above paper      */
-  --color-on-accent: #17140f; /* 9.15:1 on --accent-strong                 */
-  --color-code-bg: #0f0d09; /* recessed rather than inverted             */
-  --color-code-fg: #f3eee4;
+:root {
+  /* Tells every browser the page handles both schemes itself. Overridden
+     per-theme below so native UI follows the theme actually on screen. */
+  color-scheme: light dark;
 
-  --color-brand-whatsapp: #25d366; /* WhatsApp's brighter green reads better here */
-  --color-brand-linkedin: #70b5f9; /* LinkedIn's own dark-UI blue                 */
-  --color-brand-x: #ffffff; /* X's mark inverts on dark by design          */
-  --color-brand-email: #e08c3c;
+  --dark-paper: #17140f; /* warm brown-black, deliberately not #000   */
+  --dark-ink: #f3eee4; /* 15.88:1 on paper                          */
+  --dark-muted: #a8a093; /* 7.10:1 on paper                           */
+  --dark-hairline: #332e26;
+  --dark-accent: #e08c3c; /* 6.98:1 — same ochre hue, lifted for dark  */
+  --dark-accent-strong: #f0a85e; /* 9.15:1 — the "strong" role inverts to lighter */
+  --dark-card: #201c16; /* raised surface, slightly above paper      */
+  --dark-on-accent: #17140f; /* 9.15:1 on --accent-strong                 */
+  --dark-code-bg: #0f0d09; /* recessed rather than inverted             */
+  --dark-code-fg: #f3eee4;
+
+  --dark-brand-whatsapp: #25d366; /* WhatsApp's brighter green reads better here */
+  --dark-brand-linkedin: #70b5f9; /* LinkedIn's own dark-UI blue                 */
+  --dark-brand-x: #ffffff; /* X's mark inverts on dark by design          */
+  --dark-brand-email: #e08c3c;
 
   /* Shadows read as nothing on a dark ground — deepen them to compensate. */
-  --shadow-lift: 0 12px 28px -18px rgb(0 0 0 / 0.8);
-  --shadow-button: 0 1px 2px rgb(0 0 0 / 0.4);
+  --dark-shadow-lift: 0 12px 28px -18px rgb(0 0 0 / 0.8);
+  --dark-shadow-button: 0 1px 2px rgb(0 0 0 / 0.4);
+}
 
-  /* Native UI (scrollbars, form controls, autofill) follows the theme. */
+/* 1. Device is dark, and the visitor has not explicitly asked for light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-paper: var(--dark-paper);
+    --color-ink: var(--dark-ink);
+    --color-muted: var(--dark-muted);
+    --color-hairline: var(--dark-hairline);
+    --color-accent: var(--dark-accent);
+    --color-accent-strong: var(--dark-accent-strong);
+    --color-card: var(--dark-card);
+    --color-on-accent: var(--dark-on-accent);
+    --color-code-bg: var(--dark-code-bg);
+    --color-code-fg: var(--dark-code-fg);
+    --color-brand-whatsapp: var(--dark-brand-whatsapp);
+    --color-brand-linkedin: var(--dark-brand-linkedin);
+    --color-brand-x: var(--dark-brand-x);
+    --color-brand-email: var(--dark-brand-email);
+    --shadow-lift: var(--dark-shadow-lift);
+    --shadow-button: var(--dark-shadow-button);
+  }
+}
+
+/* 2. Explicit choice from the toggle — beats the device setting either way. */
+:root[data-theme="dark"] {
   color-scheme: dark;
+  --color-paper: var(--dark-paper);
+  --color-ink: var(--dark-ink);
+  --color-muted: var(--dark-muted);
+  --color-hairline: var(--dark-hairline);
+  --color-accent: var(--dark-accent);
+  --color-accent-strong: var(--dark-accent-strong);
+  --color-card: var(--dark-card);
+  --color-on-accent: var(--dark-on-accent);
+  --color-code-bg: var(--dark-code-bg);
+  --color-code-fg: var(--dark-code-fg);
+  --color-brand-whatsapp: var(--dark-brand-whatsapp);
+  --color-brand-linkedin: var(--dark-brand-linkedin);
+  --color-brand-x: var(--dark-brand-x);
+  --color-brand-email: var(--dark-brand-email);
+  --shadow-lift: var(--dark-shadow-lift);
+  --shadow-button: var(--dark-shadow-button);
 }
 
 :root[data-theme="light"] {
