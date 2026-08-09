@@ -36,14 +36,17 @@ Until the key is set, the form shows an orange "Setup needed" notice on the page
 
 ## 3. Your photo
 
-- [ ] Replace **`public/daniel.jpg`** with a real portrait. Keep the filename.
-      Portrait orientation, roughly **4:5** (e.g. 1200 × 1500), face in the
-      upper half. Shoot against a plain warm wall if you can — it will sit
-      beautifully against the paper background.
-- [ ] Replace **`public/daniel-thumb.jpg`** — same photo, cropped **square**,
-      about 800 × 800. Used in the About teaser on the home page.
+- [x] **Done.** `public/daniel.jpg` (900 × 1125, 4:5) and
+      `public/daniel-thumb.jpg` (800 × 800) are your real portrait, cropped at
+      the chest just below the first shirt button.
+- [ ] Optional: send a **higher-resolution original** if you have one. The
+      version used here came in at 800 × 1334, which is slightly under what a
+      retina screen wants for the About page. It looks fine; a larger file
+      would look sharper. Crop the replacement to 4:5 and 1:1, keep both
+      filenames.
 - [ ] Optional: replace **`public/og.png`** (1200 × 630). This is the preview
       card people see when your link is shared in WhatsApp, LinkedIn or X.
+      Right now it's a clean typographic card — your photo would work too.
 
 ## 4. Your domain
 

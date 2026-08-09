@@ -52,7 +52,8 @@ export default function HomePage() {
           </div>
 
           {/* Editorial portrait: framed rectangle, thin rule, not a floating
-              circle avatar. Replace /public/daniel.jpg with a real photo. */}
+              circle avatar. daniel.jpg is a 4:5 crop, so object-cover never
+              re-crops it — swapping in another photo at 4:5 keeps this framing. */}
           <div className="md:col-span-5">
             <figure className="relative mx-auto w-full max-w-[340px] md:max-w-none">
               <div
