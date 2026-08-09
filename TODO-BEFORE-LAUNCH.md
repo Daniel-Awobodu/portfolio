@@ -36,14 +36,15 @@ Until the key is set, the form shows an orange "Setup needed" notice on the page
 
 ## 3. Your photo
 
-- [x] **Done.** `public/daniel.jpg` (900 × 1125, 4:5) and
-      `public/daniel-thumb.jpg` (800 × 800) are your real portrait, cropped at
-      the chest just below the first shirt button.
-- [ ] Optional: send a **higher-resolution original** if you have one. The
-      version used here came in at 800 × 1334, which is slightly under what a
-      retina screen wants for the About page. It looks fine; a larger file
-      would look sharper. Crop the replacement to 4:5 and 1:1, keep both
-      filenames.
+- [x] **Done.** `public/daniel.jpg` (900 × 900) is your real portrait, cropped
+      square for the circular frames, cut at the chest with the first shirt
+      button just inside the bottom of the circle. One file now serves the home
+      hero, the About page and the small home teaser.
+- [ ] Optional: send a **higher-resolution original** if you have one. What you
+      sent came in at 800 × 1334, so the square crop is 720px before scaling —
+      a touch under what a retina screen wants at the largest size. It looks
+      good as-is; a bigger file would be sharper.
+      **Crop any replacement square (1:1)** — the frames are circles now.
 - [ ] Optional: replace **`public/og.png`** (1200 × 630). This is the preview
       card people see when your link is shared in WhatsApp, LinkedIn or X.
       Right now it's a clean typographic card — your photo would work too.

@@ -42,17 +42,23 @@ export default function AboutPage() {
           {/* Portrait */}
           <div className="md:col-span-5">
             <figure className="sticky top-28">
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md border border-hairline bg-card">
-                <Image
-                  src="/daniel.jpg"
-                  alt={`${site.name}, AI automation and e-commerce growth specialist`}
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 440px"
-                  className="object-cover"
+              <div className="relative mx-auto w-full max-w-[320px] sm:max-w-[380px] md:max-w-none">
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-3 rounded-full border border-hairline sm:-inset-4"
                 />
+                <div className="relative aspect-square w-full overflow-hidden rounded-full border border-hairline bg-card">
+                  <Image
+                    src="/daniel.jpg"
+                    alt={`${site.name}, AI automation and e-commerce growth specialist`}
+                    fill
+                    priority
+                    sizes="(max-width: 640px) 320px, (max-width: 768px) 380px, 420px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
-              <figcaption className="mt-4 text-sm text-muted">
+              <figcaption className="mt-8 text-center text-sm text-muted md:text-left">
                 {site.name} — Lagos, Nigeria. Working with clients worldwide.
               </figcaption>
             </figure>

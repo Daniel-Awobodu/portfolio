@@ -51,22 +51,22 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Editorial portrait: framed rectangle, thin rule, not a floating
-              circle avatar. daniel.jpg is a 4:5 crop, so object-cover never
-              re-crops it — swapping in another photo at 4:5 keeps this framing. */}
+          {/* Circular portrait inside a concentric hairline ring.
+              daniel.jpg is cropped square for exactly this mask, so object-cover
+              never re-crops it — any replacement should be square too. */}
           <div className="md:col-span-5">
-            <figure className="relative mx-auto w-full max-w-[340px] md:max-w-none">
+            <figure className="relative mx-auto w-full max-w-[300px] sm:max-w-[340px] md:max-w-[400px]">
               <div
                 aria-hidden="true"
-                className="absolute -top-3 -right-3 bottom-3 left-3 rounded-md border border-hairline"
+                className="absolute -inset-3 rounded-full border border-hairline sm:-inset-4"
               />
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md border border-hairline bg-card">
+              <div className="relative aspect-square w-full overflow-hidden rounded-full border border-hairline bg-card">
                 <Image
                   src="/daniel.jpg"
                   alt={`Portrait of ${site.name}`}
                   fill
                   priority
-                  sizes="(max-width: 768px) 340px, 420px"
+                  sizes="(max-width: 640px) 300px, (max-width: 768px) 340px, 400px"
                   className="object-cover"
                 />
               </div>
@@ -196,9 +196,11 @@ export default function HomePage() {
           </div>
 
           <div className="order-1 md:order-2 md:col-span-4">
-            <div className="relative aspect-square w-32 overflow-hidden rounded-md border border-hairline bg-card md:ml-auto md:w-full md:max-w-[240px]">
+            {/* Same square source as the hero — next/image emits the small
+                size, so a separate thumbnail file is no longer needed. */}
+            <div className="relative aspect-square w-32 overflow-hidden rounded-full border border-hairline bg-card md:ml-auto md:w-full md:max-w-[240px]">
               <Image
-                src="/daniel-thumb.jpg"
+                src="/daniel.jpg"
                 alt=""
                 aria-hidden="true"
                 fill
