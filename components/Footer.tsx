@@ -73,11 +73,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-hairline py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        {/* Centred rather than left-aligned: it is the only item on this row
+            now, and it lines up under the centred brand block above. */}
+        <div className="border-t border-hairline py-6 text-center text-sm text-muted">
           <p>
             © {year} {site.name}
           </p>
-          <p>Built with Next.js. Hosted on Vercel.</p>
         </div>
       </Container>
     </footer>
