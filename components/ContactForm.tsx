@@ -158,7 +158,7 @@ export default function ContactForm() {
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? `${id}-name-error` : undefined}
           className={`mt-2 ${fieldClass}`}
-          placeholder="Daniel Awobodu"
+          placeholder="Sarah Johnson"
         />
         {errors.name ? (
           <p id={`${id}-name-error`} className="mt-2 text-sm text-accent-strong">

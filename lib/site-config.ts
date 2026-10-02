@@ -31,6 +31,25 @@ export const site = {
 
   credential: "B.Sc. Mathematics Education — University of Lagos, 2022.",
 
+  /** Status line under the /contact heading. */
+  availability: [
+    "Taking on new projects",
+    "Lagos, Nigeria (GMT+1)",
+    "Working with clients worldwide",
+  ],
+
+  /** The stack, shown on /contact. Clients on Upwork filter by these names. */
+  tools: [
+    "n8n",
+    "Make",
+    "OpenAI",
+    "HubSpot",
+    "Airtable",
+    "Google Sheets",
+    "Slack",
+    "APIs & webhooks",
+  ],
+
   experience: [
     { label: "Growth marketing", value: "5 years" },
     { label: "AI automation", value: "1 year" },
