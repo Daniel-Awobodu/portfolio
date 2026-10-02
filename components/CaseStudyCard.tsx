@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CaseStudy } from "@/lib/types";
+import type { CaseStudyMeta } from "@/lib/types";
 
 /**
  * Lane-page card. Everything except `title` degrades gracefully:
@@ -11,7 +11,7 @@ export default function CaseStudyCard({
   study,
   priority = false,
 }: {
-  study: CaseStudy;
+  study: CaseStudyMeta;
   priority?: boolean;
 }) {
   const topMetric = study.metrics[0];
