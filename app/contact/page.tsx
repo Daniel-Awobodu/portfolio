@@ -23,7 +23,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="Contact"
         title="Tell me what you're trying to automate or sell. I reply fast."
-        lede="State your business problem and I'll show you the workflow that solves it: what gets automated, which tools it uses, and how it runs once it's live, explained so you understand exactly what you're getting."
+        lede="State your business problem and walk me through how you handle it today: the manual steps and the tools you already use. We'll plan the fix together, then I'll build a workflow around the way your business actually runs."
       >
         <ul
           aria-label="Availability"
@@ -100,8 +100,8 @@ export default function ContactPage() {
               <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
                 &ldquo;Every lead from our website gets copied into HubSpot by
                 hand, then someone pings sales on Slack. It eats an hour a day
-                and leads still slip through.&rdquo; That&rsquo;s enough for me
-                to start mapping the fix.
+                and leads still slip through.&rdquo; That&rsquo;s enough for us
+                to start planning.
               </p>
             </div>
           </div>
