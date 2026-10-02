@@ -96,7 +96,7 @@ export default function HomePage() {
             title="Automation"
             description={LANES.automation.description}
             stat="1,172"
-            statLabel="past orders turned into a customer database"
+            statLabel="past orders, now one customer database"
             href="/automation"
             linkLabel="View automation"
           />
