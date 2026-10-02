@@ -1,17 +1,41 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CaseStudyCard from "@/components/CaseStudyCard";
+import CaseStudySearch, {
+  type SearchableStudy,
+} from "@/components/CaseStudySearch";
 import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import PageHeader from "@/components/PageHeader";
 import { getCaseStudies, LANE_SLUGS, LANES } from "@/lib/content";
-import type { Lane } from "@/lib/types";
+import { normalise } from "@/lib/search";
+import type { CaseStudy, Lane } from "@/lib/types";
 
 /** Only `automation` and `marketing` exist; anything else 404s at build time. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
   return LANE_SLUGS.map((lane) => ({ lane }));
+}
+
+/**
+ * Strips the MDX body off a study and folds everything a visitor might search
+ * for into one normalised string, so the browser only receives what it needs.
+ */
+function toSearchable({ body, ...study }: CaseStudy): SearchableStudy {
+  const haystack = normalise(
+    [
+      study.title,
+      study.client,
+      study.summary,
+      study.role,
+      study.year,
+      ...study.tools,
+      ...study.metrics.flatMap((metric) => [metric.label, metric.value]),
+      body,
+    ].join(" "),
+  );
+  return { ...study, haystack };
 }
 
 function resolveLane(value: string): Lane | null {
@@ -56,7 +80,9 @@ export default async function LanePage({
       <PageHeader eyebrow={info.eyebrow} title={info.label} lede={info.intro} />
 
       <Container as="section" className="py-14 md:py-16">
-        {studies.length > 0 ? (
+        {lane === "automation" && studies.length > 0 ? (
+          <CaseStudySearch studies={studies.map(toSearchable)} />
+        ) : studies.length > 0 ? (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {studies.map((study, index) => (
               <li key={study.slug}>
