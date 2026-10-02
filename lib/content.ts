@@ -13,7 +13,7 @@ export const LANES: Record<Lane, LaneInfo> = {
   automation: {
     slug: "automation",
     label: "Automation",
-    eyebrow: "Lane 01",
+    eyebrow: "Lane 01 · 15+ systems built",
     description:
       "AI workflows that take repetitive work off your team: capturing orders, qualifying and following up leads, booking appointments, and reading documents and receipts.",
     intro:
