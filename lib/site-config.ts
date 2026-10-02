@@ -128,7 +128,7 @@ export const contactLinks = [
  *
  * The key is safe to commit: it only lets someone send mail TO you.
  */
-export const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_KEY";
+export const WEB3FORMS_ACCESS_KEY: string = "b885468e-3c1c-4e87-9036-ac0bf439e355";
 
 /** Global navigation. Order is deliberate: work first, then proof, then ask. */
 export const navLinks = [
