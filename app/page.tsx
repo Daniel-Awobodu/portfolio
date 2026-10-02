@@ -95,8 +95,8 @@ export default function HomePage() {
             eyebrow={LANES.automation.eyebrow}
             title="Automation"
             description={LANES.automation.description}
-            stat="15+"
-            statLabel="systems built"
+            stat="1,172"
+            statLabel="past orders turned into a customer database"
             href="/automation"
             linkLabel="View automation"
           />
