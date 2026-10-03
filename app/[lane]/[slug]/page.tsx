@@ -128,7 +128,7 @@ export default async function CaseStudyPage({
         <div className="max-w-prose">
           <VideoEmbed
             src={study.video}
-            title={`Walkthrough — ${study.title}`}
+            title={`Walkthrough: ${study.title}`}
           />
 
           {/* ---------- MDX body: problem → build → how it works → outcome ---------- */}

@@ -1,0 +1,90 @@
+---
+title: "Snap a receipt, and the expense log fills itself"
+client: "Industry build · Logistics"
+lane: "automation"
+summary: "Drivers send fuel and repair receipts on WhatsApp. AI reads every field, files the receipt in Drive and logs it in Sheets, with no data entry in the office."
+role: "Designed and built"
+year: "2026"
+date: "2026-07-27"
+order: 3
+featured: false
+cover: "/case-studies/whatsapp-receipts/cover.png"
+video: "https://drive.google.com/file/d/1Ms8CrEDk3Yv--q1XOGvp7fcsWXnlj8fm/view?usp=sharing"
+tools: ["n8n", "WhatsApp (Green API)", "Google Gemini", "Airtable", "Google Drive", "Google Sheets"]
+metrics:
+  - label: "from a WhatsApp photo to a logged expense"
+    value: "~1 min"
+  - label: "receipt formats read: photos and PDFs"
+    value: "2"
+  - label: "receipts typed in by the office"
+    value: "0"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a delivery company.
+
+The drivers already sent photos of their fuel and repair receipts over
+WhatsApp. But someone in the office still had to open each photo and type the
+vendor, date and amount into a spreadsheet by hand. It was slow, typing errors
+crept in, and receipts got lost whenever nobody followed up in time.
+
+## What I built
+
+An n8n workflow that turns a WhatsApp message into a filed, logged expense.
+
+![The receipt workflow in n8n, from the incoming WhatsApp message to the Drive upload, the Sheets row and the confirmation](/case-studies/whatsapp-receipts/workflow.png)
+
+*The full workflow. The top path handles a clear receipt from start to finish.
+The lower branches catch bad files, unclear readings and save failures. Click
+the image to see it full size.*
+
+1. **A driver sends a receipt** to a WhatsApp number, as a photo or a PDF.
+   Anything else gets a polite reply asking for the right format.
+2. **AI reads it.** Google Gemini extracts the vendor, date, total, tax and
+   category. Photos and PDFs take separate paths, then join up again.
+3. **The driver is matched** by phone number against a roster in Airtable.
+4. **The reading is checked.** Clear readings move on. Unclear ones are logged
+   for review, and the driver is asked to resend.
+5. **The receipt is filed.** It goes into a Google Drive folder for the
+   current month, named by date, vendor and driver, and a row is added to the
+   expense sheet.
+6. **The driver gets a WhatsApp confirmation** of exactly what was logged.
+
+## How it works, explained simply
+
+Think of it as an office assistant who reads every receipt the moment it
+arrives, and who says so when a number is hard to read instead of guessing.
+
+- **A wrong number is worse than a missing one.** A misread total looks just
+  like a correct one once it sits in a spreadsheet. So the AI flags any field
+  it was not sure about, and those receipts go to a review log instead of
+  quietly becoming "data".
+- **Unknown drivers are still logged.** If a number is not in the roster, the
+  receipt is saved under "Unknown Driver" rather than dropped.
+- **No messy folders.** The workflow checks for this month's Drive folder
+  before creating one, so receipts never scatter across duplicate folders.
+- **Nothing fails silently.** A failed download, a wrong file type or a failed
+  save each sends a clear message to the driver, and to the admin when it
+  matters.
+
+## The outcome
+
+A receipt goes from a driver's WhatsApp to a filed, logged expense in about a
+minute, and nobody in the office touches a spreadsheet.
+
+![The expense sheet with three receipts logged: driver, vendor, date, total, tax, category and a Drive link](/case-studies/whatsapp-receipts/sheet.png)
+
+*The expense sheet from a test run. Each receipt becomes one row, with a link
+to the original file. Phone numbers are blurred.*
+
+![The Receipts folder in Google Drive for July 2026, with each file named by date, vendor and driver](/case-studies/whatsapp-receipts/drive.png)
+
+*The matching Drive folder. Files are sorted by month and named so anyone can
+find a receipt without opening it.*
+
+Two known limits, stated plainly: a receipt flagged as unclear stays in the
+review log until the driver resends it, and if WhatsApp itself fails to send
+a reply, there is no fallback yet. Both are the next things I would add for a
+client running this in production.
