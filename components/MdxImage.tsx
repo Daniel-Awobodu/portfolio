@@ -14,14 +14,24 @@ export default function MdxImage({
 }) {
   if (!src) return null;
 
+  // Workflow screenshots are too detailed to read at column width, so each
+  // one opens at full size in a new tab.
   return (
-    <Image
-      src={src}
-      alt={alt ?? ""}
-      width={1600}
-      height={1000}
-      sizes="(max-width: 768px) 100vw, 680px"
-      className="h-auto w-full"
-    />
+    <a
+      href={src}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open full size"
+      className="block cursor-zoom-in"
+    >
+      <Image
+        src={src}
+        alt={alt ?? ""}
+        width={1600}
+        height={1000}
+        sizes="(max-width: 768px) 100vw, 680px"
+        className="h-auto w-full"
+      />
+    </a>
   );
 }

@@ -41,10 +41,21 @@ clean, structured data: customer details, products, prices and quantities. An
 AI model (Llama 3.1, running on Groq) does the reading, so a new product or a
 new form layout does not break it. Every order is checked before it is saved.
 
+![The order reader workflow in n8n: AI extraction, validation, then the quantity lookup](/case-studies/order-extraction/workflow-extraction.png)
+
+*The order reader. The AI reads the email, a check decides if the order is
+usable, and the price table confirms the quantity before the order is
+assembled. Click the image to see it full size.*
+
 **2. A one-time backfill.** It pulled every past order email from Gmail, ran
 each one through the order reader, and wrote the clean rows into a Google
 Sheet. Orders that failed the checks, along with duplicates, went to a
 separate review tab instead.
+
+![The backfill workflow in n8n: Gmail, skip already-logged orders, loop, extract, then write to Sheets](/case-studies/order-extraction/workflow-backfill.png)
+
+*The backfill. It skips orders already in the sheet, loops through the rest in
+paced batches, and routes each one to the customer list or the review tab.*
 
 The order reader is its own workflow on purpose. The backfill uses it today,
 and the live order flow uses the same one, so there is only ever one version
