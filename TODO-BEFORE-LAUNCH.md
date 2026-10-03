@@ -58,7 +58,7 @@ Until the key is set, the form shows an orange "Setup needed" notice on the page
 
 ## 5. Case study placeholders
 
-Four starter case studies ship with the site. Every number in them is a bracket
+The two marketing starter case studies below still ship with the site. Every number in them is a bracket
 token — **no invented figures** — so nothing reads as a false claim while you
 fill them in.
 
@@ -66,19 +66,10 @@ fill them in.
 line entirely. The layout handles missing metrics cleanly. Never publish a
 number you can't stand behind.
 
-### `content/automation/lead-routing.mdx`
+### Automation
 
-- [ ] `[CLIENT NAME]` (appears in the settings block and in the write-up)
-- [ ] `[12h] → [4 min]`, `[300]+`, `[0 hrs]/week`
-- [ ] `[12 hours]`, `[roughly a morning a week]` in the body
-- [ ] `[ADD: what the client said…]` at the end
-
-### `content/automation/content-pipeline.mdx`
-
-- [ ] `[CLIENT NAME]`
-- [ ] `[6 hrs] → [45 min]`, `[12]`
-- [ ] `[about 6 hours]`, `[under 45 minutes]`, `[X out of 12]` in the body
-- [ ] `[ADD: engagement or reach change…]`
+- [x] **Done.** The two automation placeholders were removed. The lane now
+      holds real builds only (`order-extraction.mdx`, `order-alerts.mdx`).
 
 ### `content/marketing/ecommerce-scale.mdx`
 
