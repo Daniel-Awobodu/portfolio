@@ -1,0 +1,94 @@
+---
+title: "From website visitor to booked patient, with no one at the desk"
+client: "Industry build · Dental"
+lane: "automation"
+summary: "An AI chat assistant qualifies each visitor, spots dental emergencies, and books real open slots straight into the calendar, at any hour."
+role: "Designed and built"
+year: "2026"
+date: "2026-07-09"
+order: 4
+featured: false
+cover: "/case-studies/dental-chatbot/cover.png"
+video: "https://drive.google.com/file/d/1GUyDx7-spin8bNfDMOteyLJJvel6dxPp/view?usp=sharing"
+tools: ["n8n", "Groq", "Google Calendar", "Google Sheets"]
+metrics:
+  - label: "staff steps from \"hi\" to a booked slot"
+    value: "0"
+  - label: "routes: book, nurture or emergency"
+    value: "3"
+  - label: "slot recheck right before every booking"
+    value: "Live"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a dental practice.
+
+The practice's website chat brought in a steady stream of enquiries, but a
+person had to qualify and book every single one. Replies were slow, interested
+patients went cold, and the calendar kept gaps that could have been filled.
+
+## What I built
+
+An AI chat assistant in n8n that talks to visitors, works out what they need,
+and acts on it.
+
+![A website chat: the assistant welcomes the visitor, who asks about teeth whitening, and the assistant asks if they are a new or existing patient](/case-studies/dental-chatbot/chat.png)
+
+*The chat in action. The assistant answers naturally, then asks the next
+qualifying question.*
+
+1. **It qualifies in conversation, not with a form.** The assistant asks
+   whether the visitor is a new or existing patient, which service they want,
+   and how urgent it is.
+2. **It decides the next step.** Every visitor goes down one of three routes:
+   book an appointment, join a nurture list for follow-up, or, for urgent
+   symptoms, get an emergency safety message straight away.
+3. **It books real slots.** For bookings, it checks the live Google Calendar,
+   offers open times, and creates the appointment once the visitor picks one.
+4. **It keeps a record.** Nurture leads, emergencies and errors are logged to
+   a Google Sheet so the team can follow up.
+
+![The n8n workflow behind the chat assistant: the AI step, a router, and branches for booking, nurture, emergency and fallback replies](/case-studies/dental-chatbot/workflow.png)
+
+*The workflow. One AI step reads the conversation, a router picks the route,
+and each branch handles booking, nurture or an emergency. Click the image to
+see it full size.*
+
+## How it works, explained simply
+
+Think of it as a front desk receptionist who never sleeps, never forgets a
+detail, and always checks the diary before promising a time.
+
+- **Safety comes first.** Emergency symptoms are checked before anything else,
+  so an urgent case never gets stuck in a booking conversation.
+- **The AI never invents a time.** The assistant only hands off the request.
+  The real open slots always come from the calendar, so the one fact that
+  matters most never comes from the AI.
+- **A slot is rechecked the moment it is picked.** Two visitors, or a staff
+  member, could grab the same time mid-conversation. Rechecking the calendar
+  right before booking caught exactly that during testing, and it is closed.
+- **No double bookings from one chat.** Once a visit is confirmed, the same
+  conversation cannot accidentally book a second one.
+- **Bad AI output does not crash it.** If the AI replies in a broken format,
+  it is caught and flagged instead of failing silently.
+
+## The outcome
+
+One chat handles emergency triage, live booking and nurture follow-up, with
+no staff involved from the first "hi" to a booked appointment.
+
+![A Google Calendar event created by the chat: New Patient Consultation, booked via website chat, with the patient's details and service interest](/case-studies/dental-chatbot/calendar.png)
+
+*A booking made by the assistant, straight into the practice calendar with the
+patient's details. The phone number is blurred.*
+
+![The nurture list in Google Sheets, logging each chat with its route: nurture, emergency or error](/case-studies/dental-chatbot/nurture-sheet.png)
+
+*The nurture list from test runs. Every conversation is logged with the route
+it took, including simulated errors. Phone numbers and emails are blurred.*
+
+One known gap, stated plainly: visitors who go quiet halfway through a chat
+are not yet added to the nurture list automatically. That is the next thing I
+would add for a practice running this live.
