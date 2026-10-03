@@ -1,0 +1,83 @@
+---
+title: "An inbox full of orders, finally put to work"
+client: "Quality-Buy"
+lane: "automation"
+summary: "AI pulled 1,145 past orders out of Gmail into one customer database, so every product launch now starts with buyers we already have."
+role: "Designed and built"
+year: "2026"
+date: "2026-06-22"
+order: 1
+featured: true
+cover: "/case-studies/order-extraction/cover.png"
+tools: ["n8n", "Groq (Llama 3.1)", "Gmail", "Google Sheets", "Airtable"]
+metrics:
+  - label: "past orders, now one customer database"
+    value: "1,145"
+  - label: "reusable workflows"
+    value: "2"
+  - label: "orders silently dropped"
+    value: "0"
+---
+
+## The problem
+
+Quality-Buy is the e-commerce business I run with a partner. We sell through
+Facebook ads that send buyers to WordPress landing pages, and every order
+arrives as an email in a Gmail inbox. There was no database behind it. Orders
+were read one at a time, whenever someone opened the inbox.
+
+Over time, more than a thousand past orders piled up in that inbox with no way
+to sort, search or reuse them. Each product had its own order form, so the
+emails all looked slightly different, and the products themselves varied:
+sofa covers, bedcovers, home safes, wall art and more. We had the buyers, but
+no customer list to show for it.
+
+## What I built
+
+Two workflows in n8n that work together.
+
+**1. An order reader you can reuse.** It takes one raw order email and returns
+clean, structured data: customer details, products, prices and quantities. An
+AI model (Llama 3.1, running on Groq) does the reading, so a new product or a
+new form layout does not break it. Every order is checked before it is saved.
+
+**2. A one-time backfill.** It pulled every past order email from Gmail, ran
+each one through the order reader, and wrote the clean rows into a Google
+Sheet. Orders that failed the checks, along with duplicates, went to a
+separate review tab instead.
+
+The order reader is its own workflow on purpose. The backfill uses it today,
+and the live order flow uses the same one, so there is only ever one version
+of the logic to maintain.
+
+## How it works, explained simply
+
+Think of it as a careful assistant reading your inbox for you.
+
+- **It reads like a person, not a template.** A fixed text pattern breaks the
+  moment a form changes. The AI reads each email for meaning, so it can find
+  the customer, product and price wherever they sit in the message.
+- **It checks before it saves.** An order is only kept if it has a usable
+  customer phone number. Anything that fails goes to the review tab with the
+  reason attached. A wrong order saved quietly is worse than one that fails
+  loudly.
+- **It trusts a price table over a guess.** For products sold in bundles, the
+  real quantity is looked up from the price list. The AI's reading is only the
+  fallback.
+- **It is safe to run again.** Every row is keyed to the email's own Gmail ID,
+  so running the backfill twice can never create duplicates. If a run stops
+  halfway, the next one picks up where it left off.
+- **One bad email never stops the run.** Orders are processed in paced batches
+  to stay within the AI and Google Sheets limits, and a broken email is skipped
+  and flagged rather than halting a run of more than a thousand.
+
+## The outcome
+
+1,145 past orders went from buried emails to one clean customer database we
+can search and sort. Invalid and duplicate orders sit in their own review tab,
+so nothing bad slipped into the list and nothing was lost without a trace.
+
+That list is now a marketing asset. Before any new product launch, we can
+message the buyers we already have and make sales before spending a naira on
+ads. This build is the intake layer of a larger order-to-delivery system that
+is still in progress.
