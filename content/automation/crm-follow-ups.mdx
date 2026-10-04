@@ -1,0 +1,93 @@
+---
+title: "Every warm lead followed up, and never chased after they reply"
+client: "Industry build · Real estate"
+lane: "automation"
+summary: "AI writes a personal first email for every new lead, follows up twice in the same thread, and stops the moment the lead replies, handing them to an agent."
+role: "Designed and built"
+year: "2026"
+date: "2026-07-21"
+order: 5
+featured: false
+cover: "/case-studies/crm-follow-ups/cover.png"
+video: "https://drive.google.com/file/d/1-nujgIwyoRgHGOGRaS3FK_VzvBIVCGml/view?usp=sharing"
+tools: ["n8n", "HubSpot", "OpenAI", "Gmail", "Google Sheets"]
+metrics:
+  - label: "follow-ups sent after a lead replies"
+    value: "0"
+  - label: "AI follow-ups, in the same email thread"
+    value: "2"
+  - label: "connected lanes: new lead, reply watch, follow-up"
+    value: "3"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a real estate brokerage.
+
+The agents forgot to follow up with warm leads, and when they did, the
+messages felt copy-pasted. Leads went cold on both counts: there was no
+reliable rhythm, and no real personal touch when contact did happen.
+
+## What I built
+
+Three connected workflows in n8n, sharing one Google Sheet as the record of
+where every lead stands.
+
+![The three n8n workflows: new lead, reply watcher and scheduled follow-up](/case-studies/crm-follow-ups/workflow.png)
+
+*The three lanes. Top: a new lead gets its first message. Middle: replies are
+watched. Bottom: follow-ups go out on schedule. Click the image to see it full
+size.*
+
+1. **A new lead gets a personal first email.** When a contact enters HubSpot as
+   a new lead, AI writes a first message that mentions their preferred area,
+   budget and what they last asked about. It goes out through Gmail.
+2. **Silence gets two follow-ups.** If the lead does not reply, a follow-up
+   goes out on day 3 and another on day 7. Each one continues the same email
+   thread instead of arriving as a new, disconnected email.
+3. **A reply stops everything.** The moment a genuine reply lands, the
+   sequence ends, the lead moves to "Responded" in HubSpot, and the assigned
+   agent gets a follow-up task.
+
+## How it works, explained simply
+
+Think of it as a sales assistant with a perfect memory, who writes like a
+person and knows to step back the moment the client answers.
+
+- **It checks again right before every send.** A follow-up is not sent just
+  because it was scheduled. The lead's status is rechecked seconds before
+  sending, so a reply that lands just before a follow-up still stops it. That
+  exact situation came up during testing, and the follow-up was correctly
+  held back.
+- **It matches replies to the right conversation.** Replies are matched by the
+  email thread, not by email address, because aliases and forwarded replies
+  can make addresses unreliable.
+- **It never mistakes its own emails for replies.** During testing, the
+  system's own sent emails were briefly being read as replies. Filtering by
+  Gmail's sent label fixed it for good.
+- **Late replies still count.** If a lead replies after the sequence has
+  already ended, the reply is still caught and handed to an agent.
+- **Missing details are handled gracefully.** If a lead's area or budget is
+  unknown, the AI simply leaves it out instead of writing an awkward blank.
+
+## The outcome
+
+The whole lead journey runs on its own: a personal first message, timed
+follow-ups, reply detection and a clean handoff to a human, with no one
+watching an inbox.
+
+![HubSpot contacts with both test leads moved to the Responded stage](/case-studies/crm-follow-ups/hubspot-contacts.png)
+
+*Both test leads moved to "Responded" in HubSpot the moment they replied.
+Emails and phone numbers are blurred.*
+
+![HubSpot tasks: a follow-up task created for each lead who replied](/case-studies/crm-follow-ups/hubspot-tasks.png)
+
+*A follow-up task was created for the agent each time, so no reply waits
+unseen.*
+
+![The sequence sheet tracking each lead's thread, status, follow-up count and next follow-up date](/case-studies/crm-follow-ups/sequence-sheet.png)
+
+*The shared sheet behind all three lanes: each lead's email thread, status,
+follow-up count and next date. Emails are blurred.*

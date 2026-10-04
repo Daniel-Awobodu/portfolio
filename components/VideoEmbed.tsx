@@ -38,30 +38,44 @@ export default function VideoEmbed({
 
   return (
     <div className="my-10">
-      <button
-        type="button"
-        onClick={toggle}
-        aria-expanded={open}
-        aria-controls={panelId}
-        className="group inline-flex items-center gap-3 rounded-sm border border-accent-strong bg-card px-5 py-3 text-[0.9375rem] font-semibold text-accent-strong transition-colors duration-150 hover:bg-accent-strong hover:text-on-accent"
-      >
-        <span
-          aria-hidden="true"
-          className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-strong text-on-accent transition-colors duration-150 group-hover:bg-on-accent group-hover:text-accent-strong"
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-expanded={open}
+          aria-controls={panelId}
+          className="group inline-flex items-center gap-3 rounded-sm border border-accent-strong bg-card px-5 py-3 text-[0.9375rem] font-semibold text-accent-strong transition-colors duration-150 hover:bg-accent-strong hover:text-on-accent"
         >
-          {open ? (
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
-              <rect x="6" y="5" width="4" height="14" rx="1" />
-              <rect x="14" y="5" width="4" height="14" rx="1" />
-            </svg>
-          ) : (
-            <svg viewBox="0 0 24 24" className="ml-0.5 h-3.5 w-3.5" fill="currentColor">
-              <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
-            </svg>
-          )}
-        </span>
-        {open ? "Hide the video" : "Watch the video presentation"}
-      </button>
+          <span
+            aria-hidden="true"
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-strong text-on-accent transition-colors duration-150 group-hover:bg-on-accent group-hover:text-accent-strong"
+          >
+            {open ? (
+              <svg
+                viewBox="0 0 24 24"
+                className="h-3.5 w-3.5"
+                fill="currentColor"
+              >
+                <rect x="6" y="5" width="4" height="14" rx="1" />
+                <rect x="14" y="5" width="4" height="14" rx="1" />
+              </svg>
+            ) : (
+              <svg
+                viewBox="0 0 24 24"
+                className="ml-0.5 h-3.5 w-3.5"
+                fill="currentColor"
+              >
+                <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
+              </svg>
+            )}
+          </span>
+          {open ? "Hide the video" : "Watch the video presentation"}
+        </button>
+        <p className="text-sm text-muted">
+          Tip: watch at{" "}
+          <span className="font-semibold text-ink">1.5x to 2x</span> speed
+        </p>
+      </div>
 
       {/* Animating grid-template-rows from 0fr to 1fr slides the panel open
           at its natural height, so the text below is pushed down smoothly. */}
@@ -86,7 +100,8 @@ export default function VideoEmbed({
             </div>
             <figcaption className="mt-3 text-sm text-muted">
               A walkthrough of the build, showing how it runs from start to
-              finish.
+              finish. For a quicker watch, set the speed to 1.5x or 2x with the
+              settings icon in the player.
             </figcaption>
           </figure>
         </div>
