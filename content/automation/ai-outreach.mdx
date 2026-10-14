@@ -36,11 +36,10 @@ facts, sent to the wrong person.
 Two connected workflows in n8n. One researches and drafts. The other lets a
 person approve, reject or improve each draft from Slack.
 
-![The two n8n workflows: the daily research and drafting lane on top, and the Slack approval lane below](/case-studies/ai-outreach/workflow.png)
+![The research and drafting workflow in n8n: fetch new companies, enrich them, find and score contacts, search the news, find a hook, draft the email and post it to Slack](/case-studies/ai-outreach/workflow-research.png)
 
-*The two workflows. Top: research and drafting, run every day. Bottom: what
-happens when someone approves or rejects a draft in Slack. Click the image to
-see it full size.*
+*The research and drafting workflow, run every day. The branch below the main
+line flags companies for manual review. Click the image to see it full size.*
 
 1. **It picks up new prospects.** Every day it collects up to 20 companies
    marked "New" in HubSpot.
@@ -54,9 +53,10 @@ see it full size.*
    funding round, a new leader or a big expansion.
 5. **It drafts the email** in 120 words or fewer, opening with that event, and
    saves it in HubSpot.
-6. **A person reviews it in Slack.** Approve, and the email goes out through
-   Gmail and the contact is marked Sent. Reject, and the reviewer is asked
-   why.
+6. **A person reviews it in Slack.** Each draft has a Respond button that
+   opens a choice to approve or reject. Approve, and the email goes out
+   through Gmail and the contact is marked Sent. Reject, and a box asks the
+   reviewer why.
 
 ![A Slack message with a new outreach draft for review: the company, the contact's role, the subject line and the full email](/case-studies/ai-outreach/slack-review.png)
 
@@ -64,13 +64,19 @@ see it full size.*
 the subject line and the full email. The contact's name and email are
 blurred.*
 
+![The approval workflow in n8n: it reads the Slack response, then either sends the approved email, asks for a rejection reason, or rewrites the draft until the revision limit is reached](/case-studies/ai-outreach/workflow-approval.png)
+
+*The approval workflow. Top: an approved draft is sent. Middle: a rejection
+opens the reason box. Bottom: the reason comes back, and the draft is
+rewritten or handed to a person. Click the image to see it full size.*
+
 ## How it works, explained simply
 
 Think of it as a researcher and a copywriter who do the legwork, then hand
 every email to you before anything is sent.
 
-- **No email goes out without a yes.** The only path to Gmail runs through
-  the Approve button.
+- **No email goes out without a yes.** The only path to Gmail runs through a
+  person choosing Approve in Slack.
 - **No reason is better than a fake one.** The AI is told to ignore stock
   news, lawsuits, awards and generic press releases, and to reject any reason
   that needs a guess to connect it to the email. When there is nothing real,
