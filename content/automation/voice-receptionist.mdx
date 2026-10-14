@@ -1,0 +1,109 @@
+---
+title: "Every call answered, and booked into the right branch's calendar"
+client: "Industry build · Dental"
+lane: "automation"
+summary: "A dental group with 10 branches was losing patients to unanswered calls. A voice agent now picks up, answers questions, and books open slots straight into the right branch's calendar, then texts a confirmation."
+role: "Designed and built"
+year: "2026"
+date: "2026-08-15"
+order: 8
+featured: false
+cover: "/case-studies/voice-receptionist/cover.png"
+video: "https://drive.google.com/file/d/1JrB5IrMGqkoHktpbmzPc4R7DBuJbVyA_/view?usp=drive_link"
+tools: ["Vapi", "n8n", "OpenAI", "Deepgram", "ElevenLabs", "Google Calendar", "Google Sheets", "Termii (SMS)"]
+metrics:
+  - label: "estimated running cost per minute of call"
+    value: "~$0.12"
+  - label: "branches across Nigeria, served by one phone line"
+    value: "10"
+  - label: "answering, including busy hours and after closing"
+    value: "24/7"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a dental group with branches across Nigeria.
+
+The clinics missed calls during busy hours. Patients who reach no one rarely
+leave a voicemail, and most never call back. Every missed ring was a booking
+lost to another clinic.
+
+## What I built
+
+A phone receptionist built with Vapi, backed by an n8n workflow. It is the
+phone version of the
+[website chat assistant](/automation/dental-chatbot) I built for the same
+practice.
+
+![The Vapi assistant for STACKEDHQ Dentals: the speech, language and voice models, with an estimated cost of about 12 cents a minute](/case-studies/voice-receptionist/vapi-assistant.png)
+
+*The assistant in Vapi. It hears the caller with a medical speech model,
+thinks with GPT-4.1 and speaks with a natural ElevenLabs voice.*
+
+1. **It answers the call** and finds out whether the caller wants to book,
+   has a question, or has an emergency.
+2. **It answers questions** about hours, services, prices, HMOs and locations
+   from the clinic's own information.
+3. **It checks real availability.** It asks which branch, what the visit is
+   for, and when suits them, then reads out the first three open times from
+   that branch's calendar.
+4. **It books the slot** once the caller picks a time, after reading their
+   name and phone number back to confirm them.
+5. **It texts a confirmation** with the branch, date and time.
+6. **Emergencies go straight to a person.** The call is transferred to the
+   clinic's phone instead of being handled by the agent.
+
+![The n8n workflow behind the agent: one webhook, a switch that routes to checking availability or booking, a recheck before booking, then the confirmation text](/case-studies/voice-receptionist/workflow.png)
+
+*The workflow behind the agent. Top: checking availability. Below: the recheck
+before booking, which either books the slot and sends the text, or offers new
+times if the slot was just taken. Click the image to see it full size.*
+
+## How it works, explained simply
+
+Think of it as a receptionist who never misses a ring, knows every branch's
+diary, and double checks the diary before promising a time.
+
+- **Every branch has its own calendar.** A Google Sheet links each branch to
+  its calendar, so an Abuja booking can never land in the Lagos diary.
+- **It works like the clinic does.** Appointments are one hour, mornings run
+  from 8am to 1pm, afternoons from 2pm to 6pm, and the 1pm lunch break is
+  never offered. If the day the caller wants is full, it looks up to six days
+  ahead.
+- **A slot is rechecked right before booking.** A staff member could fill the
+  same time while the caller is still talking. I tested exactly that: mid-call,
+  I moved another appointment into the 5pm slot the caller had chosen. The
+  agent caught it, said 5pm was no longer free, and offered three new times.
+  The caller picked 4pm, and that is what was booked.
+- **It reads details back.** During testing, the agent got the caller's phone
+  number wrong. Because it read the number back, the caller corrected it, and
+  the booking used the right number.
+- **It sounds like a front desk.** Soft office sounds play in the background,
+  and the confirmation text is sent a short while after the call, so it reads
+  like a message from the front desk rather than an instant robot reply.
+
+![Part of the agent's instructions: how to greet callers, answer questions without guaranteeing HMO cover or giving a diagnosis, and how to handle branches](/case-studies/voice-receptionist/vapi-prompt.png)
+
+*Part of the agent's instructions. It quotes prices only as ranges, never
+promises HMO cover, and never gives a diagnosis.*
+
+## The outcome
+
+Every call gets answered. Questions are handled on the spot, and bookings go
+straight into the right branch's calendar with the patient's details, even
+when the calendar changes mid-call.
+
+![A Google Calendar week with separate calendars for each branch, and an appointment created by the agent in the Abuja calendar with the patient's name, visit type and branch](/case-studies/voice-receptionist/calendar.png)
+
+*A booking created by the agent in the Abuja branch calendar. Each branch has
+its own calendar. The phone number is blurred.*
+
+![Two text messages confirming appointments at STACKEDHQ Dentals, Abuja, with the date and time](/case-studies/voice-receptionist/sms.png)
+
+*The confirmation texts from two test bookings, sent through Termii.*
+
+One known gap, stated plainly: calls that end without a booking are not
+logged anywhere yet, so the clinic sees every appointment but not every
+enquiry. Logging each call with a short summary is the next thing I would add
+for a clinic running this live.
