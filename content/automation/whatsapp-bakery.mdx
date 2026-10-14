@@ -1,0 +1,121 @@
+---
+title: "Messy WhatsApp orders, turned into clean confirmed ones"
+client: "Industry build · Bakery"
+lane: "automation"
+summary: "Customers order the way they talk, by text or voice note. AI reads each message into a clean order, code checks it against the real menu and opening days, and the bot asks when something is unclear instead of guessing."
+role: "Designed and built"
+year: "2026"
+date: "2026-10-08"
+order: 11
+featured: false
+cover: "/case-studies/whatsapp-bakery/cover.png"
+video: "https://drive.google.com/file/d/1BOg9X_x10eb41hTAThAOS6CQVFJJtemB/view?usp=sharing"
+tools: ["n8n", "WhatsApp Cloud API", "OpenAI", "Airtable", "Gmail"]
+metrics:
+  - label: "separate orders read from one message, one per pickup day"
+    value: "3"
+  - label: "AI tokens spent on greetings, menus, YES and cancels"
+    value: "0"
+  - label: "ways to order: a typed message or a voice note"
+    value: "2"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a bakery in England.
+
+Customers ordered on WhatsApp in messy free text, like "can I get 2 loaves and
+a dozen buns for Friday". Staff had to work out the items, quantities and
+pickup day by hand before writing each order down, and every unclear message
+meant a round of back and forth.
+
+## What I built
+
+A WhatsApp ordering assistant in n8n, with Airtable as the bakery's order
+book.
+
+![A WhatsApp chat with the bakery: one message asking for sourdough on Tuesday, sausage rolls on Thursday and chelsea buns on Saturday becomes three orders with prices, then all three are confirmed with order numbers](/case-studies/whatsapp-bakery/chat-multi-order.png)
+
+*One message, three pickup days. The bot splits it into three orders with
+prices, waits for YES, then confirms each with its own order number.*
+
+1. **It reads text and voice notes.** Voice notes are transcribed first.
+   Stickers and images get a polite "text or voice only" reply.
+2. **Simple messages never reach the AI.** Plain rules answer greetings,
+   opening hours, the address, the menu, YES, NO, cancel and "my orders",
+   instantly and at no AI cost.
+3. **AI reads the order.** It turns the message into items, quantities and
+   pickup dates, using the real menu (including the names people actually
+   use, like "bap" or "barm") and a calendar of the next three weeks. One
+   message can hold up to three orders for different days.
+4. **Code checks every detail.** Each item must be on the menu and in the
+   customer's own words. Prices come from the menu, never from the AI. The
+   weekday must match the date, and the bakery must be open with enough
+   notice.
+5. **It asks when unsure.** Which bread? How many? Which day? It asks up to
+   three questions at once, and remembers the half-finished order while the
+   customer replies.
+6. **Nothing is final without a YES.** The customer sees a summary with
+   prices, and the order is only confirmed when they reply YES.
+
+## How it works, explained simply
+
+Think of it as a patient counter assistant who reads every message twice,
+never guesses, and writes everything in the order book.
+
+- **It never guesses a quantity.** "A dozen" is 12 and "a couple" is 2, but
+  no number means it asks.
+- **It knows the bakery's week.** Ask for a Sunday and it offers the next open
+  day. A Victoria Sponge needs two days' notice, and the bot knows that too.
+- **It is honest about the menu.** Ask for something the bakery doesn't sell,
+  and it says so instead of swapping in something else.
+- **Changes are safe.** A change to a confirmed order stays a proposal until
+  the customer replies YES, and the original order stands until then.
+- **Late changes go to a person.** After 4pm the day before pickup, the order
+  may already be in the oven, so cancels and changes are emailed to staff
+  instead of being done by the bot.
+- **Nothing is ever deleted.** Cancelled orders are marked Cancelled, and
+  orders nobody confirms within 48 hours are marked Expired.
+- **It can't be tricked into doing things twice.** A repeated message is
+  ignored, and a second YES can't confirm an order twice.
+
+![A WhatsApp chat: the bot leaves off an item the bakery doesn't sell, then suggests Monday when the customer asks for a Sunday, and updates both orders](/case-studies/whatsapp-bakery/chat-voice-sunday.png)
+
+*Orders by voice note. The bot leaves off an item the bakery doesn't sell,
+and when the customer asks for Sunday, it offers Monday instead.*
+
+![A WhatsApp chat showing a confirmed change, a cancelled Friday order, a same-day cancel passed to staff, a voice note it couldn't hear, and a polite reply that sardine bread isn't sold](/case-studies/whatsapp-bakery/chat-changes.png)
+
+*The tricky cases: a confirmed change, a cancellation, a same-day cancel
+passed to staff because the order is already being prepared, an unclear voice
+note, and an item that isn't on the menu.*
+
+## The outcome
+
+Customers order the way they naturally write and speak, and the bakery gets
+clean, priced, confirmed orders in Airtable without anyone retyping a
+message.
+
+![The Airtable message log: each message with its type, route (simple rules or AI), outcome, order ID and the AI tokens it used](/case-studies/whatsapp-bakery/message-log.png)
+
+*Every message is logged with the route it took and what it cost. Messages
+handled by simple rules used no AI at all. The WhatsApp number is blurred.*
+
+Every evening at 6pm, staff get tomorrow's bake list by email, with item
+totals and a list of pickups. In the same run, orders nobody confirmed are marked
+Expired. If any step ever fails, a separate workflow emails staff the name of
+the failed step and its likely cause.
+
+![The 6pm workflows: one marks unconfirmed orders as expired and resets stale conversations, the other builds and emails tomorrow's bake list](/case-studies/whatsapp-bakery/evening-jobs.png)
+
+*The evening jobs. Top: tidying up unconfirmed orders. Bottom: tomorrow's bake
+list, sent by email.*
+
+Tested live on WhatsApp, using Meta's test number. Testing caught real
+problems, and each was fixed. For example, a bare "cancel" once cancelled a
+customer's only order. Now the bot lists their orders and asks which one.
+
+One known gap, stated plainly: if OpenAI is down, staff get an email, but the
+customer gets no reply yet. A simple fallback message is the next thing I
+would add for a bakery running this live.
