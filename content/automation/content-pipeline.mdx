@@ -1,0 +1,117 @@
+---
+title: "From a keyword in a sheet to a published, shared article"
+client: "Industry build · Pet care"
+lane: "automation"
+summary: "A pet care blog needed steady SEO content but couldn't write, illustrate, publish and share every post by hand. Now one keyword becomes a reviewed WordPress article, shared on X and LinkedIn, and Search Console refills the list each week."
+role: "Designed and built"
+year: "2026"
+date: "2026-09-05"
+order: 10
+featured: false
+cover: "/case-studies/content-pipeline/cover.png"
+video: "https://drive.google.com/file/d/1bESvDd3K-ODUPZ5tttcKXExavzFAZGb8/view?usp=drive_link"
+tools: ["n8n", "OpenAI", "WordPress", "Google Sheets", "Slack", "Buffer", "Google Search Console"]
+metrics:
+  - label: "words per article, checked before it becomes a draft"
+    value: "800+"
+  - label: "duplicate topics caught in testing, before any writing"
+    value: "2"
+  - label: "Search Console scan that refills the keyword list"
+    value: "Weekly"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a pet care blog.
+
+The blog wanted consistent SEO content, but writing, illustrating, publishing
+and sharing every article by hand was too slow. They also wanted help
+deciding what to write next, based on what people were already searching for.
+
+## What I built
+
+Two workflows in n8n, sharing one Google Sheet of keywords.
+
+![The two n8n workflows: the hourly writing and publishing workflow on top, and the weekly Search Console scan below](/case-studies/content-pipeline/workflow.png)
+
+*Top: the hourly workflow that writes, publishes and shares. Bottom: the
+weekly Search Console scan. Click the image to see it full size.*
+
+1. **It takes one keyword at a time.** Every hour, it picks the next new
+   keyword in the sheet and marks it Processing, so it is never picked twice.
+2. **It checks the topic is new.** If the blog already has a post on it, the
+   keyword is marked Duplicate with the reason, and nothing is written.
+3. **AI writes everything in one go:** the article, links to related posts on
+   the blog, an image prompt, an X post and a LinkedIn post.
+4. **The article is checked.** It needs at least 800 words, a title, summary
+   and web address of the right length, and social posts that fit each
+   platform. Anything that fails is marked Failed instead of going out.
+5. **AI creates the featured image.** It is converted to a light WebP file and
+   uploaded to WordPress with the article, saved as a draft.
+6. **A person approves it in Slack.** The message links to a preview of the
+   draft. Publish, and the article goes live and is shared to X and LinkedIn
+   through Buffer. Abort, and the sheet records it.
+
+![The WordPress editor showing the published article, with its AI-generated featured image, excerpt and a 913-word count](/case-studies/content-pipeline/wordpress-post.png)
+
+*A finished article in WordPress, with its featured image, summary and word
+count, published after approval.*
+
+Every Monday, a second workflow asks Google Search Console which searches the
+blog already appears for, but outside the top results. It drops keywords that
+are already covered, already queued or searched too rarely, then adds up
+to five of the best to the sheet. A Slack summary says what it kept and why it dropped
+the rest.
+
+## How it works, explained simply
+
+Think of it as a small content team: a researcher, a writer, an illustrator
+and a social media assistant, with an editor signing off every post.
+
+- **It never writes the same article twice.** Before writing, it compares
+  each keyword with every published post. In testing it caught two: one
+  keyword appeared word for word in an existing post's summary, and another
+  overlapped 83% with a post's title.
+- **Internal links always work.** The AI may only link to posts that really
+  exist on the blog. Any other link it writes is removed before the draft is
+  saved, so readers never land on a broken or invented page.
+- **Quality is checked, not hoped for.** An article that is too short, has
+  missing parts, or comes with a social post too long for the platform is
+  stopped and marked Failed.
+- **One article, written for each platform.** The X post is short and
+  direct. The LinkedIn post is longer and more conversational.
+- **It checks the draft before publishing.** If someone already published or
+  deleted the draft by hand, it stops instead of posting twice.
+- **New keywords are picked on evidence.** The weekly scan ranks keywords by
+  how many people see the blog in search without clicking, so the list fills
+  with real opportunities, not guesses.
+
+## The outcome
+
+A keyword typed into a sheet becomes a published article with its own image
+and internal links, shared on X and LinkedIn, with one approval in between.
+
+![A published article titled Signs your rabbit is sick, with its AI-generated photo of a rabbit](/case-studies/content-pipeline/published-article.png)
+
+*A live article written, illustrated and published by the workflow.*
+
+![The same articles shared on X and LinkedIn, each post written differently for its platform and linking back to the blog](/case-studies/content-pipeline/social-posts.png)
+
+*The articles shared on X (left) and LinkedIn (right), each written for its
+platform.*
+
+![The keyword sheet: each keyword's status, WordPress post, source, notes and links to the X and LinkedIn posts](/case-studies/content-pipeline/keyword-sheet.png)
+
+*The keyword sheet. Each row shows the status, the WordPress post, where the
+keyword came from (typed in, or GSC for Search Console), and links to the
+social posts. Two keywords were caught as duplicates.*
+
+Tested end to end on a live WordPress site, with real posts on X and
+LinkedIn. The site was too new to have much search data, so the weekly scan
+was tested with sample Search Console results.
+
+One known gap, stated plainly: an aborted draft is not rewritten. It is
+logged in the sheet, and someone has to decide what to do with the keyword.
+Asking for a reason and redrafting from that feedback is the next thing I
+would add for a client running this live.
