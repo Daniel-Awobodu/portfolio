@@ -1,0 +1,91 @@
+---
+title: "Appointment reminders that check the calendar before they text"
+client: "Industry build · Healthcare"
+lane: "automation"
+summary: "A clinic's old reminders texted patients about slots that had already moved. Now every reminder is rechecked against the live calendar seconds before it sends."
+role: "Designed and built"
+year: "2026"
+date: "2026-07-17"
+order: 6
+featured: false
+cover: "/case-studies/appointment-reminders/cover.png"
+video: "https://drive.google.com/file/d/1UfMCIxkPpeVlw4XUEgMyEgSClWsORKGF/view?usp=drive_link"
+tools: ["n8n", "Google Calendar", "Termii (SMS)", "n8n Data Table"]
+metrics:
+  - label: "stale reminders sent in testing"
+    value: "0"
+  - label: "test cases proven, including live reschedules"
+    value: "9"
+  - label: "SMS reminders per visit: 24 hours and 2 hours before"
+    value: "2"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a clinic.
+
+The clinic's old reminder automation was fragile. It texted patients about
+appointments that had already been moved or cancelled, and sometimes at the
+wrong time. Patients stopped trusting the messages.
+
+The root cause was simple: each reminder was scheduled once and never checked
+again. If staff moved an appointment after that, the old reminder still went
+out.
+
+## What I built
+
+A scheduled workflow in n8n that treats every reminder as unconfirmed until
+the moment it is about to send.
+
+![The reminder workflow in n8n: fetch upcoming appointments, filter out reminders already sent, wait, recheck the live calendar, then send the SMS or log the skip](/case-studies/appointment-reminders/workflow.png)
+
+*The full workflow. The recheck happens right before sending, and every
+outcome is logged, whether the reminder was sent or skipped. Click the image
+to see it full size.*
+
+1. **Every 15 minutes**, it fetches the appointments coming up in the next 25
+   hours from Google Calendar.
+2. **It works out which reminders are due:** one 24 hours before each visit
+   and one 2 hours before.
+3. **It skips anything already sent**, using a log of every reminder.
+4. **It waits briefly, then rechecks the live calendar** for that exact
+   appointment, so last-minute staff changes land first.
+5. **If the appointment moved or was cancelled**, the old reminder is skipped
+   and the reason is logged.
+6. **If it is still valid**, the phone number is put into the right format
+   and the SMS goes out through Termii. The result is checked and logged.
+
+## How it works, explained simply
+
+Think of it as a receptionist who looks at the diary again right before
+picking up the phone, instead of trusting a note written yesterday.
+
+- **A reminder is never trusted until it sends.** The appointment is fetched
+  fresh from the calendar seconds before each text goes out, not just when
+  the reminder was first planned.
+- **A moved appointment counts as a new one.** The sent log records each
+  appointment together with its exact start time. Change the time, and the
+  system treats it as a fresh booking, so it can never reuse an old,
+  wrong reminder.
+- **Nothing is skipped silently.** Every cancelled or moved appointment is
+  logged with the reason it was skipped.
+- **It checks the send result.** The workflow reads Termii's response for
+  every text instead of assuming it went through.
+
+## The outcome
+
+Reminders now match the calendar at the moment they are sent, not the moment
+they were planned. Nine test cases passed with zero stale reminders. In one
+live test, a queued appointment was dragged to a new time mid-flow, and the
+system skipped the old reminder and logged exactly why.
+
+![A Google Calendar week of clinic appointments, with one appointment open showing the patient, service and time](/case-studies/appointment-reminders/calendar.png)
+
+*The clinic calendar the workflow reads from. Each appointment carries the
+patient's details and service. The phone number is blurred.*
+
+One known gap, stated plainly: the workflow confirms that Termii accepted
+each text, but not that the phone network delivered it. During testing, a
+network outage showed that difference is real. Tracking final delivery
+status is the next thing I would add for a clinic running this live.
