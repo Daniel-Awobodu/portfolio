@@ -1,0 +1,119 @@
+---
+title: "Cold emails that open with a real reason to write"
+client: "Industry build · B2B sales"
+lane: "automation"
+summary: "Every day it researches new prospects, finds the right decision-maker, and writes a personal email around real, recent company news. If there is no genuine reason to write, it says so instead of inventing one."
+role: "Designed and built"
+year: "2026"
+date: "2026-08-31"
+order: 9
+featured: false
+cover: "/case-studies/ai-outreach/cover.png"
+video: "https://drive.google.com/file/d/1z4qXjR3ziB1ydrPlGIiNH52Wnsfl6fZU/view?usp=drive_link"
+tools: ["n8n", "HubSpot", "Apollo", "Hunter.io", "Serper (Google News)", "OpenAI", "Slack", "Gmail"]
+metrics:
+  - label: "emails sent without a person approving them"
+    value: "0"
+  - label: "rewrites from feedback before a person takes over"
+    value: "2"
+  - label: "test companies matched to a decision-maker, the rest flagged"
+    value: "4 of 6"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a B2B agency that sells automation services.
+
+Good cold outreach takes time. For every company, someone has to research it,
+find the right person to contact, look for a timely reason to get in touch,
+and write an email that doesn't read like a template. Done by hand, that is
+slow. Done by a careless AI, it produces confident emails built on made-up
+facts, sent to the wrong person.
+
+## What I built
+
+Two connected workflows in n8n. One researches and drafts. The other lets a
+person approve, reject or improve each draft from Slack.
+
+![The two n8n workflows: the daily research and drafting lane on top, and the Slack approval lane below](/case-studies/ai-outreach/workflow.png)
+
+*The two workflows. Top: research and drafting, run every day. Bottom: what
+happens when someone approves or rejects a draft in Slack. Click the image to
+see it full size.*
+
+1. **It picks up new prospects.** Every day it collects up to 20 companies
+   marked "New" in HubSpot.
+2. **It researches each company.** Apollo fills in the industry, size, revenue
+   and a short description, and HubSpot is updated.
+3. **It finds the right person.** Hunter.io lists the people at the company,
+   and the workflow scores them, favouring operations, IT and leadership
+   roles. Assistants, coordinators and interns are never picked.
+4. **It looks for a real reason to write.** It searches the last month of news
+   about the company, and AI picks out one specific, relevant event, such as a
+   funding round, a new leader or a big expansion.
+5. **It drafts the email** in 120 words or fewer, opening with that event, and
+   saves it in HubSpot.
+6. **A person reviews it in Slack.** Approve, and the email goes out through
+   Gmail and the contact is marked Sent. Reject, and the reviewer is asked
+   why.
+
+![A Slack message with a new outreach draft for review: the company, the contact's role, the subject line and the full email](/case-studies/ai-outreach/slack-review.png)
+
+*A draft waiting for review in Slack, with the company, the contact's role,
+the subject line and the full email. The contact's name and email are
+blurred.*
+
+## How it works, explained simply
+
+Think of it as a researcher and a copywriter who do the legwork, then hand
+every email to you before anything is sent.
+
+- **No email goes out without a yes.** The only path to Gmail runs through
+  the Approve button.
+- **No reason is better than a fake one.** The AI is told to ignore stock
+  news, lawsuits, awards and generic press releases, and to reject any reason
+  that needs a guess to connect it to the email. When there is nothing real,
+  it says so, and the email opens with a plain observation about the company
+  instead of pretending something just happened.
+- **It never invents proof.** The drafting rules ban made-up case studies,
+  statistics and client results, along with lines like "I hope this email
+  finds you well".
+- **Feedback fixes the actual problem.** A rejection comes with a reason,
+  such as "change the subject". The rewrite is told to fix only what the
+  reviewer flagged and leave the rest alone.
+- **It knows when to stop.** After two rewrites, a draft that is still
+  rejected goes to a person, marked Needs Manual Review, instead of looping
+  forever.
+- **Gaps are flagged, not guessed.** A company with no website, one Apollo
+  cannot find, or one with no suitable contact is marked for manual review.
+
+## The outcome
+
+Six test companies went through the system. Four were researched and matched
+to a decision-maker. The other two were flagged for a person: one had no
+website address on record, and Apollo could not find the other.
+
+![HubSpot companies after a test run: four enriched with industry, revenue, size, description and a personalisation hook, and two marked Needs Manual Review](/case-studies/ai-outreach/hubspot-companies.png)
+
+*The companies in HubSpot after the test run, each with its status and the
+personalisation hook the AI found. Contact names are blurred.*
+
+Three emails were approved and sent. One of them had its subject line
+rejected first and was rewritten before approval. The fourth draft reached
+the rewrite limit and went to a person.
+
+![HubSpot contacts showing each decision-maker's role, outreach status, rejection reason, draft subject and revision count](/case-studies/ai-outreach/hubspot-contacts.png)
+
+*Each contact's job title, outreach status, rejection reason and revision
+count. Names, emails and draft previews are blurred.*
+
+![A sent cold email to HappyRobot that opens by congratulating them on their $150M Series C](/case-studies/ai-outreach/sent-email.png)
+
+*An approved email, opening with HappyRobot's Series C funding, found in
+recent news. The recipient's name is blurred.*
+
+One known gap, stated plainly: once an email is sent, this system's job ends.
+Replies and follow-ups are not handled yet. Connecting it to the follow-up
+sequence from my [real estate build](/automation/crm-follow-ups) is the next
+thing I would add for a client running this live.
