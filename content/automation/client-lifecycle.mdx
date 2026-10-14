@@ -1,0 +1,107 @@
+---
+title: "One system for every lead, every payment and every Monday report"
+client: "Industry build · SaaS"
+lane: "automation"
+summary: "New leads, Stripe payments and the weekly report all waited on someone having time. Three connected workflows now handle all three on their own, and log every step."
+role: "Designed and built"
+year: "2026"
+date: "2026-05-12"
+order: 7
+featured: false
+cover: "/case-studies/client-lifecycle/cover.png"
+tools: ["n8n", "Stripe", "HubSpot", "Termii (SMS)", "Slack", "Google Sheets", "Gmail"]
+metrics:
+  - label: "from a form fill to a CRM record, SMS and team alert"
+    value: "<3 sec"
+  - label: "connected workflows: leads, payments, weekly report"
+    value: "3"
+  - label: "tools working together as one system"
+    value: "7"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a SaaS company.
+
+The operations team ran the whole client journey by hand. Each new lead took
+up to 20 minutes to log, add to the CRM and follow up, so hot leads waited
+hours for a reply. Every Stripe payment had to be copied into the CRM and a
+spreadsheet. And every Monday, the ops manager spent 45 minutes pulling
+numbers from three tools to build a report.
+
+Three manual jobs, and all of them depended on someone being free to do them.
+
+## What I built
+
+Three connected workflows in n8n that cover the journey from first contact,
+to payment, to the weekly report.
+
+![The three n8n workflows on one canvas: Stripe payment sync, the weekly report, and lead intake](/case-studies/client-lifecycle/workflow.png)
+
+*All three workflows. Top: payment sync. Middle: weekly report. Bottom: lead
+intake. Click the image to see it full size.*
+
+1. **Lead intake.** The moment someone fills in the website form, the lead is
+   checked, added to HubSpot, sent a welcome SMS through Termii, announced to
+   the sales team in Slack, and logged in Google Sheets.
+2. **Payment sync.** Every completed Stripe payment finds the customer in
+   HubSpot, updates their plan and last payment date, and is logged to a
+   payment sheet.
+3. **Weekly report.** Every Monday at 8:30am, the workflow reads the payment
+   log, totals the last 7 days by revenue, number of payments and plan, and
+   sends the report by email and Slack.
+
+## How it works, explained simply
+
+Think of it as an operations assistant who answers every new lead in
+seconds, never misses a payment, and has the Monday numbers ready before the
+meeting starts.
+
+- **The workflows feed each other.** The weekly report only works because the
+  payment sync logs clean data every single time. That is the difference
+  between a few separate automations and one system.
+- **Incomplete leads don't break anything.** A form that arrives without a
+  name, email or phone number goes to a Failed Leads sheet instead of
+  crashing the workflow, so nothing is lost.
+- **Phone numbers are cleaned first.** Spaces and stray characters are
+  removed, and the number is put into international format before the SMS
+  goes out.
+- **It records whether each SMS went out.** The workflow reads Termii's
+  response and marks each lead's row Yes or No, instead of assuming.
+- **No payment goes untracked.** If a paying customer is not in HubSpot, or
+  the payment log fails to save, the team gets an email with the payment
+  details so someone can act on it.
+- **It tries again before giving up.** If HubSpot is briefly unavailable, the
+  step retries up to 3 times before anything is flagged.
+
+![The HubSpot lookup step's settings in n8n: retry on fail switched on, 3 tries, 5 seconds between tries](/case-studies/client-lifecycle/retry-settings.png)
+
+*The retry settings on the HubSpot lookup: 3 tries, 5 seconds apart. The data
+on the left is a Stripe test payment.*
+
+## The outcome
+
+A new lead now gets a reply in under 3 seconds, every payment lands in the CRM
+and the log, and the Monday report arrives on its own. Nobody on the team has
+to copy, paste or remember any of it.
+
+![A Slack alert in the new-leads channel: the lead's name, source, SMS status and the new HubSpot contact ID](/case-studies/client-lifecycle/slack-alert.png)
+
+*The alert the sales team sees for each new lead, with the SMS confirmed and
+the HubSpot contact already created. The email and phone number are blurred.*
+
+![The Termii SMS log: three welcome messages from OpsPilot, each marked Delivered](/case-studies/client-lifecycle/termii-sms.png)
+
+*The welcome texts in Termii's log, each one marked Delivered. Phone numbers
+are blurred.*
+
+![HubSpot contacts after test runs, each new lead with the status New](/case-studies/client-lifecycle/hubspot-contacts.png)
+
+*The leads in HubSpot after test runs. Emails and phone numbers are blurred.*
+
+Tested end to end with Stripe test payments and simulated form submissions.
+One known gap, stated plainly: if the lead log in Google Sheets fails to
+save, nothing alerts the team yet. The payment workflow already has that
+backup email, and adding the same to lead intake is the next thing I would do
+for a client running this live.
