@@ -19,6 +19,23 @@ export function generateStaticParams() {
 }
 
 /**
+ * Drops each screenshot and the italic caption under it. They describe the
+ * picture, not the build ("phone numbers are blurred"), so leaving them in
+ * makes searches like "phone" match every study.
+ */
+function withoutImages(body: string): string {
+  return body
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(
+      (block) =>
+        !/^!\[[^\]]*\]\([^)]*\)$/.test(block) &&
+        !/^\*(?!\*)[\s\S]*[^*]\*$/.test(block),
+    )
+    .join("\n\n");
+}
+
+/**
  * Strips the MDX body off a study and folds everything a visitor might search
  * for into one normalised string, so the browser only receives what it needs.
  */
@@ -32,7 +49,7 @@ function toSearchable({ body, ...study }: CaseStudy): SearchableStudy {
       study.year,
       ...study.tools,
       ...study.metrics.flatMap((metric) => [metric.label, metric.value]),
-      body,
+      withoutImages(body),
     ].join(" "),
   );
   return { ...study, haystack };
