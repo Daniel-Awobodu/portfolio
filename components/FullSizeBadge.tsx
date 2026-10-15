@@ -22,7 +22,7 @@ export default function FullSizeBadge() {
         </svg>
         Full size
       </span>
-      <span className="sr-only"> (opens full size in a new tab)</span>
+      <span className="sr-only"> (opens full size)</span>
     </>
   );
 }
