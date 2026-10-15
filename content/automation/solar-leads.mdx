@@ -1,0 +1,115 @@
+---
+title: "Solar leads checked against real-world data, scored and followed up automatically"
+client: "Industry build · Solar"
+lane: "automation"
+summary: "A US solar installer's team qualified every web lead by hand. Now each form is checked against address, property, sunlight and power-price data, scored by AI, logged in HubSpot, and followed up by email or a WhatsApp alert to sales."
+role: "Designed and built"
+year: "2026"
+date: "2026-08-07"
+order: 14
+featured: false
+cover: "/case-studies/solar-leads/cover.png"
+video: "https://drive.google.com/file/d/1xagpwpo2DIZ09hFAz0OfqjcW0Sl0mhpm/view?usp=sharing"
+tools: ["n8n", "Tally", "HubSpot", "OpenAI", "Geoapify", "RentCast", "NREL PVWatts", "EIA", "WhatsApp (Green API)", "Gmail"]
+metrics:
+  - label: "outside data sources checked before a lead is scored"
+    value: "4"
+  - label: "unverified facts allowed into the first email"
+    value: "0"
+  - label: "address match confidence required before any research begins"
+    value: "90%"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a solar installation company in the United States.
+
+The company runs ads that send homeowners to a form on its website. After
+every submission, someone had to research the lead, score it, update the
+CRM and write the first email by hand. Leads waited, and the sales team
+spent their time on admin instead of calls.
+
+## What I built
+
+A workflow in n8n that takes a form submission all the way to a scored lead
+in HubSpot and a first contact, with no one touching it.
+
+![The n8n workflow: the form trigger, validation, the returning-lead check, address verification, four enrichment steps, AI scoring, the HubSpot update, then email for HOT and WARM leads or a WhatsApp alert for leads that need review](/case-studies/solar-leads/workflow.png)
+
+*The workflow, from form to first contact. The branches below the main line
+handle renters, returning leads and addresses that can't be verified. Click
+the image to see it full size.*
+
+1. **It checks the form.** Leads with missing details, no consent to be
+   contacted or a broken email address are logged as disqualified. So are
+   renters, because only an owner can approve an installation.
+2. **It spots returning leads.** Someone filling in the form again is already
+   interested, so the sales team gets a WhatsApp message to call them
+   instead of an automated email.
+3. **It verifies the address.** The address must match a real US building
+   with at least 90% confidence. If it doesn't, the lead is logged and sales
+   are asked to confirm it by phone. Nothing is researched on a guessed
+   address.
+4. **It researches the property:** the property record (owner on the deed,
+   size, roof type, year built), the local sunlight from NREL, and the
+   state's electricity price from the EIA, which is saved for a month so the
+   same state isn't looked up twice.
+5. **AI does the lead scoring.** Each lead gets a score from 0 to 100 and a
+   tier: HOT, WARM or REVIEW. Every score comes with its reasons, concerns and
+   a recommended next step.
+6. **Everything goes into HubSpot**, then each tier is followed up. HOT and
+   WARM leads get a personal first email. REVIEW leads go to a person on
+   WhatsApp, with the reasons.
+
+## How it works, explained simply
+
+Think of it as a sales assistant who researches every lead before calling,
+checks what they say against the records, and knows which calls need a
+person.
+
+- **Every fact is labelled.** Each detail is tagged with where it came from
+  (the homeowner, a public record, or an estimate) and how confident the
+  system is in it. The AI is told to treat an estimate as an estimate.
+- **What the lead says is checked against the records.** If the name isn't
+  on the deed, or the roof type on the form doesn't match the county record,
+  the lead goes to REVIEW, whatever its score. A good score can't hide a red
+  flag.
+- **The first email only uses facts it can trust.** It may mention the bill
+  range, roof, timeline, home size and sunlight, and only when they are
+  high confidence. It never mentions savings, system size or roof direction,
+  because those were estimated, not measured.
+- **The tone matches the lead.** A HOT lead is nudged toward a quick call. A
+  WARM lead gets a low-pressure note that only asks for a reply.
+- **If the AI fails, the lead isn't lost.** An unreadable score sends the
+  lead to REVIEW for a person to handle.
+- **Outages don't stop it.** If a property or sunlight lookup fails, the lead
+  is still scored with what is known. If the address check fails, the run
+  stops and a separate workflow sends the error to WhatsApp.
+
+![WhatsApp alerts to the sales team: a returning lead on their third submission, an address that couldn't be verified with 0.25 confidence, and a lead scored 60 out of 100 sent for review because the name wasn't on the deed and the roof type didn't match](/case-studies/solar-leads/whatsapp-alerts.png)
+
+*The alerts sales receive. Top: a lead filling in the form for the third
+time. Middle: an address that couldn't be verified. Bottom: a lead sent for
+review because the name wasn't on the deed and the roof type didn't match.
+Phone numbers and emails are blurred.*
+
+## The outcome
+
+Every lead is researched, scored and logged within minutes of submitting the
+form, and the sales team only steps in where a person is actually needed.
+
+![Two first-touch emails: a HOT lead asked for a 15-minute call, and a WARM lead offered a short summary with no pressure](/case-studies/solar-leads/first-emails.png)
+
+*Top: a HOT lead, ready to move, asked for a quick call. Bottom: a WARM lead,
+still researching, offered a short summary instead.*
+
+Each path was tested: a HOT lead and a WARM lead were emailed, a returning
+lead and an unverifiable address went to sales on WhatsApp, a renter was
+disqualified, a lead with contradictions went to review, and a forced error
+reached WhatsApp with the failed step named.
+
+One known gap, stated plainly: there is no follow-up yet if a lead doesn't
+reply to the first email. A short follow-up sequence, like the one in my
+[real estate build](/automation/crm-follow-ups), is the next thing I would
+add for an installer running this live.
