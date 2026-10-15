@@ -23,6 +23,8 @@ export type CaseStudyMeta = {
   live: boolean;
   /** Optional — degrades gracefully when absent. */
   cover?: string;
+  /** The workflow canvas. When set, the card cover slides to it after the result. */
+  canvas?: string;
   video?: string;
   tools: string[];
   metrics: Metric[];

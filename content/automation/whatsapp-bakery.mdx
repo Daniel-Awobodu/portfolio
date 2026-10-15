@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-10-08"
 order: 11
 featured: false
-cover: "/case-studies/whatsapp-bakery/cover.png"
+cover: "/case-studies/whatsapp-bakery/result.png"
+canvas: "/case-studies/whatsapp-bakery/canvas.png"
 video: "https://drive.google.com/file/d/1BOg9X_x10eb41hTAThAOS6CQVFJJtemB/view?usp=sharing"
 tools: ["n8n", "WhatsApp Cloud API", "OpenAI", "Airtable", "Gmail"]
 metrics:
@@ -22,13 +23,10 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a bakery in England.
-
-Customers ordered on WhatsApp in messy free text, like "can I get 2 loaves and
-a dozen buns for Friday". Staff had to work out the items, quantities and
-pickup day by hand before writing each order down, and every unclear message
-meant a round of back and forth.
+At a bakery in England, customers ordered on WhatsApp in messy free text, like
+"can I get 2 loaves and a dozen buns for Friday". Staff had to work out the
+items, quantities and pickup day by hand before writing each order down, and
+every unclear message meant a round of back and forth.
 
 ## What I built
 
@@ -61,8 +59,8 @@ prices, waits for YES, then confirms each with its own order number.*
 
 ## How it works, explained simply
 
-Think of it as a patient counter assistant who reads every message twice,
-never guesses, and writes everything in the order book.
+The bot behaves like a patient counter assistant: it reads every message
+twice, never guesses, and writes everything in the order book.
 
 - **It never guesses a quantity.** "A dozen" is 12 and "a couple" is 2, but
   no number means it asks.
@@ -116,6 +114,10 @@ Tested live on WhatsApp, using Meta's test number. Testing caught real
 problems, and each was fixed. For example, a bare "cancel" once cancelled a
 customer's only order. Now the bot lists their orders and asks which one.
 
-One known gap, stated plainly: if OpenAI is down, staff get an email, but the
-customer gets no reply yet. A simple fallback message is the next thing I
-would add for a bakery running this live.
+<NextStep>
+
+**A fallback reply when the AI is down.** If OpenAI is unavailable, staff get
+an email, but the customer gets no reply yet. A simple holding message would
+keep the customer in the loop until a person picks it up.
+
+</NextStep>

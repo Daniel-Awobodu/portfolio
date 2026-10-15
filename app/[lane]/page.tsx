@@ -21,7 +21,8 @@ export function generateStaticParams() {
 /**
  * Drops each screenshot and the italic caption under it. They describe the
  * picture, not the build ("phone numbers are blurred"), so leaving them in
- * makes searches like "phone" match every study.
+ * makes searches like "phone" match every study. Bare component tags such as
+ * `<NextStep>` go too; the text inside them stays searchable.
  */
 function withoutImages(body: string): string {
   return body
@@ -30,7 +31,8 @@ function withoutImages(body: string): string {
     .filter(
       (block) =>
         !/^!\[[^\]]*\]\([^)]*\)$/.test(block) &&
-        !/^\*(?!\*)[\s\S]*[^*]\*$/.test(block),
+        !/^\*(?!\*)[\s\S]*[^*]\*$/.test(block) &&
+        !/^<\/?[A-Z][A-Za-z]*\s*\/?>$/.test(block),
     )
     .join("\n\n");
 }

@@ -9,7 +9,8 @@ year: "2026"
 date: "2026-06-22"
 order: 1
 featured: true
-cover: "/case-studies/order-extraction/cover.png"
+cover: "/case-studies/order-extraction/result.png"
+canvas: "/case-studies/order-extraction/canvas.png"
 tools: ["n8n", "Groq (Llama 3.1)", "Gmail", "Google Sheets", "Airtable"]
 metrics:
   - label: "to process the whole backlog"
@@ -46,7 +47,7 @@ new form layout does not break it. Every order is checked before it is saved.
 
 *The order reader. The AI reads the email, a check decides if the order is
 usable, and the price table confirms the quantity before the order is
-assembled. Click the image to see it full size.*
+assembled.*
 
 **2. A one-time backfill.** It pulled every past order email from Gmail, ran
 each one through the order reader, and wrote the clean rows into a Google
@@ -64,7 +65,8 @@ of the logic to maintain.
 
 ## How it works, explained simply
 
-Think of it as a careful assistant reading your inbox for you.
+It reads the inbox the way a careful assistant would, then follows a few rules
+a busy person might skip.
 
 - **It reads like a person, not a template.** A fixed text pattern breaks the
   moment a form changes. The AI reads each email for meaning, so it can find

@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-07-21"
 order: 5
 featured: false
-cover: "/case-studies/crm-follow-ups/cover.png"
+cover: "/case-studies/crm-follow-ups/result.png"
+canvas: "/case-studies/crm-follow-ups/canvas.png"
 video: "https://drive.google.com/file/d/1-nujgIwyoRgHGOGRaS3FK_VzvBIVCGml/view?usp=sharing"
 tools: ["n8n", "HubSpot", "OpenAI", "Gmail", "Google Sheets"]
 metrics:
@@ -22,12 +23,10 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a real estate brokerage.
-
-The agents forgot to follow up with warm leads, and when they did, the
-messages felt copy-pasted. Leads went cold on both counts: there was no
-reliable rhythm, and no real personal touch when contact did happen.
+At a real estate brokerage, agents forgot to follow up with warm leads, and
+when they did, the messages felt copy-pasted. Leads went cold on both counts:
+there was no reliable rhythm, and no real personal touch when contact did
+happen.
 
 ## What I built
 
@@ -37,8 +36,7 @@ where every lead stands.
 ![The three n8n workflows: new lead, reply watcher and scheduled follow-up](/case-studies/crm-follow-ups/workflow.png)
 
 *The three lanes. Top: a new lead gets its first message. Middle: replies are
-watched. Bottom: follow-ups go out on schedule. Click the image to see it full
-size.*
+watched. Bottom: follow-ups go out on schedule.*
 
 1. **A new lead gets a personal first email.** When a contact enters HubSpot as
    a new lead, AI writes a first message that mentions their preferred area,
@@ -52,8 +50,8 @@ size.*
 
 ## How it works, explained simply
 
-Think of it as a sales assistant with a perfect memory, who writes like a
-person and knows to step back the moment the client answers.
+It is a sales assistant with a perfect memory, who writes like a person and
+steps back the moment the client answers.
 
 - **It checks again right before every send.** A follow-up is not sent just
   because it was scheduled. The lead's status is rechecked seconds before

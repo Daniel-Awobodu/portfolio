@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-05-12"
 order: 7
 featured: false
-cover: "/case-studies/client-lifecycle/cover.png"
+cover: "/case-studies/client-lifecycle/result.png"
+canvas: "/case-studies/client-lifecycle/canvas.png"
 tools: ["n8n", "Stripe", "HubSpot", "Termii (SMS)", "Slack", "Google Sheets", "Gmail"]
 metrics:
   - label: "from a form fill to a CRM record, SMS and team alert"
@@ -21,14 +22,11 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a SaaS company.
-
-The operations team ran the whole client journey by hand. Each new lead took
-up to 20 minutes to log, add to the CRM and follow up, so hot leads waited
-hours for a reply. Every Stripe payment had to be copied into the CRM and a
-spreadsheet. And every Monday, the ops manager spent 45 minutes pulling
-numbers from three tools to build a report.
+At a SaaS company, the operations team ran the whole client journey by hand.
+Each new lead took up to 20 minutes to log, add to the CRM and follow up, so
+hot leads waited hours for a reply. Every Stripe payment had to be copied into
+the CRM and a spreadsheet. And every Monday, the ops manager spent 45 minutes
+pulling numbers from three tools to build a report.
 
 Three manual jobs, and all of them depended on someone being free to do them.
 
@@ -40,7 +38,7 @@ to payment, to the weekly report.
 ![The three n8n workflows on one canvas: Stripe payment sync, the weekly report, and lead intake](/case-studies/client-lifecycle/workflow.png)
 
 *All three workflows. Top: payment sync. Middle: weekly report. Bottom: lead
-intake. Click the image to see it full size.*
+intake.*
 
 1. **Lead intake.** The moment someone fills in the website form, the lead is
    checked, added to HubSpot, sent a welcome SMS through Termii, announced to
@@ -54,9 +52,9 @@ intake. Click the image to see it full size.*
 
 ## How it works, explained simply
 
-Think of it as an operations assistant who answers every new lead in
-seconds, never misses a payment, and has the Monday numbers ready before the
-meeting starts.
+Together, the three workflows act as an operations assistant who answers every
+new lead in seconds, never misses a payment, and has the Monday numbers ready
+before the meeting starts.
 
 - **The workflows feed each other.** The weekly report only works because the
   payment sync logs clean data every single time. That is the difference
@@ -101,7 +99,11 @@ are blurred.*
 *The leads in HubSpot after test runs. Emails and phone numbers are blurred.*
 
 Tested end to end with Stripe test payments and simulated form submissions.
-One known gap, stated plainly: if the lead log in Google Sheets fails to
-save, nothing alerts the team yet. The payment workflow already has that
-backup email, and adding the same to lead intake is the next thing I would do
-for a client running this live.
+
+<NextStep>
+
+**A backup alert for lead intake.** If the lead log in Google Sheets fails to
+save, nothing tells the team yet. The payment workflow already sends a backup
+email in that case, and lead intake should do the same.
+
+</NextStep>

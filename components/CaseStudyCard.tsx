@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import CardCover from "@/components/CardCover";
 import LiveBadge from "@/components/LiveBadge";
 import type { CaseStudyMeta } from "@/lib/types";
 
@@ -21,13 +21,11 @@ export default function CaseStudyCard({
     <article className="group relative flex h-full flex-col overflow-hidden rounded-md border border-hairline bg-card transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lift">
       <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-hairline bg-paper">
         {study.cover ? (
-          <Image
-            src={study.cover}
-            alt={`Cover image for ${study.title}`}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 520px"
+          <CardCover
+            cover={study.cover}
+            canvas={study.canvas}
+            title={study.title}
             priority={priority}
-            className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           />
         ) : (
           /* No cover set — a quiet editorial panel rather than a broken image.

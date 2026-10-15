@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-09-23"
 order: 12
 featured: false
-cover: "/case-studies/quote-requests/cover.png"
+cover: "/case-studies/quote-requests/result.png"
+canvas: "/case-studies/quote-requests/canvas.png"
 video: "https://drive.google.com/file/d/1d_IT0BeUUp7qhdV_Lt4JlGiUhIYAm_Nb/view?usp=drive_link"
 tools: ["n8n", "Gmail", "OpenAI", "Airtable", "Slack"]
 metrics:
@@ -22,13 +23,11 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a supplier of surgical, laboratory and diagnostic equipment.
-
-Customers email their quote requests, often with the items spread across
-attached files. For every request, a staff member opened the email and each
-attachment, picked out the items and quantities, looked up every price,
-checked the deadline, and typed the reply by hand.
+A supplier of surgical, laboratory and diagnostic equipment gets its quote
+requests by email, often with the items spread across attached files. For
+every request, a staff member opened the email and each attachment, picked out
+the items and quantities, looked up every price, checked the deadline, and
+typed the reply by hand.
 
 ## What I built
 
@@ -63,14 +62,12 @@ PDF.*
 
 *The workflow. Left: new emails come in and repeats are dropped. Bottom: each
 attachment is read according to its type. Top: the AI matches items to the
-catalog, line items are saved, and the draft goes to Slack for approval.
-Click the image to see it full size.*
+catalog, line items are saved, and the draft goes to Slack for approval.*
 
 ## How it works, explained simply
 
-Think of it as a sales assistant who opens every attachment, checks every
-price against the price list, and leaves the finished reply on your desk to
-sign.
+The workflow opens every attachment, checks every price against the price
+list, and leaves the finished reply on the desk for a person to sign.
 
 - **It never invents a price.** Prices only come from the catalog. If an item
   isn't in the catalog, the reply marks it "to be confirmed", leaves it out of
@@ -119,6 +116,10 @@ subtotal, and the request was flagged for manual review. Another, with no
 attachments and nothing from the catalog, was flagged the same way, and no
 line items were created.
 
-One known gap, stated plainly: Word documents are not read yet, so an item
-that only appears in a Word file would be missed. Adding Word support is the
-next thing I would add for a supplier running this live.
+<NextStep>
+
+**Word documents.** PDFs, text files, spreadsheets and photos are all read,
+but Word files aren't yet, so an item that only appears in a Word file would
+be missed.
+
+</NextStep>

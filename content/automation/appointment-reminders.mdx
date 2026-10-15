@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-07-17"
 order: 6
 featured: false
-cover: "/case-studies/appointment-reminders/cover.png"
+cover: "/case-studies/appointment-reminders/result.png"
+canvas: "/case-studies/appointment-reminders/canvas.png"
 video: "https://drive.google.com/file/d/1UfMCIxkPpeVlw4XUEgMyEgSClWsORKGF/view?usp=drive_link"
 tools: ["n8n", "Google Calendar", "Termii (SMS)", "n8n Data Table"]
 metrics:
@@ -22,10 +23,7 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a clinic.
-
-The clinic's old reminder automation was fragile. It texted patients about
+A clinic's old reminder automation was fragile. It texted patients about
 appointments that had already been moved or cancelled, and sometimes at the
 wrong time. Patients stopped trusting the messages.
 
@@ -41,8 +39,7 @@ the moment it is about to send.
 ![The reminder workflow in n8n: fetch upcoming appointments, filter out reminders already sent, wait, recheck the live calendar, then send the SMS or log the skip](/case-studies/appointment-reminders/workflow.png)
 
 *The full workflow. The recheck happens right before sending, and every
-outcome is logged, whether the reminder was sent or skipped. Click the image
-to see it full size.*
+outcome is logged, whether the reminder was sent or skipped.*
 
 1. **Every 15 minutes**, it fetches the appointments coming up in the next 25
    hours from Google Calendar.
@@ -58,8 +55,8 @@ to see it full size.*
 
 ## How it works, explained simply
 
-Think of it as a receptionist who looks at the diary again right before
-picking up the phone, instead of trusting a note written yesterday.
+The old system trusted a note written yesterday. This one looks at the diary
+again right before picking up the phone.
 
 - **A reminder is never trusted until it sends.** The appointment is fetched
   fresh from the calendar seconds before each text goes out, not just when
@@ -85,7 +82,11 @@ system skipped the old reminder and logged exactly why.
 *The clinic calendar the workflow reads from. Each appointment carries the
 patient's details and service. The phone number is blurred.*
 
-One known gap, stated plainly: the workflow confirms that Termii accepted
-each text, but not that the phone network delivered it. During testing, a
-network outage showed that difference is real. Tracking final delivery
-status is the next thing I would add for a clinic running this live.
+<NextStep>
+
+**Track delivery, not just sending.** The workflow confirms that Termii
+accepted each text, but not that the phone network delivered it. A network
+outage during testing showed the difference is real, so reading the final
+delivery status comes next.
+
+</NextStep>

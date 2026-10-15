@@ -71,6 +71,7 @@ function parseFile(lane: Lane, filename: string): CaseStudy {
 
   const slug = filename.replace(/\.mdx?$/, "");
   const cover = asString(data.cover).trim();
+  const canvas = asString(data.canvas).trim();
   const video = asString(data.video).trim();
 
   return {
@@ -86,6 +87,7 @@ function parseFile(lane: Lane, filename: string): CaseStudy {
     featured: data.featured === true,
     live: data.live === true,
     cover: cover === "" ? undefined : cover,
+    canvas: canvas === "" ? undefined : canvas,
     video: video === "" ? undefined : video,
     tools: asTools(data.tools),
     metrics: asMetrics(data.metrics),

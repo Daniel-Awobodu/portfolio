@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-10-01"
 order: 16
 featured: false
-cover: "/case-studies/opportunity-feed/cover.png"
+cover: "/case-studies/opportunity-feed/result.png"
+canvas: "/case-studies/opportunity-feed/canvas.png"
 video: "https://drive.google.com/file/d/1zXrp_UMsbUvswXEHWsSNrVDA0Drkuxok/view?usp=drive_link"
 tools: ["n8n", "Remotive", "OpenAI", "Airtable", "Slack"]
 metrics:
@@ -22,13 +23,10 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a small automation agency.
-
-The team scrolled job boards every day looking for work they could deliver.
-Most postings were poor matches, reading them all took hours, and good gigs
-still slipped past. They wanted a daily shortlist of the postings worth their
-time, each with a one-line reason.
+A small automation agency's team scrolled job boards every day looking for
+work they could deliver. Most postings were poor matches, reading them all
+took hours, and good gigs still slipped past. They wanted a daily shortlist of
+the postings worth their time, each with a one-line reason.
 
 ## What I built
 
@@ -39,7 +37,7 @@ digest to Slack.
 ![The n8n workflow: the daily trigger and settings, the job feed with a health check and a Source Down alert, the duplicate filter, AI scoring, the proof check, saving to Airtable and the Slack digest](/case-studies/opportunity-feed/workflow.png)
 
 *The workflow, from the 10am trigger to the Slack digest. The highlighted
-step is the proof check. Click the image to see it full size.*
+step is the proof check.*
 
 1. **It runs every morning at 10am.** The agency's profile and scoring rules
    live in one settings step, so changing what counts as a fit takes a
@@ -62,9 +60,8 @@ step is the proof check. Click the image to see it full size.*
 
 ## How it works, explained simply
 
-Think of it as a researcher who reads every job board before you wake up,
-and has to show you the exact line that convinced them before recommending
-anything.
+Imagine a researcher who reads every job board before you wake up, and must
+show you the exact line that convinced them before recommending anything.
 
 - **No proof, no post.** If a job scores as a fit but its quote can't be
   found in the posting, it is never posted as a fit. It goes under "Needs a
@@ -107,8 +104,11 @@ aimed at a company that sells human AI evaluation was stopped by a new rule.
 Hand-made test cases proved the safety checks: an invented quote and a
 mislabelled full-time job were both flagged, never posted.
 
-One known gap, stated plainly: the free job feed is small, delayed and
-mostly full-time roles, so real fits are rare. In the run on 16 real
-postings, none were a fit for an agency, and the digest said so. Adding a
-freelance marketplace like Upwork as a second source is the next step for an
-agency running this live.
+<NextStep>
+
+**A second, bigger job source.** The free job feed is small, delayed and
+mostly full-time roles, so real fits are rare. In the run on 16 real postings,
+none fit the agency, and the digest said so. Adding a freelance marketplace
+like Upwork would give it far more to work with.
+
+</NextStep>

@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-07-06"
 order: 13
 featured: false
-cover: "/case-studies/office-assistant/cover.png"
+cover: "/case-studies/office-assistant/result.png"
+canvas: "/case-studies/office-assistant/canvas.png"
 video: "https://drive.google.com/file/d/1sXxALM88pDf2tVXAbOM0lb7NLuJvi-WN/view?usp=drive_link"
 tools: ["n8n", "Gmail", "OpenAI", "Google Drive", "Google Calendar"]
 metrics:
@@ -22,12 +23,9 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a marketing agency.
-
-The agency was losing hours every week to email triage, filing invoices,
-scheduling requests and remembering follow-ups. They wanted one assistant
-across their Google Workspace instead of hiring an admin.
+A marketing agency was losing hours every week to email triage, filing
+invoices, scheduling requests and remembering follow-ups. The team wanted one
+assistant across their Google Workspace instead of hiring an admin.
 
 ## What I built
 
@@ -38,7 +36,7 @@ acts on it in Gmail, Google Drive and Google Calendar.
 
 *The workflow. Left: the email and its attachment are read. Middle: one AI
 step sorts it, and code checks the answer. Right: each lane acts in Drive,
-Gmail or Calendar. Click the image to see it full size.*
+Gmail or Calendar.*
 
 1. **It checks the inbox every 5 minutes**, skipping promotions, social and
    update emails.
@@ -57,8 +55,8 @@ Gmail or Calendar. Click the image to see it full size.*
 
 ## How it works, explained simply
 
-Think of it as an office assistant who opens every email first and puts it
-on the right pile, with the urgent ones on top.
+Like a good office assistant, it opens every email first and puts it on the
+right pile, with the urgent ones on top.
 
 - **Invoices come first.** One test email attached an invoice, asked for a
   revised deck by 2pm and asked to move a meeting. The invoice decided the
@@ -95,8 +93,13 @@ as an image, read by AI and filed in its vendor's folder.*
 It also reads invoices accurately. From one PDF, it picked up the full total
 of $132.22, made up of a $123.00 subtotal plus 7.5% tax.
 
-Two known gaps, stated plainly. The follow-up flag is too eager: in testing
-it set reminders on emails that didn't need one, like a casual catch-up note.
-And attachments are paired with their vendor folder by position, which is
-only reliable when one email arrives at a time. Tightening the follow-up rule
-and matching each file to its email are the next two fixes.
+<NextStep>
+
+**A stricter follow-up flag.** In testing, it set reminders on emails that
+didn't need one, like a casual catch-up note.
+
+**Matching each attachment to its own email.** Attachments are paired with
+their vendor folder by position, which is only reliable when one email arrives
+at a time.
+
+</NextStep>

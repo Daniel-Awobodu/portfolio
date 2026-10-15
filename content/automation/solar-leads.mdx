@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-08-07"
 order: 14
 featured: false
-cover: "/case-studies/solar-leads/cover.png"
+cover: "/case-studies/solar-leads/result.png"
+canvas: "/case-studies/solar-leads/canvas.png"
 video: "https://drive.google.com/file/d/1xagpwpo2DIZ09hFAz0OfqjcW0Sl0mhpm/view?usp=sharing"
 tools: ["n8n", "Tally", "HubSpot", "OpenAI", "Geoapify", "RentCast", "NREL PVWatts", "EIA", "WhatsApp (Green API)", "Gmail"]
 metrics:
@@ -22,13 +23,10 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a solar installation company in the United States.
-
-The company runs ads that send homeowners to a form on its website. After
-every submission, someone had to research the lead, score it, update the
-CRM and write the first email by hand. Leads waited, and the sales team
-spent their time on admin instead of calls.
+A solar installation company in the United States runs ads that send
+homeowners to a form on its website. After every submission, someone had to
+research the lead, score it, update the CRM and write the first email by hand.
+Leads waited, and the sales team spent their time on admin instead of calls.
 
 ## What I built
 
@@ -38,8 +36,7 @@ in HubSpot and a first contact, with no one touching it.
 ![The n8n workflow: the form trigger, validation, the returning-lead check, address verification, four enrichment steps, AI scoring, the HubSpot update, then email for HOT and WARM leads or a WhatsApp alert for leads that need review](/case-studies/solar-leads/workflow.png)
 
 *The workflow, from form to first contact. The branches below the main line
-handle renters, returning leads and addresses that can't be verified. Click
-the image to see it full size.*
+handle renters, returning leads and addresses that can't be verified.*
 
 1. **It checks the form.** Leads with missing details, no consent to be
    contacted or a broken email address are logged as disqualified. So are
@@ -64,8 +61,8 @@ the image to see it full size.*
 
 ## How it works, explained simply
 
-Think of it as a sales assistant who researches every lead before calling,
-checks what they say against the records, and knows which calls need a
+Every lead is researched before anyone calls, what the homeowner says is
+checked against public records, and the system knows which calls need a
 person.
 
 - **Every fact is labelled.** Each detail is tagged with where it came from
@@ -109,7 +106,10 @@ lead and an unverifiable address went to sales on WhatsApp, a renter was
 disqualified, a lead with contradictions went to review, and a forced error
 reached WhatsApp with the failed step named.
 
-One known gap, stated plainly: there is no follow-up yet if a lead doesn't
-reply to the first email. A short follow-up sequence, like the one in my
-[real estate build](/automation/crm-follow-ups), is the next thing I would
-add for an installer running this live.
+<NextStep>
+
+**A follow-up sequence.** A lead who doesn't reply to the first email hears
+nothing more yet. A short sequence, like the one in my [real estate
+build](/automation/crm-follow-ups), would keep warm leads from going cold.
+
+</NextStep>
