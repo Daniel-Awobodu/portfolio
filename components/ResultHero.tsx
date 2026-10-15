@@ -1,10 +1,11 @@
 import Image from "next/image";
 import FullSizeBadge from "@/components/FullSizeBadge";
+import ImageLightbox from "@/components/ImageLightbox";
 
 /**
  * The build's best result, right under the title, so a visitor sees what it
  * produces before reading how it works. Shows the card's result crop and
- * opens the full screenshot.
+ * opens the full screenshot over the page.
  */
 export default function ResultHero({
   src,
@@ -19,11 +20,9 @@ export default function ResultHero({
 }) {
   return (
     <figure className="mt-10 max-w-4xl">
-      <a
+      <ImageLightbox
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Open full size"
+        alt={caption}
         className="group/zoom relative block cursor-zoom-in overflow-hidden rounded-md border border-hairline bg-paper shadow-sm"
       >
         <Image
@@ -36,7 +35,7 @@ export default function ResultHero({
           className="h-auto w-full"
         />
         <FullSizeBadge />
-      </a>
+      </ImageLightbox>
       <figcaption className="mt-3 text-sm leading-relaxed text-muted">
         <span className="font-semibold text-ink">The result.</span> {caption}
       </figcaption>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import FullSizeBadge from "@/components/FullSizeBadge";
+import ImageLightbox from "@/components/ImageLightbox";
 
 /**
  * `![alt](/case-studies/slug/shot.jpg)` inside an MDX body renders through
@@ -16,14 +17,11 @@ export default function MdxImage({
   if (!src) return null;
 
   // Workflow screenshots are too detailed to read at column width, so each
-  // one opens at full size in a new tab. The badge says so on every image,
-  // instead of a "click to enlarge" line repeated in the captions.
+  // one opens full size over the page, with zoom for the widest ones.
   return (
-    <a
+    <ImageLightbox
       href={src}
-      target="_blank"
-      rel="noopener noreferrer"
-      title="Open full size"
+      alt={alt ?? ""}
       className="group/zoom relative block cursor-zoom-in"
     >
       <Image
@@ -35,6 +33,6 @@ export default function MdxImage({
         className="h-auto w-full"
       />
       <FullSizeBadge />
-    </a>
+    </ImageLightbox>
   );
 }
