@@ -7,7 +7,7 @@ import { site } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "How I Think",
   description:
-    "Most automation freelancers can't explain what they built. I can — I taught maths for two years before I built systems. Clear handoffs, real documentation, and a system you actually own.",
+    "Most automation freelancers can't explain what they built. I can, because I taught maths for two years before I built systems. Clear handoffs, real documentation, and a system you actually own.",
   alternates: { canonical: "/how-i-think" },
   openGraph: {
     title: `How I Think — ${site.name}`,
@@ -38,7 +38,7 @@ export default function HowIThinkPage() {
       <PageHeader
         eyebrow="The difference"
         title="I don't just build it. I explain it."
-        lede="Most people who can wire up an automation cannot tell you how it works. That gap is where projects go to die — the system runs, nobody understands it, and the first time it breaks it gets abandoned."
+        lede="Most people who can wire up an automation cannot tell you how it works. That gap is where projects go to die: the system runs, nobody understands it, and the first time it breaks it gets abandoned."
       />
 
       {/* ---------- Thesis ---------- */}
@@ -50,7 +50,7 @@ export default function HowIThinkPage() {
           <div className="max-w-prose md:col-span-8">
             <p className="font-display text-[clamp(1.5rem,1.2rem+1.3vw,2rem)] leading-[1.25] font-semibold text-ink">
               I spent two years teaching maths before I built a single system.
-              That job was never about knowing the answer — it was about making
+              That job was never about knowing the answer. It was about making
               someone else see it.
             </p>
             <p className="mt-6 text-[1.0625rem] leading-relaxed text-muted">
@@ -62,7 +62,7 @@ export default function HowIThinkPage() {
             </p>
             <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
               That is the same skill a client needs from an automation build.
-              Not a demo — an explanation. The system is only worth what you can
+              Not a demo, an explanation. The system is only worth what you can
               still run six months after I&rsquo;ve gone.
             </p>
           </div>
@@ -111,7 +111,7 @@ export default function HowIThinkPage() {
           <ol className="mt-8 space-y-5">
             {[
               "An automation is a rule that says: when this happens, do that.",
-              "Something has to start it — a form gets filled in, a payment lands, a certain time of day arrives.",
+              "Something has to start it: a form gets filled in, a payment lands, a certain time of day arrives.",
               "Then a list of steps runs in order, and each step is something a person could have done by hand: copy this, check that, send this message.",
               "The computer's only advantage is that it never forgets a step, never gets tired, and does it at 3am.",
             ].map((sentence, index) => (
@@ -133,7 +133,7 @@ export default function HowIThinkPage() {
           </ol>
 
           <p className="mt-8 text-[1.0625rem] leading-relaxed text-muted">
-            That&rsquo;s it. Everything else — n8n, Make, webhooks, APIs — is
+            That&rsquo;s it. Everything else (n8n, Make, webhooks, APIs) is
             just the plumbing that carries out those four sentences. If someone
             needs more than four sentences to tell you what your own system
             does, be suspicious.

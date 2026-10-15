@@ -8,7 +8,7 @@ import { site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `${site.name} — UNILAG mathematics education graduate, five years in growth marketing, now building AI automation systems. ${site.tagline}`,
+  description: `${site.name}: UNILAG mathematics education graduate, five years in growth marketing, now building AI automation systems. ${site.tagline}`,
   alternates: { canonical: "/about" },
   openGraph: {
     title: `About — ${site.name}`,
@@ -33,7 +33,7 @@ export default function AboutPage() {
     <>
       <PageHeader
         eyebrow="About"
-        title="Maths teacher, marketer, systems builder — in that order."
+        title="Maths teacher, marketer, systems builder. In that order."
         lede="The job titles changed. The habit never did: take something tangled, find the structure underneath it, explain it back in plain words."
       />
 
@@ -59,7 +59,7 @@ export default function AboutPage() {
                 </div>
               </div>
               <figcaption className="mt-8 text-center text-sm text-muted md:text-left">
-                {site.name} — Lagos, Nigeria. Working with clients worldwide.
+                {site.name}, Lagos, Nigeria. Working with clients worldwide.
               </figcaption>
             </figure>
           </div>
@@ -80,7 +80,7 @@ export default function AboutPage() {
                 </p>
                 <p>
                   Alongside and after that, I spent five years in growth
-                  marketing — Facebook and Instagram ads, sales pages, offers,
+                  marketing: Facebook and Instagram ads, sales pages, offers,
                   the unglamorous work of getting a product to actually sell. I
                   ran my own store, <strong>quality-buy.online</strong>, partly
                   as a business and partly as a laboratory I could break without
@@ -89,7 +89,7 @@ export default function AboutPage() {
                 <p>
                   Marketing is where I met the bottleneck that led me here.
                   Campaigns worked, leads arrived, and then everything fell over
-                  at the human step — nobody following up, nobody sorting the
+                  at the human step. Nobody was following up, nobody was sorting the
                   inbox, the same copy-paste job done four hundred times a
                   month. So I started building systems to handle it, and that
                   became the work.
@@ -137,7 +137,7 @@ export default function AboutPage() {
                     className="flex gap-3 border-b border-hairline pb-3 text-[1.0625rem] text-muted last:border-0"
                   >
                     <span aria-hidden="true" className="text-accent-strong">
-                      —
+                      •
                     </span>
                     {fact}
                   </li>

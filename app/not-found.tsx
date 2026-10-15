@@ -13,7 +13,7 @@ export default function NotFound() {
         That page doesn&rsquo;t exist
       </h1>
       <p className="mx-auto mt-5 max-w-md text-[1.0625rem] leading-relaxed text-muted">
-        The link may be out of date. The work is all still here — start with the
+        The link may be out of date. The work is all still here. Start with the
         automation lane, or just message me.
       </p>
       <div className="mt-9 flex flex-wrap justify-center gap-4">

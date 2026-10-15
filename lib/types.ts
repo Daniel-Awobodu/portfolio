@@ -19,6 +19,8 @@ export type CaseStudyMeta = {
   /** Lower sorts higher on the lane page. */
   order: number;
   featured: boolean;
+  /** Runs in a live business, not built to a brief. Shows the Live badge. */
+  live: boolean;
   /** Optional — degrades gracefully when absent. */
   cover?: string;
   video?: string;

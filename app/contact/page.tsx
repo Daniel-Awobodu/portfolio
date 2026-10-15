@@ -7,7 +7,7 @@ import { site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Tell ${site.name} what you're trying to automate or sell. Message on WhatsApp, email, LinkedIn or X — replies are fast.`,
+  description: `Tell ${site.name} what you're trying to automate or sell. Message on WhatsApp, email, LinkedIn or X. Replies are fast.`,
   alternates: { canonical: "/contact" },
   openGraph: {
     title: `Contact — ${site.name}`,

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import LiveBadge from "@/components/LiveBadge";
 import type { CaseStudyMeta } from "@/lib/types";
 
 /**
@@ -41,6 +42,9 @@ export default function CaseStudyCard({
             <span className="block h-px w-1/3 bg-accent" />
           </div>
         )}
+        {study.live ? (
+          <LiveBadge className="pointer-events-none absolute top-3 left-3 z-10" />
+        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col p-6">
