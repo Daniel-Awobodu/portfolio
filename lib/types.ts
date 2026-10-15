@@ -25,6 +25,10 @@ export type CaseStudyMeta = {
   cover?: string;
   /** The workflow canvas. When set, the card cover slides to it after the result. */
   canvas?: string;
+  /** Caption for the result image shown under the title. No caption, no image. */
+  resultCaption?: string;
+  /** The full screenshot the result image opens. Defaults to `cover`. */
+  resultFull?: string;
   video?: string;
   tools: string[];
   metrics: Metric[];
