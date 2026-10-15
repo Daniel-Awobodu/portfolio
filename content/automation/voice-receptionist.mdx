@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-08-15"
 order: 8
 featured: false
-cover: "/case-studies/voice-receptionist/cover.png"
+cover: "/case-studies/voice-receptionist/result.png"
+canvas: "/case-studies/voice-receptionist/canvas.png"
 video: "https://drive.google.com/file/d/1JrB5IrMGqkoHktpbmzPc4R7DBuJbVyA_/view?usp=drive_link"
 tools: ["Vapi", "n8n", "OpenAI", "Deepgram", "ElevenLabs", "Google Calendar", "Google Sheets", "Termii (SMS)"]
 metrics:
@@ -22,12 +23,9 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a dental group with branches across Nigeria.
-
-The clinics missed calls during busy hours. Patients who reach no one rarely
-leave a voicemail, and most never call back. Every missed ring was a booking
-lost to another clinic.
+A dental group with branches across Nigeria kept missing calls during busy
+hours. Patients who reach no one rarely leave a voicemail, and most never call
+back. Every missed ring was a booking lost to another clinic.
 
 ## What I built
 
@@ -58,12 +56,12 @@ thinks with GPT-4.1 and speaks with a natural ElevenLabs voice.*
 
 *The workflow behind the agent. Top: checking availability. Below: the recheck
 before booking, which either books the slot and sends the text, or offers new
-times if the slot was just taken. Click the image to see it full size.*
+times if the slot was just taken.*
 
 ## How it works, explained simply
 
-Think of it as a receptionist who never misses a ring, knows every branch's
-diary, and double checks the diary before promising a time.
+It answers like a receptionist who never misses a ring, knows every branch's
+diary, and double checks it before promising a time.
 
 - **Every branch has its own calendar.** A Google Sheet links each branch to
   its calendar, so an Abuja booking can never land in the Lagos diary.
@@ -103,7 +101,11 @@ its own calendar. The phone number is blurred.*
 
 *The confirmation texts from two test bookings, sent through Termii.*
 
-One known gap, stated plainly: calls that end without a booking are not
-logged anywhere yet, so the clinic sees every appointment but not every
-enquiry. Logging each call with a short summary is the next thing I would add
-for a clinic running this live.
+<NextStep>
+
+**A log of every call, not just every booking.** Calls that end without a
+booking aren't recorded yet, so the clinic sees every appointment but not
+every enquiry. Logging each call with a short summary would show what callers
+ask for most.
+
+</NextStep>

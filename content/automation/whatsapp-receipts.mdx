@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-07-27"
 order: 3
 featured: false
-cover: "/case-studies/whatsapp-receipts/cover.png"
+cover: "/case-studies/whatsapp-receipts/result.png"
+canvas: "/case-studies/whatsapp-receipts/canvas.png"
 video: "https://drive.google.com/file/d/1Ms8CrEDk3Yv--q1XOGvp7fcsWXnlj8fm/view?usp=sharing"
 tools: ["n8n", "WhatsApp (Green API)", "Google Gemini", "Airtable", "Google Drive", "Google Sheets"]
 metrics:
@@ -22,13 +23,11 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a delivery company.
-
-The drivers already sent photos of their fuel and repair receipts over
-WhatsApp. But someone in the office still had to open each photo and type the
-vendor, date and amount into a spreadsheet by hand. It was slow, typing errors
-crept in, and receipts got lost whenever nobody followed up in time.
+A delivery company's drivers already sent photos of their fuel and repair
+receipts over WhatsApp. But someone in the office still had to open each photo
+and type the vendor, date and amount into a spreadsheet by hand. It was slow,
+typing errors crept in, and receipts got lost whenever nobody followed up in
+time.
 
 ## What I built
 
@@ -37,8 +36,7 @@ An n8n workflow that turns a WhatsApp message into a filed, logged expense.
 ![The receipt workflow in n8n, from the incoming WhatsApp message to the Drive upload, the Sheets row and the confirmation](/case-studies/whatsapp-receipts/workflow.png)
 
 *The full workflow. The top path handles a clear receipt from start to finish.
-The lower branches catch bad files, unclear readings and save failures. Click
-the image to see it full size.*
+The lower branches catch bad files, unclear readings and save failures.*
 
 1. **A driver sends a receipt** to a WhatsApp number, as a photo or a PDF.
    Anything else gets a polite reply asking for the right format.
@@ -54,8 +52,8 @@ the image to see it full size.*
 
 ## How it works, explained simply
 
-Think of it as an office assistant who reads every receipt the moment it
-arrives, and who says so when a number is hard to read instead of guessing.
+It behaves like an office assistant who reads every receipt the moment it
+arrives, and says so when a number is hard to read instead of guessing.
 
 - **A wrong number is worse than a missing one.** A misread total looks just
   like a correct one once it sits in a spreadsheet. So the AI flags any field
@@ -84,7 +82,14 @@ to the original file. Phone numbers are blurred.*
 *The matching Drive folder. Files are sorted by month and named so anyone can
 find a receipt without opening it.*
 
-Two known limits, stated plainly: a receipt flagged as unclear stays in the
-review log until the driver resends it, and if WhatsApp itself fails to send
-a reply, there is no fallback yet. Both are the next things I would add for a
-client running this in production.
+<NextStep>
+
+**A reminder for unclear receipts.** A receipt flagged as unclear waits in the
+review log until the driver resends it. An automatic nudge to the driver would
+close that loop.
+
+**A fallback when WhatsApp fails.** If WhatsApp can't deliver a reply, nothing
+else steps in yet. A second channel, such as SMS, would make sure the driver
+always hears back.
+
+</NextStep>

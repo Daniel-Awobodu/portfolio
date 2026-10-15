@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-08-20"
 order: 15
 featured: false
-cover: "/case-studies/multichannel-intake/cover.png"
+cover: "/case-studies/multichannel-intake/result.png"
+canvas: "/case-studies/multichannel-intake/canvas.png"
 video: "https://drive.google.com/file/d/1ZoXBvld7-B-YjFsxPeQsxmsmI6EeZJab/view?usp=sharing"
 tools: ["n8n", "Airtable", "OpenAI", "Gmail", "Slack"]
 metrics:
@@ -22,15 +23,11 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a healthcare advisory firm, a team of consultants that hospitals,
-clinics and medical groups hire for advice on regulation, billing and
-operations.
-
-Requests arrived three ways: the website form, email, and notes typed by
-staff after a call or meeting. For every one, a staff member had to copy it
-into a table, decide what kind of request it was, work out the next step and
-write the first reply by hand.
+A healthcare advisory firm helps hospitals, clinics and medical groups with
+regulation, billing and operations. Its requests arrived three ways: the
+website form, email, and notes typed by staff after a call or meeting. For
+every one, a staff member had to copy it into a table, decide what kind of
+request it was, work out the next step and write the first reply by hand.
 
 ## What I built
 
@@ -67,14 +64,13 @@ send it, to quote in any follow-up.*
 
 *The workflow. Left: the three channels, each tidied into the same shape.
 Middle: they merge, duplicates are dropped and the record is saved. Right:
-the AI classifies it, and Slack hears about urgent requests and failures.
-Click the image to see it full size.*
+the AI classifies it, and Slack hears about urgent requests and failures.*
 
 ## How it works, explained simply
 
-Think of it as a front office coordinator who logs every request the moment
-it arrives, wherever it came from, then reads it and puts it on the right
-advisor's desk.
+It does the job of a front office coordinator: log every request the moment it
+arrives, wherever it came from, then read it and put it on the right advisor's
+desk.
 
 - **Nothing is lost if the AI fails.** The request is saved before the AI
   runs, and the original wording is never overwritten. If classification
@@ -117,7 +113,10 @@ under the staff member's name, an email was classified, and a reply to that
 email was recognised as a follow-up. Sending the same web request twice was
 stopped at the duplicate check.
 
-One known gap, stated plainly: the drafted reply is copied and sent by hand.
-An approve-and-send step, like the Slack approval in my
-[quote request build](/automation/quote-requests), is the next thing I would
-add for a firm running this live.
+<NextStep>
+
+**Approve and send from Slack.** The drafted reply is still copied and sent by
+hand. An approve-and-send step, like the Slack approval in my [quote request
+build](/automation/quote-requests), would remove that last manual step.
+
+</NextStep>

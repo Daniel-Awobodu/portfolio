@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-08-31"
 order: 9
 featured: false
-cover: "/case-studies/ai-outreach/cover.png"
+cover: "/case-studies/ai-outreach/result.png"
+canvas: "/case-studies/ai-outreach/canvas.png"
 video: "https://drive.google.com/file/d/1z4qXjR3ziB1ydrPlGIiNH52Wnsfl6fZU/view?usp=drive_link"
 tools: ["n8n", "HubSpot", "Apollo", "Hunter.io", "Serper (Google News)", "OpenAI", "Slack", "Gmail"]
 metrics:
@@ -22,14 +23,12 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a B2B agency that sells automation services.
-
-Good cold outreach takes time. For every company, someone has to research it,
-find the right person to contact, look for a timely reason to get in touch,
-and write an email that doesn't read like a template. Done by hand, that is
-slow. Done by a careless AI, it produces confident emails built on made-up
-facts, sent to the wrong person.
+Good cold outreach takes time, and a B2B agency selling automation services
+felt it. For every company, someone has to research it, find the right person
+to contact, look for a timely reason to get in touch, and write an email that
+doesn't read like a template. Done by hand, that is slow. Done by a careless
+AI, it produces confident emails built on made-up facts, sent to the wrong
+person.
 
 ## What I built
 
@@ -39,7 +38,7 @@ person approve, reject or improve each draft from Slack.
 ![The research and drafting workflow in n8n: fetch new companies, enrich them, find and score contacts, search the news, find a hook, draft the email and post it to Slack](/case-studies/ai-outreach/workflow-research.png)
 
 *The research and drafting workflow, run every day. The branch below the main
-line flags companies for manual review. Click the image to see it full size.*
+line flags companies for manual review.*
 
 1. **It picks up new prospects.** Every day it collects up to 20 companies
    marked "New" in HubSpot.
@@ -68,12 +67,12 @@ blurred.*
 
 *The approval workflow. Top: an approved draft is sent. Middle: a rejection
 opens the reason box. Bottom: the reason comes back, and the draft is
-rewritten or handed to a person. Click the image to see it full size.*
+rewritten or handed to a person.*
 
 ## How it works, explained simply
 
-Think of it as a researcher and a copywriter who do the legwork, then hand
-every email to you before anything is sent.
+The system does the legwork of a researcher and a copywriter, then hands every
+email to a person before anything is sent.
 
 - **No email goes out without a yes.** The only path to Gmail runs through a
   person choosing Approve in Slack.
@@ -119,7 +118,11 @@ count. Names, emails and draft previews are blurred.*
 *An approved email, opening with HappyRobot's Series C funding, found in
 recent news. The recipient's name is blurred.*
 
-One known gap, stated plainly: once an email is sent, this system's job ends.
-Replies and follow-ups are not handled yet. Connecting it to the follow-up
-sequence from my [real estate build](/automation/crm-follow-ups) is the next
-thing I would add for a client running this live.
+<NextStep>
+
+**Replies and follow-ups.** Once an email is sent, this system's job ends.
+Connecting it to the follow-up sequence from my [real estate
+build](/automation/crm-follow-ups) would carry each lead from the first email
+to a reply.
+
+</NextStep>

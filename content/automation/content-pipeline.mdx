@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-09-05"
 order: 10
 featured: false
-cover: "/case-studies/content-pipeline/cover.png"
+cover: "/case-studies/content-pipeline/result.png"
+canvas: "/case-studies/content-pipeline/canvas.png"
 video: "https://drive.google.com/file/d/1bESvDd3K-ODUPZ5tttcKXExavzFAZGb8/view?usp=drive_link"
 tools: ["n8n", "OpenAI", "WordPress", "Google Sheets", "Slack", "Buffer", "Google Search Console"]
 metrics:
@@ -22,11 +23,8 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a pet care blog.
-
-The blog wanted consistent SEO content, but writing, illustrating, publishing
-and sharing every article by hand was too slow. They also wanted help
+A pet care blog wanted consistent SEO content, but writing, illustrating,
+publishing and sharing every article by hand was too slow. It also wanted help
 deciding what to write next, based on what people were already searching for.
 
 ## What I built
@@ -36,7 +34,7 @@ Two workflows in n8n, sharing one Google Sheet of keywords.
 ![The two n8n workflows: the hourly writing and publishing workflow on top, and the weekly Search Console scan below](/case-studies/content-pipeline/workflow.png)
 
 *Top: the hourly workflow that writes, publishes and shares. Bottom: the
-weekly Search Console scan. Click the image to see it full size.*
+weekly Search Console scan.*
 
 1. **It takes one keyword at a time.** Every hour, it picks the next new
    keyword in the sheet and marks it Processing, so it is never picked twice.
@@ -66,8 +64,9 @@ the rest.
 
 ## How it works, explained simply
 
-Think of it as a small content team: a researcher, a writer, an illustrator
-and a social media assistant, with an editor signing off every post.
+It does the work of a small content team: a researcher, a writer, an
+illustrator and a social media assistant. A person stays the editor and signs
+off every post.
 
 - **It never writes the same article twice.** Before writing, it compares
   each keyword with every published post. In testing it caught two: one
@@ -111,7 +110,11 @@ Tested end to end on a live WordPress site, with real posts on X and
 LinkedIn. The site was too new to have much search data, so the weekly scan
 was tested with sample Search Console results.
 
-One known gap, stated plainly: an aborted draft is not rewritten. It is
-logged in the sheet, and someone has to decide what to do with the keyword.
-Asking for a reason and redrafting from that feedback is the next thing I
-would add for a client running this live.
+<NextStep>
+
+**Redrafting from feedback.** An aborted draft is logged in the sheet but not
+rewritten, so someone has to decide what to do with the keyword. Asking for a
+reason and redrafting from it, as my [outreach build](/automation/ai-outreach)
+does, would close that loop.
+
+</NextStep>

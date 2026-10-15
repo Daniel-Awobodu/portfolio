@@ -8,7 +8,8 @@ year: "2026"
 date: "2026-07-09"
 order: 4
 featured: false
-cover: "/case-studies/dental-chatbot/cover.png"
+cover: "/case-studies/dental-chatbot/result.png"
+canvas: "/case-studies/dental-chatbot/canvas.png"
 video: "https://drive.google.com/file/d/1GUyDx7-spin8bNfDMOteyLJJvel6dxPp/view?usp=sharing"
 tools: ["n8n", "Groq", "Google Calendar", "Google Sheets"]
 metrics:
@@ -22,12 +23,10 @@ metrics:
 
 ## The problem
 
-This is an industry build: a complete, working system built to a realistic
-brief from a dental practice.
-
-The practice's website chat brought in a steady stream of enquiries, but a
-person had to qualify and book every single one. Replies were slow, interested
-patients went cold, and the calendar kept gaps that could have been filled.
+A dental practice's website chat brought in a steady stream of enquiries, but
+a person had to qualify and book every single one. Replies were slow,
+interested patients went cold, and the calendar kept gaps that could have been
+filled.
 
 ## What I built
 
@@ -53,13 +52,12 @@ qualifying question.*
 ![The n8n workflow behind the chat assistant: the AI step, a router, and branches for booking, nurture, emergency and fallback replies](/case-studies/dental-chatbot/workflow.png)
 
 *The workflow. One AI step reads the conversation, a router picks the route,
-and each branch handles booking, nurture or an emergency. Click the image to
-see it full size.*
+and each branch handles booking, nurture or an emergency.*
 
 ## How it works, explained simply
 
-Think of it as a front desk receptionist who never sleeps, never forgets a
-detail, and always checks the diary before promising a time.
+The assistant works like a front desk receptionist who never sleeps, never
+forgets a detail, and always checks the diary before promising a time.
 
 - **Safety comes first.** Emergency symptoms are checked before anything else,
   so an urgent case never gets stuck in a booking conversation.
@@ -89,6 +87,10 @@ patient's details. The phone number is blurred.*
 *The nurture list from test runs. Every conversation is logged with the route
 it took, including simulated errors. Phone numbers and emails are blurred.*
 
-One known gap, stated plainly: visitors who go quiet halfway through a chat
-are not yet added to the nurture list automatically. That is the next thing I
-would add for a practice running this live.
+<NextStep>
+
+**Catch the visitors who go quiet.** Someone who leaves halfway through a chat
+isn't added to the nurture list yet. Adding them automatically would turn more
+half-finished chats into bookings.
+
+</NextStep>

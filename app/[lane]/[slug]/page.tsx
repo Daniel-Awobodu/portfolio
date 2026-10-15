@@ -6,6 +6,7 @@ import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import LiveBadge from "@/components/LiveBadge";
 import MdxImage from "@/components/MdxImage";
+import NextStep from "@/components/NextStep";
 import StatRow from "@/components/StatRow";
 import VideoEmbed from "@/components/VideoEmbed";
 import {
@@ -140,7 +141,10 @@ export default async function CaseStudyPage({
 
           {/* ---------- MDX body: problem → build → how it works → outcome ---------- */}
           <div className="prose-editorial mt-4">
-            <MDXRemote source={study.body} components={{ img: MdxImage }} />
+            <MDXRemote
+              source={study.body}
+              components={{ img: MdxImage, NextStep }}
+            />
           </div>
         </div>
       </Container>

@@ -5,6 +5,20 @@ import CaseStudyCard from "./CaseStudyCard";
 import { normalise } from "@/lib/search";
 import type { CaseStudyMeta } from "@/lib/types";
 
+const CHIP_LIMIT = 10;
+
+/** Variants of one tool share a chip. Cards still show the full name. */
+const CHIP_ALIASES: Record<string, string> = {
+  "Groq (Llama 3.1)": "Groq",
+  "WhatsApp (Green API)": "WhatsApp",
+  "WhatsApp Cloud API": "WhatsApp",
+  "n8n Data Table": "n8n",
+};
+
+function chipName(tool: string): string {
+  return CHIP_ALIASES[tool] ?? tool;
+}
+
 export type SearchableStudy = CaseStudyMeta & {
   /** Every searchable word for this study, pre-normalised on the server. */
   haystack: string;
@@ -40,13 +54,16 @@ export default function CaseStudySearch({
   const tools = useMemo(() => {
     const counts = new Map<string, number>();
     for (const study of studies) {
-      for (const tool of study.tools) {
+      // A Set, so a build listing two WhatsApp APIs still counts once.
+      for (const tool of new Set(study.tools.map(chipName))) {
         counts.set(tool, (counts.get(tool) ?? 0) + 1);
       }
     }
     // Most-used tools first, so the chips lead with what clients ask about.
+    // Everything else is still found by typing it.
     return [...counts.entries()]
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, CHIP_LIMIT)
       .map(([tool]) => tool);
   }, [studies]);
 
@@ -115,6 +132,9 @@ export default function CaseStudySearch({
             })}
           </ul>
         ) : null}
+        <p className="mt-3 text-sm text-muted">
+          The most used tools. Search finds any tool or word in the builds.
+        </p>
       </div>
 
       <p className="mt-8 text-sm text-muted" aria-live="polite">
