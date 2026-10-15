@@ -35,7 +35,7 @@ export default function HomePage() {
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
               {site.role} for founders and teams who want the work handled and
               the system explained. Five years in marketing, a year building
-              automations, two years teaching maths — that last one is why you
+              automations, two years teaching maths. That last one is why you
               will understand what I hand you.
             </p>
 

@@ -107,7 +107,7 @@ export default function ContactForm() {
           Message sent.
         </p>
         <p className="mx-auto mt-3 max-w-sm text-[0.9375rem] leading-relaxed text-muted">
-          Thank you — I&rsquo;ve got it and I&rsquo;ll reply from my inbox
+          Thank you, I&rsquo;ve got it and I&rsquo;ll reply from my inbox
           shortly. If it&rsquo;s urgent, WhatsApp is faster.
         </p>
         <button

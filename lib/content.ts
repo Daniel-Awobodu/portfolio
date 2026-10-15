@@ -17,7 +17,7 @@ export const LANES: Record<Lane, LaneInfo> = {
     description:
       "AI workflows that take repetitive work off your team: capturing orders, qualifying and following up leads, booking appointments, and reading documents and receipts.",
     intro:
-      "Systems that do the work nobody should be doing by hand. Each build below starts with the bottleneck, shows the wiring, then explains it in plain language.",
+      "Systems that do the work nobody should be doing by hand. Builds marked Live run in production in my own e-commerce business. The rest were built to real industry briefs and tested end to end with live tools. Each one starts with the bottleneck, shows the wiring, then explains it in plain language.",
   },
   marketing: {
     slug: "marketing",
@@ -26,7 +26,7 @@ export const LANES: Record<Lane, LaneInfo> = {
     description:
       "Facebook & Instagram ads, sales pages, and social systems that turn spend into orders.",
     intro:
-      "Five years of getting products sold online. Ads, offers and sales pages — measured by orders, not impressions.",
+      "Five years of getting products sold online. Ads, offers and sales pages, measured by orders, not impressions.",
   },
 };
 
@@ -84,6 +84,7 @@ function parseFile(lane: Lane, filename: string): CaseStudy {
     date: asString(data.date, "1970-01-01"),
     order: typeof data.order === "number" ? data.order : 999,
     featured: data.featured === true,
+    live: data.live === true,
     cover: cover === "" ? undefined : cover,
     video: video === "" ? undefined : video,
     tools: asTools(data.tools),

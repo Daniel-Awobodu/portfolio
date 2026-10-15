@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
+import LiveBadge from "@/components/LiveBadge";
 import MdxImage from "@/components/MdxImage";
 import StatRow from "@/components/StatRow";
 import VideoEmbed from "@/components/VideoEmbed";
@@ -78,8 +79,12 @@ export default async function CaseStudyPage({
   const next = getNextCaseStudy(lane, slug);
   const laneInfo = LANES[lane];
 
+  // Automation builds made to a brief name their industry, not a client.
+  const clientLabel =
+    study.live || lane !== "automation" ? "Client" : "Industry";
+
   const facts = [
-    { label: "Client", value: study.client },
+    { label: clientLabel, value: study.client },
     { label: "Role", value: study.role },
     { label: "Year", value: study.year },
     { label: "Tools", value: study.tools.join(", ") },
@@ -97,6 +102,8 @@ export default async function CaseStudyPage({
             ← {laneInfo.label}
           </Link>
         </p>
+
+        {study.live ? <LiveBadge className="mt-6" /> : null}
 
         <h1 className="mt-6 max-w-4xl font-display text-[clamp(2rem,1.5rem+2.4vw,3.25rem)] leading-[1.1] font-semibold text-ink">
           {study.title}
