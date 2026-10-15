@@ -1,0 +1,102 @@
+---
+title: "An inbox assistant that sorts mail, files invoices and flags what's urgent"
+client: "Industry build · Marketing agency"
+lane: "automation"
+summary: "A marketing agency was losing hours to email triage and invoice filing. An AI assistant now reads every email and its attachment, sorts it, files invoices in a folder per vendor, and stars what can't wait."
+role: "Designed and built"
+year: "2026"
+date: "2026-07-06"
+order: 13
+featured: false
+cover: "/case-studies/office-assistant/cover.png"
+video: "https://drive.google.com/file/d/1sXxALM88pDf2tVXAbOM0lb7NLuJvi-WN/view?usp=drive_link"
+tools: ["n8n", "Gmail", "OpenAI", "Google Drive", "Google Calendar"]
+metrics:
+  - label: "lanes for every email: invoices, scheduling and everything else"
+    value: "3"
+  - label: "contracts or reports mistaken for invoices in testing"
+    value: "0"
+  - label: "Drive folders, created on a vendor's first invoice"
+    value: "1 per vendor"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a marketing agency.
+
+The agency was losing hours every week to email triage, filing invoices,
+scheduling requests and remembering follow-ups. They wanted one assistant
+across their Google Workspace instead of hiring an admin.
+
+## What I built
+
+An AI assistant in n8n that reads every new email, decides what it is, and
+acts on it in Gmail, Google Drive and Google Calendar.
+
+![The n8n workflow: Gmail trigger, attachment reader for PDFs and images, one AI classification step, a check on its answer, then lanes for filing invoices in Drive, labelling, starring urgent mail and creating calendar reminders](/case-studies/office-assistant/workflow.png)
+
+*The workflow. Left: the email and its attachment are read. Middle: one AI
+step sorts it, and code checks the answer. Right: each lane acts in Drive,
+Gmail or Calendar. Click the image to see it full size.*
+
+1. **It checks the inbox every 5 minutes**, skipping promotions, social and
+   update emails.
+2. **It reads the attachment.** PDFs are read directly, and images are read
+   by AI, so an invoice that arrives as a photo still counts.
+3. **One AI step sorts the email** into a lane: invoice, scheduling or
+   general. It also sets two separate flags, urgent and needs follow-up,
+   writes a one-line summary, and names the vendor on invoices.
+4. **Code checks the AI's answer.** The lane must be one of the three and
+   the flags must be clear yes or no answers. Anything else stops the run
+   instead of filing something in the wrong place.
+5. **Each lane acts on it.** Invoices are filed in a Drive folder for that
+   vendor, created on their first invoice. Scheduling and general emails are
+   labelled. Urgent emails are starred and labelled. Follow-ups get a
+   calendar reminder at the next 9am or 2pm slot.
+
+## How it works, explained simply
+
+Think of it as an office assistant who opens every email first and puts it
+on the right pile, with the urgent ones on top.
+
+- **Invoices come first.** One test email attached an invoice, asked for a
+  revised deck by 2pm and asked to move a meeting. The invoice decided the
+  lane, and the rest became urgent and follow-up flags, so nothing was lost.
+- **A PDF is not automatically an invoice.** A signed contract PDF and a
+  campaign report spreadsheet both went to General, because no money was
+  being billed.
+- **"Let's grab coffee sometime" isn't a meeting request.** Only a real
+  request to book or move a meeting goes to Scheduling.
+- **Urgency comes from what's asked, not the subject line.** A deadline like
+  "by 2pm today" makes an email urgent. The word "URGENT" alone doesn't.
+- **One vendor, one folder.** Names are cleaned up, so "Acme Co." becomes
+  "Acme", and the assistant looks for the vendor's folder before creating a
+  new one.
+- **It never sends anything.** It only labels, stars, files and adds
+  reminders, so nothing goes out in the agency's name.
+
+## The outcome
+
+Every email arrives already sorted, invoices file themselves, and the urgent
+ones are starred at the top.
+
+![Gmail after a test run: each email labelled AI/General, AI/Scheduling or AI/Urgent, with urgent emails starred, and the AI labels in the sidebar](/case-studies/office-assistant/gmail-labels.png)
+
+*The test inbox after a run. The emergency reschedule went to Scheduling and
+Urgent and was starred. The coffee catch-up, the signed contract and the
+campaign report went to General.*
+
+![Google Drive: an Invoices folder with a folder for each vendor (Acme, Webflow, Luminary Print Co), and inside Luminary Print Co, the invoice that arrived as an image](/case-studies/office-assistant/drive-folders.png)
+
+*A folder per vendor, created automatically. Below: an invoice that arrived
+as an image, read by AI and filed in its vendor's folder.*
+
+It also reads invoices accurately. From one PDF, it picked up the full total
+of $132.22, made up of a $123.00 subtotal plus 7.5% tax.
+
+Two known gaps, stated plainly. The follow-up flag is too eager: in testing
+it set reminders on emails that didn't need one, like a casual catch-up note.
+And attachments are paired with their vendor folder by position, which is
+only reliable when one email arrives at a time. Tightening the follow-up rule
+and matching each file to its email are the next two fixes.
