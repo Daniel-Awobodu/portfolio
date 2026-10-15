@@ -1,0 +1,114 @@
+---
+title: "A daily job shortlist where every fit comes with proof"
+client: "Industry build · Automation agency"
+lane: "automation"
+summary: "A small agency lost hours scrolling job boards and still missed good gigs. Every morning, AI now scores each new posting against the agency's services, code checks its proof, and only real fits reach Slack."
+role: "Designed and built"
+year: "2026"
+date: "2026-10-01"
+order: 16
+featured: false
+cover: "/case-studies/opportunity-feed/cover.png"
+video: "https://drive.google.com/file/d/1zXrp_UMsbUvswXEHWsSNrVDA0Drkuxok/view?usp=drive_link"
+tools: ["n8n", "Remotive", "OpenAI", "Airtable", "Slack"]
+metrics:
+  - label: "fits posted without a quote found word for word in the job post"
+    value: "0"
+  - label: "real job posts judged correctly after tuning the scoring rules"
+    value: "16 of 16"
+  - label: "red flags caught: pay-to-apply, commission-only, middlemen, spam"
+    value: "4"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a small automation agency.
+
+The team scrolled job boards every day looking for work they could deliver.
+Most postings were poor matches, reading them all took hours, and good gigs
+still slipped past. They wanted a daily shortlist of the postings worth their
+time, each with a one-line reason.
+
+## What I built
+
+A scheduled workflow in n8n that pulls new postings each morning, scores
+every one against a short profile of the agency's services, and posts one
+digest to Slack.
+
+![The n8n workflow: the daily trigger and settings, the job feed with a health check and a Source Down alert, the duplicate filter, AI scoring, the proof check, saving to Airtable and the Slack digest](/case-studies/opportunity-feed/workflow.png)
+
+*The workflow, from the 10am trigger to the Slack digest. The highlighted
+step is the proof check. Click the image to see it full size.*
+
+1. **It runs every morning at 10am.** The agency's profile and scoring rules
+   live in one settings step, so changing what counts as a fit takes a
+   minute.
+2. **It checks the job feed before trusting it.** If the source is down,
+   empty or has changed format, the team gets an alert saying today's jobs
+   were not checked, instead of a misleading "no jobs today".
+3. **It only scores what's new.** Every posting is checked against the
+   Airtable log, so nothing is scored or posted twice. Job descriptions are
+   cleaned of their web formatting first.
+4. **AI scores each posting** against the agency profile: how well the work
+   matches the agency's skills, whether a client would hire an agency for it,
+   whether the pay works, and any red flags. Before scoring, it must copy
+   one passage from the posting, word for word, as proof.
+5. **Code checks the proof and decides.** The quote must really appear in
+   the posting, and code, not the AI, adds up the final score. A job is a fit
+   only with 6 or more out of 10, including at least 3 out of 6 for skills.
+6. **One digest goes to Slack**, after everything is saved to Airtable:
+   fits, jobs that need a human check, and pitch ideas.
+
+## How it works, explained simply
+
+Think of it as a researcher who reads every job board before you wake up,
+and has to show you the exact line that convinced them before recommending
+anything.
+
+- **No proof, no post.** If a job scores as a fit but its quote can't be
+  found in the posting, it is never posted as a fit. It goes under "Needs a
+  human check" instead.
+- **Job labels aren't trusted blindly.** Job boards often mislabel roles. If
+  the board says full-time but the AI thinks it is project work, the job is
+  flagged for a person to check.
+- **Red flags cost points.** Pay-to-apply, commission-only pay, talent
+  networks posing as clients and spammy posts are labelled and scored down.
+- **Hiring posts can become sales leads.** When a company is hiring someone
+  to do work by hand that the agency could automate, the digest suggests a
+  cold pitch, backed by its own verified quote from the posting.
+- **Nothing gets mixed up.** If the number of AI answers doesn't match the
+  number of jobs, the run stops instead of guessing which answer belongs to
+  which job.
+- **Failures are explained in plain words.** A separate workflow posts the
+  step that failed and exactly what to do about it.
+
+![The daily Slack digest: one fit scored 10 out of 10 with its reason, proof quote and pay, one pitch idea with its proof, and 8 red-flag posts skipped](/case-studies/opportunity-feed/slack-digest.png)
+
+*A daily digest. The fit is a test posting added to check the full path. The
+pitch idea suggests automating a company's manual data entry, backed by a
+quote from its own job ad. The company name is blurred.*
+
+## The outcome
+
+The agency gets one short message each morning instead of an hour of
+scrolling, and every recommendation can be checked against the posting in
+seconds.
+
+![The Airtable log: every job with its status, reason, final score and the evidence quote, each marked as verified](/case-studies/opportunity-feed/airtable-log.png)
+
+*Every job in the Airtable log, with its status, reason, score and the
+quote behind it, each one verified. Company names are blurred.*
+
+Testing tightened the scoring. On the first run, 15 of 16 real postings were
+judged correctly. The miss was a talent marketplace scored as a fit. After
+the scoring rules were rewritten, all 16 were judged correctly. A pitch idea
+aimed at a company that sells human AI evaluation was stopped by a new rule.
+Hand-made test cases proved the safety checks: an invented quote and a
+mislabelled full-time job were both flagged, never posted.
+
+One known gap, stated plainly: the free job feed is small, delayed and
+mostly full-time roles, so real fits are rare. In the run on 16 real
+postings, none were a fit for an agency, and the digest said so. Adding a
+freelance marketplace like Upwork as a second source is the next step for an
+agency running this live.
