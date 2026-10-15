@@ -4,11 +4,18 @@ import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import ContactLinks from "@/components/ContactLinks";
 import LaneCard from "@/components/LaneCard";
-import { getCaseStudies, getProofMetrics, LANES } from "@/lib/content";
+import {
+  getCaseStudies,
+  getLaneEyebrow,
+  getProofMetrics,
+  LANES,
+} from "@/lib/content";
 import { site } from "@/lib/site-config";
+import { countTools } from "@/lib/tools";
 
 export default function HomePage() {
   const marketing = getCaseStudies("marketing");
+  const automationTools = countTools(getCaseStudies("automation"));
   const proof = getProofMetrics();
 
   return (
@@ -89,19 +96,19 @@ export default function HomePage() {
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {/* Stated total of systems shipped, not the number of case studies
-              published — those are two different numbers on purpose. */}
+          {/* Both numbers are counted from the build files: the eyebrow's
+              build count and the tools used across all of them. */}
           <LaneCard
-            eyebrow={LANES.automation.eyebrow}
+            eyebrow={getLaneEyebrow("automation")}
             title="Automation"
             description={LANES.automation.description}
-            stat="1,145"
-            statLabel="past orders, now one customer database"
+            stat={`${automationTools}`}
+            statLabel="tools connected across the builds"
             href="/automation"
             linkLabel="View automation"
           />
           <LaneCard
-            eyebrow={LANES.marketing.eyebrow}
+            eyebrow={getLaneEyebrow("marketing")}
             title="Marketing"
             description={LANES.marketing.description}
             stat={marketing.length > 0 ? `${marketing.length}` : "New lane"}

@@ -44,6 +44,11 @@ export type LaneInfo = {
   slug: Lane;
   label: string;
   eyebrow: string;
+  /**
+   * When set, the eyebrow ends with a live count of the lane's builds,
+   * e.g. "Lane 01 · 16 systems built". Singular, then plural.
+   */
+  countLabel?: [string, string];
   /** Verbatim lane card description used on the home page. */
   description: string;
   intro: string;

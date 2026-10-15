@@ -7,7 +7,12 @@ import CaseStudySearch, {
 import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import PageHeader from "@/components/PageHeader";
-import { getCaseStudies, LANE_SLUGS, LANES } from "@/lib/content";
+import {
+  getCaseStudies,
+  getLaneEyebrow,
+  LANE_SLUGS,
+  LANES,
+} from "@/lib/content";
 import { normalise } from "@/lib/search";
 import type { CaseStudy, Lane } from "@/lib/types";
 
@@ -96,7 +101,11 @@ export default async function LanePage({
 
   return (
     <>
-      <PageHeader eyebrow={info.eyebrow} title={info.label} lede={info.intro} />
+      <PageHeader
+        eyebrow={getLaneEyebrow(lane)}
+        title={info.label}
+        lede={info.intro}
+      />
 
       <Container as="section" className="py-14 md:py-16">
         {lane === "automation" && studies.length > 0 ? (

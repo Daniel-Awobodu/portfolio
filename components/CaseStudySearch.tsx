@@ -3,21 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import CaseStudyCard from "./CaseStudyCard";
 import { normalise } from "@/lib/search";
+import { toolName } from "@/lib/tools";
 import type { CaseStudyMeta } from "@/lib/types";
 
 const CHIP_LIMIT = 10;
-
-/** Variants of one tool share a chip. Cards still show the full name. */
-const CHIP_ALIASES: Record<string, string> = {
-  "Groq (Llama 3.1)": "Groq",
-  "WhatsApp (Green API)": "WhatsApp",
-  "WhatsApp Cloud API": "WhatsApp",
-  "n8n Data Table": "n8n",
-};
-
-function chipName(tool: string): string {
-  return CHIP_ALIASES[tool] ?? tool;
-}
 
 export type SearchableStudy = CaseStudyMeta & {
   /** Every searchable word for this study, pre-normalised on the server. */
@@ -55,7 +44,7 @@ export default function CaseStudySearch({
     const counts = new Map<string, number>();
     for (const study of studies) {
       // A Set, so a build listing two WhatsApp APIs still counts once.
-      for (const tool of new Set(study.tools.map(chipName))) {
+      for (const tool of new Set(study.tools.map(toolName))) {
         counts.set(tool, (counts.get(tool) ?? 0) + 1);
       }
     }
