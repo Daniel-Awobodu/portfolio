@@ -1,0 +1,124 @@
+---
+title: "Quote requests spread across attachments, priced and drafted for approval"
+client: "Industry build · Medical supplies"
+lane: "automation"
+summary: "Staff used to open every emailed quote request and its attachments, look up each price and type the reply by hand. Now AI reads it all, prices every item from the catalog, and drafts the reply for a person to approve in Slack."
+role: "Designed and built"
+year: "2026"
+date: "2026-09-23"
+order: 12
+featured: false
+cover: "/case-studies/quote-requests/cover.png"
+video: "https://drive.google.com/file/d/1d_IT0BeUUp7qhdV_Lt4JlGiUhIYAm_Nb/view?usp=drive_link"
+tools: ["n8n", "Gmail", "OpenAI", "Airtable", "Slack"]
+metrics:
+  - label: "items read from five attached files in one request"
+    value: "12"
+  - label: "invented prices: anything not in the catalog is marked to be confirmed"
+    value: "0"
+  - label: "to approve in Slack before a draft is flagged instead of sent"
+    value: "2 days"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a supplier of surgical, laboratory and diagnostic equipment.
+
+Customers email their quote requests, often with the items spread across
+attached files. For every request, a staff member opened the email and each
+attachment, picked out the items and quantities, looked up every price,
+checked the deadline, and typed the reply by hand.
+
+## What I built
+
+A workflow in n8n that takes a request from the inbox to a priced reply,
+with Airtable holding the product catalog and every request.
+
+![A quote request email that lists no items itself, with five attachments: an image, two text files, a CSV spreadsheet and a PDF](/case-studies/quote-requests/request-email.png)
+
+*A test request. The email itself lists no items: all 12 are spread across
+five attachments, including a photo, two text files, a spreadsheet and a
+PDF.*
+
+1. **It picks up new requests.** Every two minutes, it checks the quotes
+   inbox and skips any email it has already handled.
+2. **It reads every attachment.** PDFs, text files, and CSV and Excel
+   spreadsheets are read directly, and photos are read by AI. Each file is
+   handled in turn.
+3. **AI pulls out the request:** every item exactly as the customer wrote
+   it, the quantity, the unit, any model number, and the deadline. An item
+   mentioned in two files is only counted once.
+4. **Every item is matched to the catalog.** The AI searches the product
+   catalog in Airtable, by model number first and then by name. Each match
+   gets a confidence rating, and the price always comes from the catalog.
+5. **Everything is recorded.** The request and each priced line item are
+   saved in Airtable, along with the file each item came from.
+6. **A reply is drafted for approval.** A Gmail draft is written, and Slack
+   shows a summary of every item, its match and the subtotal. Approve, and
+   the reply goes out in the same email thread. Reject, and the request is
+   flagged for manual review.
+
+![The n8n workflow: the email trigger and duplicate check, the attachment reader that handles each file type, the AI agent with the product catalog, the line item records, the Gmail draft and the Slack approval](/case-studies/quote-requests/workflow.png)
+
+*The workflow. Left: new emails come in and repeats are dropped. Bottom: each
+attachment is read according to its type. Top: the AI matches items to the
+catalog, line items are saved, and the draft goes to Slack for approval.
+Click the image to see it full size.*
+
+## How it works, explained simply
+
+Think of it as a sales assistant who opens every attachment, checks every
+price against the price list, and leaves the finished reply on your desk to
+sign.
+
+- **It never invents a price.** Prices only come from the catalog. If an item
+  isn't in the catalog, the reply marks it "to be confirmed", leaves it out of
+  the subtotal, and the request is flagged for review.
+- **It doesn't promise what it can't back up.** The test request asked for
+  delivery costs and VAT, which aren't in the catalog, so the reply says they
+  will be confirmed instead of making up a figure.
+- **The customer's words are kept.** Each line shows the item exactly as the
+  customer wrote it, beside the catalog product it was matched to, so staff
+  can check every match at a glance.
+- **Model numbers come first.** When a customer gives a catalog number, that
+  is searched before anything else, so "DE-BAL-01" finds the exact balance.
+- **Deadlines are never made up.** A clear date is recorded. "ASAP" is marked
+  as vague, and no deadline stays empty instead of becoming a guessed date.
+- **Nothing goes out unapproved.** If nobody responds in Slack within two
+  days, the reply stays a draft and the request is marked for manual review.
+
+![The Slack approval message: the requester, each item as written with its catalog match, quantity and confidence, the subtotal, a preview of the reply, and Approve and Reject buttons, with the next request flagged for manual review](/case-studies/quote-requests/slack-approval.png)
+
+*The approval message in Slack. Each item is listed as the customer wrote it,
+with its catalog match, quantity and confidence, then a preview of the reply.
+Below it, the next request has been flagged for manual review. Email
+addresses are blurred.*
+
+## The outcome
+
+In testing, a request with no items in the email and five attachments became
+12 priced line items and a ready-to-send reply, without anyone opening a
+file. Once it was approved, the reply went out in the customer's email
+thread.
+
+![Line items in Airtable grouped by request, each showing the customer's wording, the file it came from, the matched product, the match confidence, the unit price and the line total](/case-studies/quote-requests/line-items.png)
+
+*Line items in Airtable, grouped by request. Each one shows the customer's
+wording, which file it came from, the catalog match, how confident the match
+is, and the price.*
+
+![The end of the approved reply: the last items, a subtotal of 1,784,500 naira excluding delivery and VAT, and notes saying delivery and VAT will be confirmed](/case-studies/quote-requests/reply-sent.png)
+
+*The end of the approved reply: the last of the 12 items, the ₦1,784,500
+subtotal, and notes that only promise what the catalog can back up.*
+
+Other test requests checked the safety rules. One included items the
+supplier doesn't stock: they were marked to be confirmed, left out of the
+subtotal, and the request was flagged for manual review. Another, with no
+attachments and nothing from the catalog, was flagged the same way, and no
+line items were created.
+
+One known gap, stated plainly: Word documents are not read yet, so an item
+that only appears in a Word file would be missed. Adding Word support is the
+next thing I would add for a supplier running this live.
