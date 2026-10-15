@@ -43,8 +43,9 @@ PDF.*
 
 1. **It picks up new requests.** Every two minutes, it checks the quotes
    inbox and skips any email it has already handled.
-2. **It reads every attachment.** PDFs, text files and CSV spreadsheets are
-   read directly, and photos are read by AI. Each file is handled in turn.
+2. **It reads every attachment.** PDFs, text files, and CSV and Excel
+   spreadsheets are read directly, and photos are read by AI. Each file is
+   handled in turn.
 3. **AI pulls out the request:** every item exactly as the customer wrote
    it, the quantity, the unit, any model number, and the deadline. An item
    mentioned in two files is only counted once.
@@ -118,6 +119,6 @@ subtotal, and the request was flagged for manual review. Another, with no
 attachments and nothing from the catalog, was flagged the same way, and no
 line items were created.
 
-One known gap, stated plainly: Word and Excel attachments are not read yet,
-so an item that only appears in one of those files would be missed. Adding
-both is the next thing I would add for a supplier running this live.
+One known gap, stated plainly: Word documents are not read yet, so an item
+that only appears in a Word file would be missed. Adding Word support is the
+next thing I would add for a supplier running this live.
