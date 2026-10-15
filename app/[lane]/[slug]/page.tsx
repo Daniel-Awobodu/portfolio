@@ -7,6 +7,7 @@ import Container from "@/components/Container";
 import LiveBadge from "@/components/LiveBadge";
 import MdxImage from "@/components/MdxImage";
 import NextStep from "@/components/NextStep";
+import ResultHero from "@/components/ResultHero";
 import StatRow from "@/components/StatRow";
 import VideoEmbed from "@/components/VideoEmbed";
 import {
@@ -114,6 +115,15 @@ export default async function CaseStudyPage({
           <p className="mt-5 max-w-prose text-lg leading-relaxed text-muted">
             {study.summary}
           </p>
+        ) : null}
+
+        {study.cover && study.resultCaption ? (
+          <ResultHero
+            src={study.cover}
+            href={study.resultFull ?? study.cover}
+            caption={study.resultCaption}
+            title={study.title}
+          />
         ) : null}
 
         {/* Skipped entirely when a file sets none of these, so a minimal
