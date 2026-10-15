@@ -3,6 +3,10 @@ import CardCover from "@/components/CardCover";
 import LiveBadge from "@/components/LiveBadge";
 import type { CaseStudyMeta } from "@/lib/types";
 
+const VISIBLE_TOOLS = 3;
+const chipClass =
+  "rounded-xs border border-hairline px-2 py-1 text-xs font-medium text-muted";
+
 /**
  * Lane-page card. Everything except `title` degrades gracefully:
  * no cover falls back to a typographic panel, and missing metrics/tools simply
@@ -16,6 +20,8 @@ export default function CaseStudyCard({
   priority?: boolean;
 }) {
   const topMetric = study.metrics[0];
+  // The full list is on the build page; the card keeps to one or two rows.
+  const hiddenTools = study.tools.slice(VISIBLE_TOOLS);
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-md border border-hairline bg-card transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lift">
@@ -77,14 +83,17 @@ export default function CaseStudyCard({
 
           {study.tools.length > 0 ? (
             <ul className="mt-4 flex flex-wrap gap-1.5">
-              {study.tools.map((tool) => (
-                <li
-                  key={tool}
-                  className="rounded-xs border border-hairline px-2 py-1 text-xs font-medium text-muted"
-                >
+              {study.tools.slice(0, VISIBLE_TOOLS).map((tool) => (
+                <li key={tool} className={chipClass}>
                   {tool}
                 </li>
               ))}
+              {hiddenTools.length > 0 ? (
+                <li className={chipClass} title={hiddenTools.join(", ")}>
+                  +{hiddenTools.length}
+                  <span className="sr-only"> more: {hiddenTools.join(", ")}</span>
+                </li>
+              ) : null}
             </ul>
           ) : null}
         </div>
