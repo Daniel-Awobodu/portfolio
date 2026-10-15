@@ -1,0 +1,123 @@
+---
+title: "Requests from the website, inbox and staff notes, in one classified record"
+client: "Industry build · Healthcare advisory"
+lane: "automation"
+summary: "A healthcare advisory took requests by web form, email and staff notes, and typed, sorted and answered each by hand. Now every request becomes one record, classified by AI with a next step and a drafted reply, and urgent ones go straight to Slack."
+role: "Designed and built"
+year: "2026"
+date: "2026-08-20"
+order: 15
+featured: false
+cover: "/case-studies/multichannel-intake/cover.png"
+video: "https://drive.google.com/file/d/1ZoXBvld7-B-YjFsxPeQsxmsmI6EeZJab/view?usp=sharing"
+tools: ["n8n", "Airtable", "OpenAI", "Gmail", "Slack"]
+metrics:
+  - label: "channels feeding one table: web form, email and staff notes"
+    value: "3"
+  - label: "requests lost if the AI fails: each is saved before it runs"
+    value: "0"
+  - label: "test requests classified, all with confidence of 0.96 or more"
+    value: "5 of 5"
+---
+
+## The problem
+
+This is an industry build: a complete, working system built to a realistic
+brief from a healthcare advisory firm, a team of consultants that hospitals,
+clinics and medical groups hire for advice on regulation, billing and
+operations.
+
+Requests arrived three ways: the website form, email, and notes typed by
+staff after a call or meeting. For every one, a staff member had to copy it
+into a table, decide what kind of request it was, work out the next step and
+write the first reply by hand.
+
+## What I built
+
+A workflow in n8n that turns a request from any of the three channels into
+the same structured record in Airtable, then classifies it and drafts the
+reply.
+
+![The website form where clients request a consultation: name, email, organization and their request](/case-studies/multichannel-intake/web-form.png)
+
+*The website form. Clients get a reference number on screen as soon as they
+send it, to quote in any follow-up.*
+
+1. **It takes requests from three places.** The website form, an email
+   inbox, and a form staff fill in after a phone call or meeting.
+2. **It turns them into one shape.** Each request becomes the same record,
+   with the source, the requester, the original wording and a reference
+   number. For emails, quoted earlier messages and signatures are removed,
+   and the organisation is worked out from the email domain.
+3. **It filters out junk.** Bots are quietly ignored, and a form with an
+   empty name, a broken email address or too short a request is sent back to
+   be corrected.
+4. **It skips duplicates.** On the web form and staff notes, the same
+   request from the same person on the same day is caught before it is
+   saved, even if the punctuation or spacing changes. An email is never
+   logged twice.
+5. **It saves the request first, then asks the AI.** The AI gives each
+   request a title, a category, an urgency, a suggested next step for the
+   advisor, a drafted holding reply and a confidence score.
+6. **Urgent requests alert the team.** High and Critical requests post to
+   Slack with a link to the record. Normal and Low ones wait in the table
+   for the day's review.
+
+![The n8n workflow: the web form webhook with its bot, invalid and valid routes, the staff note form and the email trigger, all merging into one path that checks for duplicates, saves the record, classifies it with AI, and alerts Slack for urgent requests or failures](/case-studies/multichannel-intake/workflow.png)
+
+*The workflow. Left: the three channels, each tidied into the same shape.
+Middle: they merge, duplicates are dropped and the record is saved. Right:
+the AI classifies it, and Slack hears about urgent requests and failures.
+Click the image to see it full size.*
+
+## How it works, explained simply
+
+Think of it as a front office coordinator who logs every request the moment
+it arrives, wherever it came from, then reads it and puts it on the right
+advisor's desk.
+
+- **Nothing is lost if the AI fails.** The request is saved before the AI
+  runs, and the original wording is never overwritten. If classification
+  fails, the record is marked as failed with the reason, and the team is
+  told on Slack.
+- **The AI only picks from approved options.** There are eight categories
+  and four urgency levels. If the AI returns anything else, code replaces it
+  with "Other / Unclear" or "Normal" and notes what happened.
+- **Critical means critical.** Only patient safety or active regulatory
+  enforcement counts as Critical. A tight deadline is High, so the alert
+  channel isn't flooded.
+- **The drafted reply never gives advice.** It acknowledges the request,
+  restates it so the client knows they were understood, and says an advisor
+  will follow up. It never promises an outcome.
+- **Patient details are flagged.** If a request names a patient, a date of
+  birth or a record number, it is marked so staff handle it with care.
+- **Follow-ups are recognised.** When a client replies to an earlier email,
+  the record notes that it continues an earlier request, so the advisor
+  reads the thread first.
+
+![The Airtable intake table: five requests from the website form, email and a staff note, each with its category, urgency, AI confidence, received channel and reference number](/case-studies/multichannel-intake/intake-records.png)
+
+*Every request in one table, whichever channel it came from, with its
+category, urgency, confidence and reference. The email follow-up is noted as
+continuing an earlier request. Email addresses are blurred.*
+
+## The outcome
+
+Every request lands in one place, already sorted, with a next step and a
+draft reply waiting, and the team only gets pinged for what can't wait.
+
+![A Slack alert in the intake-alerts channel: a Critical regulatory and compliance request from a medical group, with the suggested next step and a link to the record](/case-studies/multichannel-intake/slack-alert.png)
+
+*The alert for a Critical request: a regulator's 14-day deadline about
+exposed patient records, with the next step and a link to the record.*
+
+Each channel was tested: a critical web request alerted Slack, a low-urgency
+one waited quietly in the table, a staff note from a meeting was logged
+under the staff member's name, an email was classified, and a reply to that
+email was recognised as a follow-up. Sending the same web request twice was
+stopped at the duplicate check.
+
+One known gap, stated plainly: the drafted reply is copied and sent by hand.
+An approve-and-send step, like the Slack approval in my
+[quote request build](/automation/quote-requests), is the next thing I would
+add for a firm running this live.
