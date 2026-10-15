@@ -13,7 +13,8 @@ export const LANES: Record<Lane, LaneInfo> = {
   automation: {
     slug: "automation",
     label: "Automation",
-    eyebrow: "Lane 01 · 15+ systems built",
+    eyebrow: "Lane 01",
+    countLabel: ["system built", "systems built"],
     description:
       "AI workflows that take repetitive work off your team: capturing orders, qualifying and following up leads, booking appointments, and reading documents and receipts.",
     intro:
@@ -136,6 +137,17 @@ export function getAllCaseStudies(): CaseStudy[] {
 
 export function getCaseStudy(lane: Lane, slug: string): CaseStudy | null {
   return getCaseStudies(lane).find((study) => study.slug === slug) ?? null;
+}
+
+/**
+ * The lane's eyebrow, with its build count read from /content, so adding or
+ * removing a build file updates it on the next deploy.
+ */
+export function getLaneEyebrow(lane: Lane): string {
+  const { eyebrow, countLabel } = LANES[lane];
+  const count = getCaseStudies(lane).length;
+  if (!countLabel || count === 0) return eyebrow;
+  return `${eyebrow} · ${count} ${count === 1 ? countLabel[0] : countLabel[1]}`;
 }
 
 /** Powers `generateStaticParams` on the case study route. */
