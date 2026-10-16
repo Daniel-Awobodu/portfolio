@@ -6,6 +6,7 @@ import CaseStudySearch, {
 } from "@/components/CaseStudySearch";
 import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
+import ImageLightbox from "@/components/ImageLightbox";
 import PageHeader from "@/components/PageHeader";
 import {
   getCaseStudies,
@@ -14,6 +15,7 @@ import {
   LANES,
 } from "@/lib/content";
 import { normalise } from "@/lib/search";
+import { site } from "@/lib/site-config";
 import type { CaseStudy, Lane } from "@/lib/types";
 
 /** Only `automation` and `marketing` exist; anything else 404s at build time. */
@@ -106,7 +108,28 @@ export default async function LanePage({
         eyebrow={getLaneEyebrow(lane)}
         title={info.label}
         lede={info.intro}
-      />
+      >
+        {lane === "automation" ? (
+          <p className="mt-5 inline-flex max-w-full items-start gap-2 rounded-md border border-edge bg-card px-4 py-2 text-sm leading-relaxed text-ink">
+            <span
+              aria-hidden="true"
+              className="font-semibold text-accent-strong"
+            >
+              ✓
+            </span>
+            <span>
+              Certified in {site.certification.label}.{" "}
+              <ImageLightbox
+                href={site.certification.image}
+                alt={`Certificate: ${site.certification.label}`}
+                className="font-semibold text-accent-strong underline underline-offset-4"
+              >
+                See the certificate
+              </ImageLightbox>
+            </span>
+          </p>
+        ) : null}
+      </PageHeader>
 
       <Container as="section" className="py-14 md:py-16">
         {lane === "automation" && studies.length > 0 ? (

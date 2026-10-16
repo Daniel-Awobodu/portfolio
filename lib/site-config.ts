@@ -31,6 +31,13 @@ export const site = {
 
   credential: "B.Sc. (Ed.) Mathematics, University of Lagos, 2022.",
 
+  /** Shown wherever the degree is, with the certificate opening full size. */
+  certification: {
+    label: "AI & Automation, TS Academy, 2026",
+    detail: "A three-month programme, certified July 5, 2026.",
+    image: "/credentials/ts-academy-ai-automation.jpg",
+  },
+
   /** Status line under the /contact heading. */
   availability: [
     "Taking on new projects",
@@ -128,7 +135,8 @@ export const contactLinks = [
  *
  * The key is safe to commit: it only lets someone send mail TO you.
  */
-export const WEB3FORMS_ACCESS_KEY: string = "b885468e-3c1c-4e87-9036-ac0bf439e355";
+export const WEB3FORMS_ACCESS_KEY: string =
+  "b885468e-3c1c-4e87-9036-ac0bf439e355";
 
 /** Global navigation. Order is deliberate: work first, then proof, then ask. */
 export const navLinks = [

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Container from "@/components/Container";
 import ContactLinks from "@/components/ContactLinks";
 import CTAButton from "@/components/CTAButton";
+import ImageLightbox from "@/components/ImageLightbox";
 import PageHeader from "@/components/PageHeader";
 import { site } from "@/lib/site-config";
 
@@ -97,11 +98,22 @@ export default function AboutPage() {
                   with real money and real customers.
                 </p>
                 <p>
-                  Quality-Buy is also where I met the problem that led me here.
+                  In late 2025, a video by Liam Ottley, an AI automation creator
+                  on YouTube, stopped me. His point was simple: AI isn&rsquo;t
+                  the next wave, it&rsquo;s already here, and most people
+                  haven&rsquo;t caught up. I&rsquo;d been looking for a way into
+                  tech, and automation fit how I already work: find what&rsquo;s
+                  slowing a business down, and fix it. I went all in, won a
+                  scholarship to TS Academy&rsquo;s AI &amp; Automation
+                  programme, and finished it in July 2026.
+                </p>
+                <p>
+                  The first problem I pointed it at was Quality-Buy&rsquo;s.
                   Every order arrived as an email. Gmail notifications came
                   late, so orders sat unseen for up to two hours, and each one
                   was copied into WhatsApp by hand. More than a thousand past
-                  orders sat in the inbox with no way to reuse them. So I built{" "}
+                  orders sat in the inbox with no way to reuse them. So, while
+                  the course was still running, I built{" "}
                   <Link href="/automation/order-alerts">
                     an alert that sends every new order to WhatsApp
                   </Link>
@@ -167,10 +179,27 @@ export default function AboutPage() {
                 ))}
               </dl>
 
-              <p className="mt-4 text-[0.9375rem] leading-relaxed text-muted">
-                <span className="font-semibold text-ink">Education:</span>{" "}
-                {site.credential}
-              </p>
+              <dl className="mt-4 space-y-2 text-[0.9375rem] leading-relaxed text-muted">
+                <div>
+                  <dt className="inline font-semibold text-ink">Education:</dt>{" "}
+                  <dd className="inline">{site.credential}</dd>
+                </div>
+                <div>
+                  <dt className="inline font-semibold text-ink">
+                    Certification:
+                  </dt>{" "}
+                  <dd className="inline">
+                    {site.certification.label}.{" "}
+                    <ImageLightbox
+                      href={site.certification.image}
+                      alt={`Certificate: ${site.certification.label}`}
+                      className="font-semibold text-accent-strong underline underline-offset-4"
+                    >
+                      See the certificate
+                    </ImageLightbox>
+                  </dd>
+                </div>
+              </dl>
 
               {/* Fun facts: hidden until there are real ones. */}
               {funFacts.length > 0 ? (
