@@ -199,6 +199,23 @@ export default function AboutPage() {
                     </ImageLightbox>
                   </dd>
                 </div>
+                <div>
+                  <dt className="inline font-semibold text-ink">
+                    Capstone project:
+                  </dt>{" "}
+                  <dd className="inline">
+                    graded {site.certification.capstone.grade}, called &ldquo;
+                    {site.certification.capstone.feedback}&rdquo; by the
+                    assessors.{" "}
+                    <ImageLightbox
+                      href={site.certification.capstone.image}
+                      alt="TS Academy's email with the capstone project result"
+                      className="font-semibold text-accent-strong underline underline-offset-4"
+                    >
+                      See the result
+                    </ImageLightbox>
+                  </dd>
+                </div>
               </dl>
 
               {/* Fun facts: hidden until there are real ones. */}

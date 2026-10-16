@@ -118,7 +118,8 @@ export default async function LanePage({
               ✓
             </span>
             <span>
-              Certified in {site.certification.label}.{" "}
+              Certified in {site.certification.label}, with a capstone graded{" "}
+              {site.certification.capstone.grade}.{" "}
               <ImageLightbox
                 href={site.certification.image}
                 alt={`Certificate: ${site.certification.label}`}
