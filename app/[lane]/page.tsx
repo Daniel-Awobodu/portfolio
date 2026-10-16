@@ -111,7 +111,7 @@ export default async function LanePage({
         {lane === "automation" && studies.length > 0 ? (
           <CaseStudySearch studies={studies.map(toSearchable)} />
         ) : studies.length > 0 ? (
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {studies.map((study, index) => (
               <li key={study.slug}>
                 <CaseStudyCard study={study} priority={index < 3} />
