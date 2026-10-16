@@ -166,8 +166,9 @@ export default function HowIThinkPage() {
               That&rsquo;s how I build. A correct system isn&rsquo;t enough if
               the people running it can&rsquo;t see how it works. So every build
               comes with the clock on the table: a plain explanation, a real
-              example and a walkthrough. The system is only worth what you can
-              still run six months after I&rsquo;ve gone.
+              example and a walkthrough. A system is only worth something if it
+              still runs long after the handoff. I make sure your team
+              understands it too.
             </p>
           </div>
         </div>
