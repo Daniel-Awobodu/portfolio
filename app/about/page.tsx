@@ -21,7 +21,21 @@ export const metadata: Metadata = {
 
 /* True, specific things outside work. The section stays hidden until this
    list has entries, so a placeholder can never go live. */
-const funFacts: string[] = [];
+const funFacts: string[] = [
+  "I’m an Arsenal fan. When we finally won the league again in 2025/26, after 22 years, I went completely crazy.",
+  "I love music and my own company. Quiet time with good music is how I recharge.",
+  "I’m a giver. Helping people out, with money, things or a hand when they need it, is one of my greatest joys.",
+  "I’m a Christian, and God comes first in my life.",
+];
+
+const countWords = [
+  "",
+  "One thing",
+  "Two things",
+  "Three things",
+  "Four things",
+  "Five things",
+];
 
 export default function AboutPage() {
   return (
@@ -162,7 +176,8 @@ export default function AboutPage() {
               {funFacts.length > 0 ? (
                 <>
                   <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
-                    Five things that aren&rsquo;t on my CV
+                    {countWords[funFacts.length] ?? "A few things"} that
+                    aren&rsquo;t on my CV
                   </h2>
                   <ul className="mt-5 space-y-3">
                     {funFacts.map((fact, index) => (
