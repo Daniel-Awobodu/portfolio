@@ -53,7 +53,12 @@ export default function CaseStudyCard({
 
       <div className="flex flex-1 flex-col p-6">
         <p className="eyebrow">
-          {[study.client, study.year].filter(Boolean).join(" · ")}
+          {[
+            [study.client, study.alsoAt].filter(Boolean).join(" & "),
+            study.year,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
         </p>
 
         <h3 className="mt-2.5 font-display text-xl leading-snug font-semibold text-ink">
@@ -91,7 +96,10 @@ export default function CaseStudyCard({
               {hiddenTools.length > 0 ? (
                 <li className={chipClass} title={hiddenTools.join(", ")}>
                   +{hiddenTools.length}
-                  <span className="sr-only"> more: {hiddenTools.join(", ")}</span>
+                  <span className="sr-only">
+                    {" "}
+                    more: {hiddenTools.join(", ")}
+                  </span>
                 </li>
               ) : null}
             </ul>
