@@ -72,14 +72,15 @@ export default function AboutPage() {
               </h2>
               <div className="mt-5 space-y-5 text-[1.0625rem] leading-relaxed text-muted">
                 <p>
-                  I graduated from the University of Lagos in 2022 with a B.Sc.
-                  in Mathematics Education, and then did the thing the degree
-                  was for: I taught. Two years in front of a class, turning
-                  abstract ideas into something a sixteen-year-old could hold
-                  onto.
+                  I earned a B.Sc. (Ed.) Mathematics from the University of
+                  Lagos in 2022, and I taught in two schools: maths to five SS1
+                  classes at Mainland High School during my teaching practice,
+                  then a primary class at Busy Fingers School for my NYSC year.
+                  Both came down to the same job: turning abstract ideas into
+                  something a student could hold onto.
                 </p>
                 <p>
-                  Alongside and after that, I spent five years in growth
+                  Alongside that, I spent five years in growth
                   marketing: Facebook and Instagram ads, sales pages, offers,
                   the unglamorous work of getting a product to actually sell. I
                   ran my own store, <strong>quality-buy.online</strong>, partly

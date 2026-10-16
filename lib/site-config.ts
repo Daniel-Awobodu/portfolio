@@ -53,7 +53,7 @@ export const site = {
   experience: [
     { label: "Growth marketing", value: "5 years" },
     { label: "AI automation", value: "1 year" },
-    { label: "Teaching maths", value: "2 years" },
+    { label: "Teaching", value: "2 schools" },
   ],
 } as const;
 
