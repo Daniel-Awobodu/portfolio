@@ -39,7 +39,7 @@ export const testimonials: Testimonial[] = [
   },
   {
     id: "adelaja",
-    name: "Adelaja Olwatobi",
+    name: "Adelaja Oluwatobi",
     role: "Business partner, Quality-Buy",
     photo: "/testimonials/adelaja.jpg",
     message: "/testimonials/adelaja-message.jpg",
