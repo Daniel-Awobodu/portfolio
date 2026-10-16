@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import Container from "@/components/Container";
 import ContactLinks from "@/components/ContactLinks";
 import CTAButton from "@/components/CTAButton";
@@ -13,27 +14,21 @@ export const metadata: Metadata = {
   openGraph: {
     title: `About — ${site.name}`,
     description:
-      "Maths teacher, then five years in growth marketing, now building AI automation systems. The through-line is making complex things simple.",
+      "Maths teacher and growth marketer, now building AI automation systems. The through-line is making complex things simple.",
     url: "/about",
   },
 };
 
-/* Replace each [FUN FACT] with something true and specific — these are what
-   people actually remember about you. Keep them short. */
-const funFacts = [
-  "[FUN FACT]",
-  "[FUN FACT]",
-  "[FUN FACT]",
-  "[FUN FACT]",
-  "[FUN FACT]",
-];
+/* True, specific things outside work. The section stays hidden until this
+   list has entries, so a placeholder can never go live. */
+const funFacts: string[] = [];
 
 export default function AboutPage() {
   return (
     <>
       <PageHeader
         eyebrow="About"
-        title="Maths teacher, marketer, systems builder. In that order."
+        title="Maths teacher, marketer, systems builder."
         lede="The job titles changed. The habit never did: take something tangled, find the structure underneath it, explain it back in plain words."
       />
 
@@ -59,7 +54,7 @@ export default function AboutPage() {
                 </div>
               </div>
               <figcaption className="mt-8 text-center text-sm text-muted md:text-left">
-                {site.name}, Lagos, Nigeria. Working with clients worldwide.
+                {site.name}, Lagos, Nigeria. Available to clients worldwide.
               </figcaption>
             </figure>
           </div>
@@ -70,7 +65,7 @@ export default function AboutPage() {
               <h2 className="font-display text-2xl leading-tight font-semibold text-ink">
                 The story
               </h2>
-              <div className="mt-5 space-y-5 text-[1.0625rem] leading-relaxed text-muted">
+              <div className="mt-5 space-y-5 text-[1.0625rem] leading-relaxed text-muted [&_a]:text-accent-strong [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:decoration-2">
                 <p>
                   I earned a B.Sc. (Ed.) Mathematics from the University of
                   Lagos in 2022, and I taught in two schools: maths to five SS1
@@ -80,20 +75,29 @@ export default function AboutPage() {
                   something a student could hold onto.
                 </p>
                 <p>
-                  Alongside that, I spent five years in growth
-                  marketing: Facebook and Instagram ads, sales pages, offers,
-                  the unglamorous work of getting a product to actually sell. I
-                  ran my own store, <strong>quality-buy.online</strong>, partly
-                  as a business and partly as a laboratory I could break without
-                  costing anyone else money.
+                  Alongside that, I spent five years in growth marketing:
+                  Facebook and Instagram ads, sales pages, offers, the
+                  unglamorous work of getting a product to actually sell. I run
+                  an e-commerce business, <strong>Quality-Buy</strong>, with a
+                  business partner, and it&rsquo;s where every idea gets tested
+                  with real money and real customers.
                 </p>
                 <p>
-                  Marketing is where I met the bottleneck that led me here.
-                  Campaigns worked, leads arrived, and then everything fell over
-                  at the human step. Nobody was following up, nobody was sorting the
-                  inbox, the same copy-paste job done four hundred times a
-                  month. So I started building systems to handle it, and that
-                  became the work.
+                  Quality-Buy is also where I met the problem that led me here.
+                  Every order arrived as an email. Gmail notifications came
+                  late, so orders sat unseen for up to two hours, and each one
+                  was copied into WhatsApp by hand. More than a thousand past
+                  orders sat in the inbox with no way to reuse them. So I built{" "}
+                  <Link href="/automation/order-alerts">
+                    an alert that sends every new order to WhatsApp
+                  </Link>
+                  , and{" "}
+                  <Link href="/automation/order-extraction">
+                    a reader that turned 1,145 past orders into one customer
+                    database
+                  </Link>
+                  . Both still run every day, at Quality-Buy and at SpotShop,
+                  and building systems like them became the work.
                 </p>
                 <p>
                   The through-line is the same one from the classroom. A
@@ -103,6 +107,36 @@ export default function AboutPage() {
                   owns it.
                 </p>
               </div>
+
+              {/* What I do now */}
+              <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
+                What I do now
+              </h2>
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
+                I build AI automations that take repetitive work off a team:
+                capturing orders, following up leads, booking appointments, and
+                reading documents and receipts. Every build comes with a plain
+                explanation, so your team owns it. I still run the ads and sales
+                pages for Quality-Buy.
+              </p>
+              <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                <li>
+                  <Link
+                    href="/automation"
+                    className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+                  >
+                    See the automation builds
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/how-i-think"
+                    className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+                  >
+                    How I work
+                  </Link>
+                </li>
+              </ul>
 
               {/* Experience */}
               <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
@@ -119,31 +153,32 @@ export default function AboutPage() {
                 ))}
               </dl>
 
-              {/* Credential — one text line, no documents, no images. */}
-              <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
-                Education
-              </h2>
-              <p className="mt-4 text-[1.0625rem] leading-relaxed text-ink">
+              <p className="mt-4 text-[0.9375rem] leading-relaxed text-muted">
+                <span className="font-semibold text-ink">Education:</span>{" "}
                 {site.credential}
               </p>
 
-              {/* Fun facts */}
-              <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
-                Five things that aren&rsquo;t on my CV
-              </h2>
-              <ul className="mt-5 space-y-3">
-                {funFacts.map((fact, index) => (
-                  <li
-                    key={`${fact}-${index}`}
-                    className="flex gap-3 border-b border-hairline pb-3 text-[1.0625rem] text-muted last:border-0"
-                  >
-                    <span aria-hidden="true" className="text-accent-strong">
-                      •
-                    </span>
-                    {fact}
-                  </li>
-                ))}
-              </ul>
+              {/* Fun facts: hidden until there are real ones. */}
+              {funFacts.length > 0 ? (
+                <>
+                  <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
+                    Five things that aren&rsquo;t on my CV
+                  </h2>
+                  <ul className="mt-5 space-y-3">
+                    {funFacts.map((fact, index) => (
+                      <li
+                        key={`${fact}-${index}`}
+                        className="flex gap-3 border-b border-hairline pb-3 text-[1.0625rem] text-muted last:border-0"
+                      >
+                        <span aria-hidden="true" className="text-accent-strong">
+                          •
+                        </span>
+                        {fact}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
