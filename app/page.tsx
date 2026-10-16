@@ -257,7 +257,7 @@ export default function HomePage() {
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
               One message is enough to start. Tell me the bottleneck or the
               product, and I&rsquo;ll tell you straight whether I&rsquo;m the
-              right person for it. I reply fast.
+              right person for it. I usually reply within a few hours.
             </p>
 
             <div className="mt-9">

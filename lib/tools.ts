@@ -14,6 +14,28 @@ export function toolName(tool: string): string {
   return TOOL_ALIASES[tool] ?? tool;
 }
 
+/**
+ * Tools ranked by how many builds use them, most used first, with
+ * variants merged. `exclude` drops names shown elsewhere.
+ */
+export function topTools(
+  studies: { tools: string[] }[],
+  limit: number,
+  exclude: readonly string[] = [],
+): string[] {
+  const counts = new Map<string, number>();
+  for (const study of studies) {
+    for (const tool of new Set(study.tools.map(toolName))) {
+      counts.set(tool, (counts.get(tool) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .filter(([tool]) => !exclude.includes(tool))
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, limit)
+    .map(([tool]) => tool);
+}
+
 /** How many different tools a set of builds uses between them. */
 export function countTools(studies: { tools: string[] }[]): number {
   return new Set(studies.flatMap((study) => study.tools.map(toolName))).size;
