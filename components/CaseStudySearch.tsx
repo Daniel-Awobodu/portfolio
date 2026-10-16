@@ -133,7 +133,7 @@ export default function CaseStudySearch({
       </p>
 
       {results.length > 0 ? (
-        <ul className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-5 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((study, index) => (
             <li key={study.slug}>
               <CaseStudyCard study={study} priority={index < 3} />

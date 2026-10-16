@@ -24,7 +24,7 @@ export default function CaseStudyCard({
   const hiddenTools = study.tools.slice(VISIBLE_TOOLS);
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-md border border-hairline bg-card transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lift">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-md border border-edge bg-card shadow-card transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lift">
       <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-hairline bg-paper">
         {study.cover ? (
           <CardCover

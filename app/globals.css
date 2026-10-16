@@ -13,6 +13,7 @@
   --color-ink: #1c1b18; /* primary text, warm near-black            */
   --color-muted: #6e6a62; /* secondary text — 5.03:1 on paper (AA)    */
   --color-hairline: #e6e0d4; /* borders, dividers                        */
+  --color-edge: #cfc7b8; /* card outlines, firmer than a hairline     */
   /* CONTRAST RULE — verified against #FAF7F1 paper and #FFFFFF card:
      --accent is 4.09:1, which clears AA for large text only, so it is used
      ONLY at 26px and above (comfortably past the 24px/18pt threshold).
@@ -56,6 +57,9 @@
   /* --- Elevation (tokenised so it can lift on dark surfaces) ------------ */
   --shadow-lift: 0 12px 28px -18px rgb(28 27 24 / 0.45);
   --shadow-button: 0 1px 2px rgb(28 27 24 / 0.12);
+  /* Resting cards: just enough lift to read as separate objects. */
+  --shadow-card:
+    0 1px 2px rgb(28 27 24 / 0.06), 0 6px 16px -6px rgb(28 27 24 / 0.14);
 }
 
 /* ==========================================================================
@@ -94,6 +98,7 @@
   --dark-ink: #f3eee4; /* 15.88:1 on paper                          */
   --dark-muted: #a8a093; /* 7.10:1 on paper                           */
   --dark-hairline: #332e26;
+  --dark-edge: #4a443a;
   --dark-accent: #e08c3c; /* 6.98:1 — same ochre hue, lifted for dark  */
   --dark-accent-strong: #f0a85e; /* 9.15:1 — the "strong" role inverts to lighter */
   --dark-card: #201c16; /* raised surface, slightly above paper      */
@@ -109,6 +114,8 @@
   /* Shadows read as nothing on a dark ground — deepen them to compensate. */
   --dark-shadow-lift: 0 12px 28px -18px rgb(0 0 0 / 0.8);
   --dark-shadow-button: 0 1px 2px rgb(0 0 0 / 0.4);
+  --dark-shadow-card:
+    0 1px 2px rgb(0 0 0 / 0.3), 0 6px 16px -6px rgb(0 0 0 / 0.6);
 }
 
 /* 1. Device is dark, and the visitor has not explicitly asked for light. */
@@ -119,6 +126,7 @@
     --color-ink: var(--dark-ink);
     --color-muted: var(--dark-muted);
     --color-hairline: var(--dark-hairline);
+    --color-edge: var(--dark-edge);
     --color-accent: var(--dark-accent);
     --color-accent-strong: var(--dark-accent-strong);
     --color-card: var(--dark-card);
@@ -131,6 +139,7 @@
     --color-brand-email: var(--dark-brand-email);
     --shadow-lift: var(--dark-shadow-lift);
     --shadow-button: var(--dark-shadow-button);
+    --shadow-card: var(--dark-shadow-card);
   }
 }
 
@@ -141,6 +150,7 @@
   --color-ink: var(--dark-ink);
   --color-muted: var(--dark-muted);
   --color-hairline: var(--dark-hairline);
+  --color-edge: var(--dark-edge);
   --color-accent: var(--dark-accent);
   --color-accent-strong: var(--dark-accent-strong);
   --color-card: var(--dark-card);
@@ -153,6 +163,7 @@
   --color-brand-email: var(--dark-brand-email);
   --shadow-lift: var(--dark-shadow-lift);
   --shadow-button: var(--dark-shadow-button);
+  --shadow-card: var(--dark-shadow-card);
 }
 
 :root[data-theme="light"] {
