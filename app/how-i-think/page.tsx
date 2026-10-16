@@ -103,6 +103,10 @@ const projectSteps: {
     link: { href: "#handoff-guide", label: "See a sample guide" },
   },
   {
+    title: "Error alerts from day one",
+    body: "Every build I hand over reports its own failures. The moment any step fails, an alert goes to me and to someone on your team, naming the step that broke. I usually know before anyone notices a problem, and most fixes take minutes. Your team’s copy means you’re never in the dark, retainer or not.",
+  },
+  {
     title: "Support",
     body: "Fixes are free for the first two weeks after launch, while your team settles in. After that, you choose how to keep me on:",
     options: [
@@ -144,6 +148,7 @@ const handoffGuide = {
     {
       heading: "If something seems wrong",
       items: [
+        "You’ll often hear from me first: every failed run sends an alert to me and to your office admin, naming the step that failed.",
         "Drivers say they got no reply: check that the WhatsApp number is still connected in Green API.",
         "Receipts arrive but nothing new appears in the sheet: open n8n, go to Executions, and look for a run marked in red. It names the step that failed.",
         "Still stuck: message me with the time the receipt was sent, and I’ll trace it.",
@@ -444,11 +449,7 @@ export default function HowIThinkPage() {
       </section>
 
       {/* ---------- Sample handoff guide ---------- */}
-      <Container
-        as="section"
-        id="handoff-guide"
-        className="py-14 md:py-16"
-      >
+      <Container as="section" id="handoff-guide" className="py-14 md:py-16">
         <div className="max-w-prose">
           <p className="eyebrow">What you get at handoff</p>
           <h2 className="mt-3 font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
