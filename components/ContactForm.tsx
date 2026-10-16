@@ -107,8 +107,8 @@ export default function ContactForm() {
           Message sent.
         </p>
         <p className="mx-auto mt-3 max-w-sm text-[0.9375rem] leading-relaxed text-muted">
-          Thank you, I&rsquo;ve got it and I&rsquo;ll reply from my inbox
-          shortly. If it&rsquo;s urgent, WhatsApp is faster.
+          Thank you, I&rsquo;ve got it. I&rsquo;ll reply by email,{" "}
+          {site.replyTime}. If it&rsquo;s urgent, WhatsApp is faster.
         </p>
         <button
           type="button"
@@ -161,7 +161,10 @@ export default function ContactForm() {
           placeholder="Sarah Johnson"
         />
         {errors.name ? (
-          <p id={`${id}-name-error`} className="mt-2 text-sm text-accent-strong">
+          <p
+            id={`${id}-name-error`}
+            className="mt-2 text-sm text-accent-strong"
+          >
             {errors.name}
           </p>
         ) : null}

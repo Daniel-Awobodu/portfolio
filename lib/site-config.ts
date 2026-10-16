@@ -48,20 +48,19 @@ export const site = {
   availability: [
     "Taking on new projects",
     "Lagos, Nigeria (GMT+1)",
-    "Working with clients worldwide",
+    "Available to clients worldwide",
   ],
 
-  /** The stack, shown on /contact. Clients on Upwork filter by these names. */
-  tools: [
-    "n8n",
-    "Make",
-    "OpenAI",
-    "HubSpot",
-    "Airtable",
-    "Google Sheets",
-    "Slack",
-    "APIs & webhooks",
-  ],
+  /** Shown wherever reply time is promised. */
+  replyTime: "usually within a few hours",
+
+  /**
+   * The stack on /contact. Platforms lead (Make included: used, though no
+   * published build runs on it yet); the most-used tools from the builds
+   * follow automatically, then skills that aren't a single tool.
+   */
+  platforms: ["n8n", "Make", "Zapier", "Vapi"],
+  skills: ["APIs & webhooks"],
 
   experience: [
     { label: "Growth marketing", value: "5 years" },
@@ -89,6 +88,8 @@ export const contact = {
 
   /** Handle @deemhorn. x.com works for old twitter.com links too. */
   x: "https://x.com/deemhorn",
+
+  upwork: "https://www.upwork.com/freelancers/~01accea4d15faeb1ea",
 } as const;
 
 /**
@@ -114,7 +115,7 @@ export const contactLinks = [
   {
     label: "LinkedIn",
     href: contact.linkedin,
-    hint: "Let's connect",
+    hint: "Connect, or follow my builds",
     external: true,
     icon: "linkedin",
   },
