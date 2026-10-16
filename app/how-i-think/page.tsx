@@ -6,6 +6,7 @@ import Container from "@/components/Container";
 import FullSizeBadge from "@/components/FullSizeBadge";
 import ImageLightbox from "@/components/ImageLightbox";
 import PageHeader from "@/components/PageHeader";
+import VideoEmbed from "@/components/VideoEmbed";
 import { getCaseStudy } from "@/lib/content";
 import { site } from "@/lib/site-config";
 
@@ -24,6 +25,11 @@ export const metadata: Metadata = {
 
 /** Where the teaching happened. Kept factual: school, class, year. */
 const schools = [
+  {
+    name: "University of Lagos",
+    detail: "B.Sc. (Ed.) Mathematics",
+    when: "Graduated 2022",
+  },
   {
     name: "Mainland High School, Lagos",
     detail: "Mathematics, SS1A to SS1E",
@@ -47,8 +53,8 @@ const principles = [
     builds: ["whatsapp-bakery", "quote-requests", "opportunity-feed"],
   },
   {
-    title: "A person approves anything that leaves the business.",
-    body: "Emails, quotes and posts are drafted automatically, then wait for a person to say yes, in whichever app your team already uses. Nothing goes out in your name without one.",
+    title: "A person approves anything risky to get wrong.",
+    body: "Quotes, cold emails and published posts are drafted automatically, then wait for a person to say yes, in whichever app your team already uses. Routine messages, like a booking confirmation, go out on their own.",
     builds: ["ai-outreach", "quote-requests", "content-pipeline"],
   },
   {
@@ -58,7 +64,7 @@ const principles = [
   },
   {
     title: "Fail loudly, never silently.",
-    body: "When something can’t be read or saved, it goes to a review list with the reason, and someone is told. A wrong record saved quietly is worse than one that fails loudly.",
+    body: "When something can’t be read or saved, it’s set aside with the reason, so a person can deal with it. A wrong record saved quietly is worse than one that fails loudly.",
     builds: ["order-extraction", "whatsapp-receipts", "multichannel-intake"],
   },
   {
@@ -69,7 +75,12 @@ const principles = [
 ];
 
 /** How a project runs, start to finish. */
-const projectSteps: { title: string; body: string; options?: string[] }[] = [
+const projectSteps: {
+  title: string;
+  body: string;
+  options?: string[];
+  link?: { href: string; label: string };
+}[] = [
   {
     title: "Discovery call",
     body: "We talk through the job that’s eating your time. I ask how it’s done today, step by step, and what done right looks like.",
@@ -80,29 +91,85 @@ const projectSteps: { title: string; body: string; options?: string[] }[] = [
   },
   {
     title: "Build",
-    body: "I build it in the tools you already use, in small pieces you can see working early, so there are no surprises at the end.",
+    body: "I build it in n8n or Zapier, connected to the tools you already use, in small pieces you can see working early, so there are no surprises at the end.",
   },
   {
     title: "Test the edge cases",
-    body: "I try to break it: the messy message, the missing detail, the change halfway through. Every build on this site lists what testing caught.",
+    body: "I try to break it: the messy message, the missing detail, the change halfway through. The build pages show what testing caught, like a reply that landed seconds before a follow-up was due.",
   },
   {
     title: "Walkthrough and handoff",
     body: "You get a recorded walkthrough and a short guide in plain words: what runs, when it runs, and what to do if it stops.",
+    link: { href: "#handoff-guide", label: "See a sample guide" },
+  },
+  {
+    title: "Error alerts from day one",
+    body: "Every build I hand over reports its own failures. The moment any step fails, an alert goes to me and to someone on your team, naming the step that broke. I usually know before anyone notices a problem, and most fixes take minutes. Your team’s copy means you’re never in the dark, retainer or not.",
   },
   {
     title: "Support",
     body: "Fixes are free for the first two weeks after launch, while your team settles in. After that, you choose how to keep me on:",
     options: [
-      "A monthly retainer: I’m always on hand to fix anything that comes up and to add to your workflows.",
+      "A monthly retainer: I’m on call to fix anything that comes up and to add to your workflows.",
       "Pay as you go: a consultation fee each time you need me.",
     ],
   },
 ];
 
+/**
+ * A sample of the plain-language guide every client gets at handoff, written
+ * for the receipt build so it can be checked against that build's page.
+ */
+const handoffGuide = {
+  title: "Receipt logging: how your system works",
+  sections: [
+    {
+      heading: "What it does",
+      items: [
+        "Drivers send receipts on WhatsApp. The system reads each one, files it in Google Drive and adds it to the expense sheet. Nobody in the office types anything.",
+      ],
+    },
+    {
+      heading: "What happens to each receipt",
+      items: [
+        "A clear photo or PDF: filed in this month’s Drive folder, added to the expense sheet, and the driver gets a confirmation.",
+        "Hard to read: saved to the review log, and the driver is asked to send it again.",
+        "Not a photo or PDF: the driver is asked for the right format.",
+        "From a number that isn’t on the driver list: logged under Unknown Driver, so nothing is lost.",
+      ],
+    },
+    {
+      heading: "Your weekly five minutes",
+      items: [
+        "Open the review log and chase any driver who hasn’t resent a receipt.",
+        "Look for Unknown Driver rows. If it’s a new driver, add their number to the driver list in Airtable, and their next receipt is matched automatically.",
+      ],
+    },
+    {
+      heading: "If something seems wrong",
+      items: [
+        "You’ll often hear from me first: every failed run sends an alert to me and to your office admin, naming the step that failed.",
+        "Drivers say they got no reply: check that the WhatsApp number is still connected in Green API.",
+        "Receipts arrive but nothing new appears in the sheet: open n8n, go to Executions, and look for a run marked in red. It names the step that failed.",
+        "Still stuck: message me with the time the receipt was sent, and I’ll trace it.",
+      ],
+    },
+    {
+      heading: "Where everything lives",
+      items: [
+        "Receipts: Google Drive, in the Receipts folder, one folder per month.",
+        "Expenses: the expense sheet in Google Sheets, one row per receipt.",
+        "Driver list: Airtable. The workflow itself: n8n.",
+      ],
+    },
+  ],
+};
+
 /** A real build, explained the way the thesis promises. */
 const workedExample = {
   slug: "whatsapp-receipts",
+  video:
+    "https://drive.google.com/file/d/1Ms8CrEDk3Yv--q1XOGvp7fcsWXnlj8fm/view?usp=sharing",
   image: "/case-studies/whatsapp-receipts/workflow.png",
   alt: "The receipt workflow in n8n, from the incoming WhatsApp message to the Drive upload, the expense sheet row and the reply to the driver",
   sentences: [
@@ -118,7 +185,7 @@ export default function HowIThinkPage() {
     <>
       <PageHeader
         eyebrow="The difference"
-        title="I don't just build it. I explain it."
+        title="I don’t just build it. I explain it."
         lede="Most people who can wire up an automation cannot tell you how it works. That gap is where projects go to die: the system runs, nobody understands it, and the first time it breaks it gets abandoned."
       />
 
@@ -126,7 +193,7 @@ export default function HowIThinkPage() {
       <Container as="section" className="py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-12 md:gap-12">
           <div className="md:col-span-4">
-            <p className="eyebrow">Where I taught</p>
+            <p className="eyebrow">Teaching background</p>
             <ul className="mt-5 space-y-5">
               {schools.map((school) => (
                 <li key={school.name} className="border-l-2 border-edge pl-4">
@@ -177,9 +244,9 @@ export default function HowIThinkPage() {
       {/* ---------- Principles, each with the builds that prove it ---------- */}
       <section className="border-y border-hairline bg-card">
         <Container className="py-14 md:py-16">
-          <p className="eyebrow">In every build</p>
+          <p className="eyebrow">How I build</p>
           <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
-            Five rules you&rsquo;ll find in everything I build
+            Five rules I build by
           </h2>
           <p className="mt-4 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
             Not promises. Each one links to the builds where you can see it
@@ -210,7 +277,7 @@ export default function HowIThinkPage() {
                   <p className="mt-4 text-sm font-semibold text-ink">
                     See it in:
                   </p>
-                  <ul className="mt-2 flex flex-wrap gap-2">
+                  <ul className="mt-2 space-y-1.5">
                     {principle.builds
                       .map((slug) => getCaseStudy("automation", slug))
                       .filter((study) => study !== null)
@@ -218,9 +285,12 @@ export default function HowIThinkPage() {
                         <li key={study.slug}>
                           <Link
                             href={`/automation/${study.slug}`}
-                            className="inline-block rounded-sm border border-edge px-3 py-1.5 text-sm text-ink transition-colors duration-150 hover:border-accent-strong hover:text-accent-strong"
+                            className="group/link inline-flex gap-2 text-[0.9375rem] leading-snug font-medium text-accent-strong"
                           >
-                            {study.title}
+                            <span aria-hidden="true">→</span>
+                            <span className="underline decoration-edge underline-offset-4 transition-colors duration-150 group-hover/link:decoration-accent-strong">
+                              {study.title}
+                            </span>
                           </Link>
                         </li>
                       ))}
@@ -289,7 +359,18 @@ export default function HowIThinkPage() {
             catch what goes wrong. If someone needs more than four sentences to
             tell you what your own system does, be suspicious.
           </p>
-          <p className="mt-5">
+          <h3 className="mt-10 font-display text-xl leading-snug font-semibold text-ink">
+            Hear me walk through it
+          </h3>
+          <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
+            The same receipt build, explained out loud, the way I&rsquo;d hand
+            it over to your team.
+          </p>
+          <VideoEmbed
+            src={workedExample.video}
+            title="Walkthrough: the receipt build"
+          />
+          <p>
             <Link
               href={`/automation/${workedExample.slug}`}
               className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
@@ -350,6 +431,16 @@ export default function HowIThinkPage() {
                       ))}
                     </ul>
                   ) : null}
+                  {step.link ? (
+                    <p className="mt-2">
+                      <a
+                        href={step.link.href}
+                        className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+                      >
+                        {step.link.label}
+                      </a>
+                    </p>
+                  ) : null}
                 </div>
               </li>
             ))}
@@ -357,14 +448,52 @@ export default function HowIThinkPage() {
         </Container>
       </section>
 
-      {/* ---------- Credential ---------- */}
-      <Container as="section" className="py-14 md:py-16">
+      {/* ---------- Sample handoff guide ---------- */}
+      <Container as="section" id="handoff-guide" className="py-14 md:py-16">
         <div className="max-w-prose">
-          <p className="eyebrow">Credential</p>
-          <p className="mt-3 font-display text-xl leading-snug font-semibold text-ink">
-            {site.credential}
+          <p className="eyebrow">What you get at handoff</p>
+          <h2 className="mt-3 font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
+            A guide your team can actually use
+          </h2>
+          <p className="mt-4 text-[1.0625rem] leading-relaxed text-muted">
+            Every build comes with a short guide like this one, written for the
+            people who run it, not for developers. This sample is for the
+            receipt build above.
           </p>
         </div>
+
+        <article className="mt-8 max-w-3xl rounded-md border-2 border-edge bg-card p-6 shadow-card sm:p-10">
+          <p className="eyebrow">Sample handoff guide</p>
+          <h3 className="mt-2 font-display text-2xl leading-snug font-semibold text-ink">
+            {handoffGuide.title}
+          </h3>
+          <div className="mt-6 divide-y divide-hairline">
+            {handoffGuide.sections.map((section) => (
+              <section
+                key={section.heading}
+                className="py-5 first:pt-0 last:pb-0"
+              >
+                <h4 className="text-sm font-semibold tracking-wide text-ink uppercase">
+                  {section.heading}
+                </h4>
+                <ul className="mt-3 space-y-2">
+                  {section.items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex gap-2.5 text-[0.9375rem] leading-relaxed text-muted"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent-strong"
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </article>
       </Container>
 
       {/* ---------- CTA ---------- */}
