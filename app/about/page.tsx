@@ -225,19 +225,40 @@ export default function AboutPage() {
                     {countWords[funFacts.length] ?? "A few things"} that
                     aren&rsquo;t on my CV
                   </h2>
-                  <ul className="mt-5 space-y-3">
-                    {funFacts.map((fact, index) => (
-                      <li
-                        key={`${fact}-${index}`}
-                        className="flex gap-3 border-b border-hairline pb-3 text-[1.0625rem] text-muted last:border-0"
-                      >
-                        <span aria-hidden="true" className="text-accent-strong">
-                          •
-                        </span>
-                        {fact}
-                      </li>
-                    ))}
-                  </ul>
+                  {/* The casual photo sits with the personal list: beside it
+                      on wide screens, above it on narrow ones. */}
+                  <div className="mt-5 flex flex-col gap-6 lg:flex-row-reverse lg:items-start lg:gap-8">
+                    <figure className="w-44 shrink-0 lg:w-48">
+                      <div className="relative aspect-square overflow-hidden rounded-md border-2 border-edge bg-card shadow-card">
+                        <Image
+                          src="/daniel-casual.jpg"
+                          alt={`${site.name}, smiling, in a bucket hat and white T-shirt`}
+                          fill
+                          sizes="192px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <figcaption className="mt-2.5 text-sm text-muted">
+                        Off the clock.
+                      </figcaption>
+                    </figure>
+                    <ul className="min-w-0 flex-1 space-y-3">
+                      {funFacts.map((fact, index) => (
+                        <li
+                          key={`${fact}-${index}`}
+                          className="flex gap-3 border-b border-hairline pb-3 text-[1.0625rem] text-muted last:border-0"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="text-accent-strong"
+                          >
+                            •
+                          </span>
+                          {fact}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </>
               ) : null}
             </div>
