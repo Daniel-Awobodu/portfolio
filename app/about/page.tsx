@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import Container from "@/components/Container";
 import ContactLinks from "@/components/ContactLinks";
 import CTAButton from "@/components/CTAButton";
+import ImageLightbox from "@/components/ImageLightbox";
 import PageHeader from "@/components/PageHeader";
 import { site } from "@/lib/site-config";
 
@@ -13,19 +15,27 @@ export const metadata: Metadata = {
   openGraph: {
     title: `About — ${site.name}`,
     description:
-      "Maths teacher, then five years in growth marketing, now building AI automation systems. The through-line is making complex things simple.",
+      "Maths teacher and growth marketer, now building AI automation systems. The through-line is making complex things simple.",
     url: "/about",
   },
 };
 
-/* Replace each [FUN FACT] with something true and specific — these are what
-   people actually remember about you. Keep them short. */
-const funFacts = [
-  "[FUN FACT]",
-  "[FUN FACT]",
-  "[FUN FACT]",
-  "[FUN FACT]",
-  "[FUN FACT]",
+/* True, specific things outside work. The section stays hidden until this
+   list has entries, so a placeholder can never go live. */
+const funFacts: string[] = [
+  "I’m an Arsenal fan. When we finally won the league again in 2025/26, after 22 years, I went completely crazy.",
+  "I love music and my own company. Quiet time with good music is how I recharge.",
+  "I’m a giver. Helping people out, with money, things or a hand when they need it, is one of my greatest joys.",
+  "I’m a Christian, and God comes first in my life.",
+];
+
+const countWords = [
+  "",
+  "One thing",
+  "Two things",
+  "Three things",
+  "Four things",
+  "Five things",
 ];
 
 export default function AboutPage() {
@@ -33,7 +43,7 @@ export default function AboutPage() {
     <>
       <PageHeader
         eyebrow="About"
-        title="Maths teacher, marketer, systems builder. In that order."
+        title="Maths teacher, marketer, systems builder."
         lede="The job titles changed. The habit never did: take something tangled, find the structure underneath it, explain it back in plain words."
       />
 
@@ -59,7 +69,7 @@ export default function AboutPage() {
                 </div>
               </div>
               <figcaption className="mt-8 text-center text-sm text-muted md:text-left">
-                {site.name}, Lagos, Nigeria. Working with clients worldwide.
+                {site.name}, Lagos, Nigeria. Available to clients worldwide.
               </figcaption>
             </figure>
           </div>
@@ -70,7 +80,7 @@ export default function AboutPage() {
               <h2 className="font-display text-2xl leading-tight font-semibold text-ink">
                 The story
               </h2>
-              <div className="mt-5 space-y-5 text-[1.0625rem] leading-relaxed text-muted">
+              <div className="mt-5 space-y-5 text-[1.0625rem] leading-relaxed text-muted [&_a]:text-accent-strong [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:decoration-2">
                 <p>
                   I earned a B.Sc. (Ed.) Mathematics from the University of
                   Lagos in 2022, and I taught in two schools: maths to five SS1
@@ -80,20 +90,40 @@ export default function AboutPage() {
                   something a student could hold onto.
                 </p>
                 <p>
-                  Alongside that, I spent five years in growth
-                  marketing: Facebook and Instagram ads, sales pages, offers,
-                  the unglamorous work of getting a product to actually sell. I
-                  ran my own store, <strong>quality-buy.online</strong>, partly
-                  as a business and partly as a laboratory I could break without
-                  costing anyone else money.
+                  Alongside that, I spent five years in growth marketing:
+                  Facebook and Instagram ads, sales pages, offers, the
+                  unglamorous work of getting a product to actually sell. I run
+                  an e-commerce business, <strong>Quality-Buy</strong>, with a
+                  business partner, and it&rsquo;s where every idea gets tested
+                  with real money and real customers.
                 </p>
                 <p>
-                  Marketing is where I met the bottleneck that led me here.
-                  Campaigns worked, leads arrived, and then everything fell over
-                  at the human step. Nobody was following up, nobody was sorting the
-                  inbox, the same copy-paste job done four hundred times a
-                  month. So I started building systems to handle it, and that
-                  became the work.
+                  In late 2025, a video by Liam Ottley, an AI automation creator
+                  on YouTube, stopped me. His point was simple: AI isn&rsquo;t
+                  the next wave, it&rsquo;s already here, and most people
+                  haven&rsquo;t caught up. I&rsquo;d been looking for a way into
+                  tech, and automation fit how I already work: find what&rsquo;s
+                  slowing a business down, and fix it. I went all in, won a
+                  scholarship to TS Academy&rsquo;s AI &amp; Automation
+                  programme, and finished it in July 2026.
+                </p>
+                <p>
+                  The first problem I pointed it at was Quality-Buy&rsquo;s.
+                  Every order arrived as an email. Gmail notifications came
+                  late, so orders sat unseen for up to two hours, and each one
+                  was copied into WhatsApp by hand. More than a thousand past
+                  orders sat in the inbox with no way to reuse them. So, while
+                  the course was still running, I built{" "}
+                  <Link href="/automation/order-alerts">
+                    an alert that sends every new order to WhatsApp
+                  </Link>
+                  , and{" "}
+                  <Link href="/automation/order-extraction">
+                    a reader that turned 1,145 past orders into one customer
+                    database
+                  </Link>
+                  . Both still run every day, at Quality-Buy and at SpotShop,
+                  and building systems like them became the work.
                 </p>
                 <p>
                   The through-line is the same one from the classroom. A
@@ -103,6 +133,36 @@ export default function AboutPage() {
                   owns it.
                 </p>
               </div>
+
+              {/* What I do now */}
+              <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
+                What I do now
+              </h2>
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
+                I build AI automations that take repetitive work off a team:
+                capturing orders, following up leads, booking appointments, and
+                reading documents and receipts. Every build comes with a plain
+                explanation, so your team owns it. I still run the ads and sales
+                pages for Quality-Buy.
+              </p>
+              <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                <li>
+                  <Link
+                    href="/automation"
+                    className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+                  >
+                    See the automation builds
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/how-i-think"
+                    className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+                  >
+                    How I work
+                  </Link>
+                </li>
+              </ul>
 
               {/* Experience */}
               <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
@@ -119,31 +179,67 @@ export default function AboutPage() {
                 ))}
               </dl>
 
-              {/* Credential — one text line, no documents, no images. */}
-              <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
-                Education
-              </h2>
-              <p className="mt-4 text-[1.0625rem] leading-relaxed text-ink">
-                {site.credential}
-              </p>
+              <dl className="mt-4 space-y-2 text-[0.9375rem] leading-relaxed text-muted">
+                <div>
+                  <dt className="inline font-semibold text-ink">Education:</dt>{" "}
+                  <dd className="inline">{site.credential}</dd>
+                </div>
+                <div>
+                  <dt className="inline font-semibold text-ink">
+                    Certification:
+                  </dt>{" "}
+                  <dd className="inline">
+                    {site.certification.label}.{" "}
+                    <ImageLightbox
+                      href={site.certification.image}
+                      alt={`Certificate: ${site.certification.label}`}
+                      className="font-semibold text-accent-strong underline underline-offset-4"
+                    >
+                      See the certificate
+                    </ImageLightbox>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="inline font-semibold text-ink">
+                    Capstone project:
+                  </dt>{" "}
+                  <dd className="inline">
+                    graded {site.certification.capstone.grade}, called &ldquo;
+                    {site.certification.capstone.feedback}&rdquo; by the
+                    assessors.{" "}
+                    <ImageLightbox
+                      href={site.certification.capstone.image}
+                      alt="TS Academy's email with the capstone project result"
+                      className="font-semibold text-accent-strong underline underline-offset-4"
+                    >
+                      See the result
+                    </ImageLightbox>
+                  </dd>
+                </div>
+              </dl>
 
-              {/* Fun facts */}
-              <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
-                Five things that aren&rsquo;t on my CV
-              </h2>
-              <ul className="mt-5 space-y-3">
-                {funFacts.map((fact, index) => (
-                  <li
-                    key={`${fact}-${index}`}
-                    className="flex gap-3 border-b border-hairline pb-3 text-[1.0625rem] text-muted last:border-0"
-                  >
-                    <span aria-hidden="true" className="text-accent-strong">
-                      •
-                    </span>
-                    {fact}
-                  </li>
-                ))}
-              </ul>
+              {/* Fun facts: hidden until there are real ones. */}
+              {funFacts.length > 0 ? (
+                <>
+                  <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
+                    {countWords[funFacts.length] ?? "A few things"} that
+                    aren&rsquo;t on my CV
+                  </h2>
+                  <ul className="mt-5 space-y-3">
+                    {funFacts.map((fact, index) => (
+                      <li
+                        key={`${fact}-${index}`}
+                        className="flex gap-3 border-b border-hairline pb-3 text-[1.0625rem] text-muted last:border-0"
+                      >
+                        <span aria-hidden="true" className="text-accent-strong">
+                          •
+                        </span>
+                        {fact}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
