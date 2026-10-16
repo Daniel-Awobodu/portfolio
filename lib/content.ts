@@ -18,7 +18,7 @@ export const LANES: Record<Lane, LaneInfo> = {
     description:
       "AI workflows that take repetitive work off your team: capturing orders, qualifying and following up leads, booking appointments, and reading documents and receipts.",
     intro:
-      "Systems that do the work nobody should be doing by hand. Builds marked Live run in production in my own e-commerce business. The rest were built to real industry briefs and tested end to end with live tools. Each one starts with the bottleneck, shows the wiring, then explains it in plain language.",
+      "Systems that do the work nobody should be doing by hand. Builds marked Live run every day in real businesses: my own e-commerce store, and SpotShop. The rest were built to real industry briefs and tested end to end with live tools. Each one starts with the bottleneck, shows the wiring, then explains it in plain language.",
   },
   marketing: {
     slug: "marketing",
@@ -73,6 +73,7 @@ function parseFile(lane: Lane, filename: string): CaseStudy {
   const slug = filename.replace(/\.mdx?$/, "");
   const cover = asString(data.cover).trim();
   const canvas = asString(data.canvas).trim();
+  const alsoAt = asString(data.alsoAt).trim();
   const resultCaption = asString(data.resultCaption).trim();
   const resultFull = asString(data.resultFull).trim();
   const video = asString(data.video).trim();
@@ -81,6 +82,7 @@ function parseFile(lane: Lane, filename: string): CaseStudy {
     slug,
     title: asString(data.title, slug),
     client: asString(data.client),
+    alsoAt: alsoAt === "" ? undefined : alsoAt,
     lane,
     summary: asString(data.summary),
     role: asString(data.role),

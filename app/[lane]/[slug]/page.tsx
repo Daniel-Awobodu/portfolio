@@ -9,6 +9,7 @@ import MdxImage from "@/components/MdxImage";
 import NextStep from "@/components/NextStep";
 import ResultHero from "@/components/ResultHero";
 import StatRow from "@/components/StatRow";
+import TestimonialCard from "@/components/TestimonialCard";
 import VideoEmbed from "@/components/VideoEmbed";
 import {
   getCaseStudy,
@@ -18,6 +19,7 @@ import {
   LANES,
 } from "@/lib/content";
 import { site } from "@/lib/site-config";
+import { testimonialsFor } from "@/lib/testimonials";
 import type { Lane } from "@/lib/types";
 
 export const dynamicParams = false;
@@ -80,13 +82,16 @@ export default async function CaseStudyPage({
 
   const next = getNextCaseStudy(lane, slug);
   const laneInfo = LANES[lane];
+  const quotes = lane === "automation" ? testimonialsFor(study.slug) : [];
 
   // Automation builds made to a brief name their industry, not a client.
   const clientLabel =
     study.live || lane !== "automation" ? "Client" : "Industry";
 
   const facts = [
-    { label: clientLabel, value: study.client },
+    study.alsoAt
+      ? { label: `${clientLabel}s`, value: `${study.client}, ${study.alsoAt}` }
+      : { label: clientLabel, value: study.client },
     { label: "Role", value: study.role },
     { label: "Year", value: study.year },
     { label: "Tools", value: study.tools.join(", ") },
@@ -95,7 +100,10 @@ export default async function CaseStudyPage({
   return (
     <article>
       {/* ---------- Header ---------- */}
-      <Container as="header" className="border-b border-hairline py-12 md:py-16">
+      <Container
+        as="header"
+        className="border-b border-hairline py-12 md:py-16"
+      >
         <p className="text-sm">
           <Link
             href={`/${lane}`}
@@ -141,13 +149,27 @@ export default async function CaseStudyPage({
       <Container className="py-12 md:py-14">
         <StatRow metrics={study.metrics} />
 
+        {quotes.length > 0 ? (
+          <section aria-label="From the people using it" className="mt-10">
+            <p className="eyebrow">From the people using it</p>
+            <ul
+              className={`mt-4 grid gap-6 ${
+                quotes.length > 1 ? "md:grid-cols-2" : "max-w-3xl"
+              }`}
+            >
+              {quotes.map((testimonial) => (
+                <li key={testimonial.id}>
+                  <TestimonialCard testimonial={testimonial} size="compact" />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
         {/* Left-aligned, not centred — it lines up with the title and the
             stat row above it. */}
         <div className="max-w-prose">
-          <VideoEmbed
-            src={study.video}
-            title={`Walkthrough: ${study.title}`}
-          />
+          <VideoEmbed src={study.video} title={`Walkthrough: ${study.title}`} />
 
           {/* ---------- MDX body: problem → build → how it works → outcome ---------- */}
           <div className="prose-editorial mt-4">

@@ -10,6 +10,8 @@ export type CaseStudyMeta = {
   slug: string;
   title: string;
   client: string;
+  /** Another business running this build, shown beside the client. */
+  alsoAt?: string;
   lane: Lane;
   summary: string;
   role: string;

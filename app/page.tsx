@@ -4,6 +4,7 @@ import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import ContactLinks from "@/components/ContactLinks";
 import LaneCard from "@/components/LaneCard";
+import TestimonialCard from "@/components/TestimonialCard";
 import {
   getCaseStudies,
   getLaneEyebrow,
@@ -11,6 +12,7 @@ import {
   LANES,
 } from "@/lib/content";
 import { site } from "@/lib/site-config";
+import { testimonials } from "@/lib/testimonials";
 import { countTools } from "@/lib/tools";
 
 export default function HomePage() {
@@ -174,7 +176,32 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      {/* ================= 4. ABOUT TEASER ================= */}
+      {/* ================= 4. TESTIMONIALS ================= */}
+      <Container
+        as="section"
+        className="border-b border-hairline py-16 md:py-20"
+      >
+        <p className="eyebrow">In their own words</p>
+        <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
+          From the people running my builds
+        </h2>
+        <p className="mt-4 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
+          Two businesses run my order automations every day. Each quote links to
+          the message it came from.
+        </p>
+        <ul className="mt-10 grid gap-6 md:grid-cols-2">
+          {testimonials.map((testimonial) => (
+            <li key={testimonial.id}>
+              <TestimonialCard testimonial={testimonial} />
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 text-sm text-muted">
+          References available on request.
+        </p>
+      </Container>
+
+      {/* ================= 5. ABOUT TEASER ================= */}
       <Container as="section" className="py-16 md:py-20">
         <div className="grid items-center gap-8 md:grid-cols-12 md:gap-12">
           <div className="order-2 md:order-1 md:col-span-8">
@@ -184,9 +211,10 @@ export default function HomePage() {
             </h2>
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
               I taught in two schools, making abstract things concrete, and
-              spent five years in growth marketing making products sell. Automation is where those two habits met. The through-line
-              has always been the same: take something tangled, find the
-              structure, explain it back plainly.
+              spent five years in growth marketing making products sell.
+              Automation is where those two habits met. The through-line has
+              always been the same: take something tangled, find the structure,
+              explain it back plainly.
             </p>
             <p className="mt-7">
               <Link
@@ -215,7 +243,7 @@ export default function HomePage() {
         </div>
       </Container>
 
-      {/* ================= 5. CONTACT BAND ================= */}
+      {/* ================= 6. CONTACT BAND ================= */}
       <section
         id="contact"
         className="scroll-mt-24 border-t border-hairline bg-card"

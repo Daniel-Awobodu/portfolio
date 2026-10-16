@@ -51,6 +51,7 @@ function toSearchable({ body, ...study }: CaseStudy): SearchableStudy {
     [
       study.title,
       study.client,
+      study.alsoAt ?? "",
       study.summary,
       study.role,
       study.year,
