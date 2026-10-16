@@ -34,7 +34,7 @@ const principles = [
   },
   {
     title: "A person approves anything that leaves the business.",
-    body: "Emails, quotes and posts are drafted automatically, then wait for a yes in Slack. Nothing goes out in your name without one.",
+    body: "Emails, quotes and posts are drafted automatically, then wait for a person to say yes, in whichever app your team already uses. Nothing goes out in your name without one.",
     builds: ["ai-outreach", "quote-requests", "content-pipeline"],
   },
   {
@@ -55,7 +55,7 @@ const principles = [
 ];
 
 /** How a project runs, start to finish. */
-const process = [
+const projectSteps: { title: string; body: string; options?: string[] }[] = [
   {
     title: "Discovery call",
     body: "We talk through the job that’s eating your time. I ask how it’s done today, step by step, and what done right looks like.",
@@ -78,7 +78,11 @@ const process = [
   },
   {
     title: "Support",
-    body: "After launch, I stay on hand to fix what breaks and tune what needs tuning while your team settles in.",
+    body: "Fixes are free for the first two weeks after launch, while your team settles in. After that, you choose how to keep me on:",
+    options: [
+      "A monthly retainer: I’m always on hand to fix anything that comes up and to add to your workflows.",
+      "Pay as you go: a consultation fee each time you need me.",
+    ],
   },
 ];
 
@@ -267,13 +271,13 @@ export default function HowIThinkPage() {
           </h2>
 
           <ol className="mt-10 max-w-3xl">
-            {process.map((step, index) => (
+            {projectSteps.map((step, index) => (
               <li
                 key={step.title}
                 className="relative flex gap-5 pb-8 last:pb-0"
               >
                 {/* The rail joining each step to the next. */}
-                {index < process.length - 1 ? (
+                {index < projectSteps.length - 1 ? (
                   <span
                     aria-hidden="true"
                     className="absolute top-10 bottom-0 left-[1.1875rem] w-px bg-edge"
@@ -292,6 +296,22 @@ export default function HowIThinkPage() {
                   <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
                     {step.body}
                   </p>
+                  {step.options ? (
+                    <ul className="mt-3 space-y-2">
+                      {step.options.map((option) => (
+                        <li
+                          key={option}
+                          className="flex gap-2.5 text-[0.9375rem] leading-relaxed text-muted"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent-strong"
+                          />
+                          <span>{option}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               </li>
             ))}
