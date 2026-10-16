@@ -42,8 +42,8 @@ export default function HomePage() {
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
               {site.role} for founders and teams who want the work handled and
               the system explained. Five years in marketing, a year building
-              automations, two years teaching maths. That last one is why you
-              will understand what I hand you.
+              automations, and time as a teacher in two schools. That last one
+              is why you will understand what I hand you.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
@@ -122,8 +122,8 @@ export default function HomePage() {
             eyebrow="The difference"
             title="How I Think"
             description="A maths teacher's habit: I don't just build it, I explain it so you actually own it."
-            stat="2 yrs"
-            statLabel="teaching maths before this"
+            stat="2 schools"
+            statLabel="where I taught before this"
             href="/how-i-think"
             linkLabel="View how I think"
           />
@@ -183,9 +183,8 @@ export default function HomePage() {
               A maths teacher who turned into a systems builder
             </h2>
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
-              I spent two years in front of a class making abstract things
-              concrete, then five years in growth marketing making products
-              sell. Automation is where those two habits met. The through-line
+              I taught in two schools, making abstract things concrete, and
+              spent five years in growth marketing making products sell. Automation is where those two habits met. The through-line
               has always been the same: take something tangled, find the
               structure, explain it back plainly.
             </p>

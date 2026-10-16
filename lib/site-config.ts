@@ -29,7 +29,7 @@ export const site = {
   description:
     "Daniel Awobodu builds AI automation and e-commerce growth systems, and explains exactly how they work. Systems that sell. Explained simply.",
 
-  credential: "B.Sc. Mathematics Education, University of Lagos, 2022.",
+  credential: "B.Sc. (Ed.) Mathematics, University of Lagos, 2022.",
 
   /** Status line under the /contact heading. */
   availability: [
@@ -53,7 +53,7 @@ export const site = {
   experience: [
     { label: "Growth marketing", value: "5 years" },
     { label: "AI automation", value: "1 year" },
-    { label: "Teaching maths", value: "2 years" },
+    { label: "Teaching", value: "2 schools" },
   ],
 } as const;
 
