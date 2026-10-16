@@ -12,7 +12,7 @@ import { site } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "How I Think",
   description:
-    "Most automation freelancers can't explain what they built. I can, because I taught maths for two years before I built systems. Clear handoffs, real documentation, and a system you actually own.",
+    "Most automation freelancers can't explain what they built. I can, because I was a teacher before I built systems. Clear handoffs, real documentation, and a system you actually own.",
   alternates: { canonical: "/how-i-think" },
   openGraph: {
     title: `How I Think — ${site.name}`,
@@ -21,6 +21,20 @@ export const metadata: Metadata = {
     url: "/how-i-think",
   },
 };
+
+/** Where the teaching happened. Kept factual: school, class, year. */
+const schools = [
+  {
+    name: "Mainland High School, Lagos",
+    detail: "Mathematics, SS1A to SS1E",
+    when: "2021 · Teaching practice, about six months",
+  },
+  {
+    name: "Busy Fingers School, Lagos",
+    detail: "Basic 3 (primary), most subjects including maths",
+    when: "2024 · My NYSC year",
+  },
+];
 
 /**
  * Rules that show up across the automation builds. Each one names the builds
@@ -108,28 +122,51 @@ export default function HowIThinkPage() {
         lede="Most people who can wire up an automation cannot tell you how it works. That gap is where projects go to die: the system runs, nobody understands it, and the first time it breaks it gets abandoned."
       />
 
-      {/* ---------- Thesis ---------- */}
+      {/* ---------- Thesis: where the habit comes from ---------- */}
       <Container as="section" className="py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-12 md:gap-12">
           <div className="md:col-span-4">
-            <p className="eyebrow">The thesis</p>
+            <p className="eyebrow">Where I taught</p>
+            <ul className="mt-5 space-y-5">
+              {schools.map((school) => (
+                <li key={school.name} className="border-l-2 border-edge pl-4">
+                  <p className="font-display text-lg leading-snug font-semibold text-ink">
+                    {school.name}
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-muted">
+                    {school.detail}
+                  </p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-muted">
+                    {school.when}
+                  </p>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="max-w-prose md:col-span-8">
             <p className="font-display text-[clamp(1.5rem,1.2rem+1.3vw,2rem)] leading-[1.25] font-semibold text-ink">
-              I spent two years teaching maths before I built a single system.
-              That job was never about knowing the answer. It was about making
-              someone else see it.
+              Before I built systems, I taught. The job was never knowing the
+              answer. It was making someone else see it.
             </p>
             <p className="mt-6 text-[1.0625rem] leading-relaxed text-muted">
-              Thirty teenagers will not politely nod at an explanation they
-              don&rsquo;t follow. They switch off, visibly, in about four
-              seconds. You learn very quickly to strip an idea down to its
-              actual mechanism, and to notice the exact sentence where you lost
-              the room.
+              My first classes were five SS1 maths classes at Mainland High
+              School, during my teaching practice. The lesson I still remember
+              is modular arithmetic: sums on a clock in mod 6, mod 12 and mod
+              24, clockwise and anticlockwise. My explanation was correct, and
+              the class still couldn&rsquo;t see it.
             </p>
             <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
-              That is the same skill a client needs from an automation build.
-              Not a demo, an explanation. The system is only worth what you can
+              So I went and got a real wall clock, and we worked the sums on it
+              together. For the other modes, I drew a clock on the board with
+              only that many numbers, six for mod 6, and told them to draw their
+              own whenever they got stuck. By the end, almost the whole class
+              had it. It&rsquo;s still the best lesson I&rsquo;ve taught.
+            </p>
+            <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
+              That&rsquo;s how I build. A correct system isn&rsquo;t enough if
+              the people running it can&rsquo;t see how it works. So every build
+              comes with the clock on the table: a plain explanation, a real
+              example and a walkthrough. The system is only worth what you can
               still run six months after I&rsquo;ve gone.
             </p>
           </div>
