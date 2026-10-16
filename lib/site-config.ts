@@ -36,9 +36,9 @@ export const site = {
     label: "AI & Automation, TS Academy, 2026",
     detail: "A three-month programme, certified July 5, 2026.",
     image: "/credentials/ts-academy-ai-automation.jpg",
-    /** From TS Academy's results email of June 26, 2026, quoted as written. */
+    /** From TS Academy's results email of June 26, 2026, quoted as written (graded out of 100). */
     capstone: {
-      grade: "95",
+      grade: "95/100",
       feedback: "one of the strongest submissions in the cohort",
       image: "/credentials/ts-academy-capstone-result.jpg",
     },
