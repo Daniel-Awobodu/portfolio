@@ -17,7 +17,8 @@ import { countTools } from "@/lib/tools";
 
 export default function HomePage() {
   const marketing = getCaseStudies("marketing");
-  const automationTools = countTools(getCaseStudies("automation"));
+  const automation = getCaseStudies("automation");
+  const automationTools = countTools(automation);
   const proof = getProofMetrics();
 
   return (
@@ -42,10 +43,11 @@ export default function HomePage() {
             </p>
 
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
-              {site.role} for founders and teams who want the work handled and
-              the system explained. Five years in marketing, a year building
-              automations, and time as a teacher in two schools. That last one
-              is why you will understand what I hand you.
+              I help founders and teams with AI automation and e-commerce
+              growth: the work handled, and the system explained. Five years in
+              marketing, a year building automations, and time as a teacher in
+              two schools. That last one is why you will understand what I hand
+              you.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
@@ -57,6 +59,25 @@ export default function HomePage() {
                 See my work ↓
               </Link>
             </div>
+
+            {/* Counted from the build files, so it stays true as builds are
+                added. Each item carries its own marker, so a wrapped line
+                never starts with a stray separator. */}
+            <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
+              {[
+                `${automation.length} systems built`,
+                `${automationTools} tools connected`,
+                `Certified in AI & Automation, capstone ${site.certification.capstone.grade}`,
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Circular portrait inside a concentric hairline ring.
@@ -123,7 +144,7 @@ export default function HomePage() {
           <LaneCard
             eyebrow="The difference"
             title="How I Think"
-            description="A maths teacher's habit: I don't just build it, I explain it so you actually own it."
+            description="A maths teacher’s habit: I don’t just build it, I explain it so you actually own it."
             stat="2 schools"
             statLabel="where I taught before this"
             href="/how-i-think"
@@ -139,32 +160,21 @@ export default function HomePage() {
           className="border-y border-hairline bg-card"
         >
           <Container>
-            <div className="flex flex-wrap items-baseline gap-x-5 gap-y-4 py-8 md:py-10">
-              <p className="eyebrow w-full md:w-auto md:pr-3">
-                Selected results
-              </p>
-              {proof.map((metric, index) => (
-                <span
+            <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4 py-8 md:py-10">
+              <p className="eyebrow w-full md:w-auto">Selected results</p>
+              {/* No separators: the gap and the accent number mark each
+                  result, so a wrapped line never starts with a stray dot. */}
+              {proof.map((metric) => (
+                <Link
                   key={`${metric.href}-${metric.label}`}
-                  className="flex items-baseline gap-5"
+                  href={metric.href}
+                  className="flex items-baseline gap-2.5 transition-opacity duration-150 hover:opacity-70"
                 >
-                  {/* Separator keeps each result readable as its own unit
-                      once the band wraps on narrow screens. */}
-                  {index > 0 ? (
-                    <span aria-hidden="true" className="text-hairline">
-                      ·
-                    </span>
-                  ) : null}
-                  <Link
-                    href={metric.href}
-                    className="flex items-baseline gap-2.5 transition-opacity duration-150 hover:opacity-70"
-                  >
-                    <span className="font-display text-xl leading-none font-semibold text-accent-strong sm:text-2xl">
-                      {metric.value}
-                    </span>
-                    <span className="text-sm text-muted">{metric.label}</span>
-                  </Link>
-                </span>
+                  <span className="shrink-0 font-display text-xl leading-none font-semibold whitespace-nowrap text-accent-strong sm:text-2xl">
+                    {metric.value}
+                  </span>
+                  <span className="text-sm text-muted">{metric.label}</span>
+                </Link>
               ))}
             </div>
           </Container>
@@ -227,13 +237,12 @@ export default function HomePage() {
           </div>
 
           <div className="order-1 md:order-2 md:col-span-4">
-            {/* Same square source as the hero — next/image emits the small
-                size, so a separate thumbnail file is no longer needed. */}
+            {/* A casual photo, so the page doesn't repeat the hero portrait.
+                Square source, like the hero, so the circle never re-crops it. */}
             <div className="relative aspect-square w-32 overflow-hidden rounded-full border border-hairline bg-card md:ml-auto md:w-full md:max-w-[240px]">
               <Image
-                src="/daniel.jpg"
-                alt=""
-                aria-hidden="true"
+                src="/daniel-casual.jpg"
+                alt={`${site.name}, smiling, in a bucket hat and white T-shirt`}
                 fill
                 sizes="(max-width: 768px) 128px, 240px"
                 className="object-cover"
