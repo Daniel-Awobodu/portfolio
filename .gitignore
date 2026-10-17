@@ -9,3 +9,6 @@ build
 .vercel
 next-env.d.ts
 *.tsbuildinfo
+
+# FPL skill: transcripts are re-created locally by the script, not committed
+.claude/skills/fpl-team-picker/transcripts/
