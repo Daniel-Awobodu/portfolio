@@ -75,6 +75,7 @@ function parseFile(lane: Lane, filename: string): CaseStudy {
   const canvas = asString(data.canvas).trim();
   const alsoAt = asString(data.alsoAt).trim();
   const resultCaption = asString(data.resultCaption).trim();
+  const result = asString(data.result).trim();
   const resultFull = asString(data.resultFull).trim();
   const video = asString(data.video).trim();
 
@@ -94,6 +95,7 @@ function parseFile(lane: Lane, filename: string): CaseStudy {
     cover: cover === "" ? undefined : cover,
     canvas: canvas === "" ? undefined : canvas,
     resultCaption: resultCaption === "" ? undefined : resultCaption,
+    result: result === "" ? undefined : result,
     resultFull: resultFull === "" ? undefined : resultFull,
     video: video === "" ? undefined : video,
     tools: asTools(data.tools),
@@ -121,13 +123,15 @@ export function getCaseStudies(lane: Lane): CaseStudy[] {
   const dir = path.join(CONTENT_DIR, lane);
   if (!fs.existsSync(dir)) return [];
 
-  return fs
-    .readdirSync(dir)
-    .filter((file) => /\.mdx?$/.test(file))
-    // `_`-prefixed files are templates/drafts and are never published.
-    .filter((file) => !file.startsWith("_"))
-    .map((file) => parseFile(lane, file))
-    .sort(byOrderThenDate);
+  return (
+    fs
+      .readdirSync(dir)
+      .filter((file) => /\.mdx?$/.test(file))
+      // `_`-prefixed files are templates/drafts and are never published.
+      .filter((file) => !file.startsWith("_"))
+      .map((file) => parseFile(lane, file))
+      .sort(byOrderThenDate)
+  );
 }
 
 /** All case studies across every lane, sorted for display. */

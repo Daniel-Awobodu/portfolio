@@ -17,6 +17,8 @@ import { countTools } from "@/lib/tools";
 
 export default function HomePage() {
   const marketing = getCaseStudies("marketing");
+  // The marketing card leads with the top campaign's headline number.
+  const marketingLead = marketing[0]?.metrics[0];
   const automation = getCaseStudies("automation");
   const automationTools = countTools(automation);
   const proof = getProofMetrics();
@@ -134,10 +136,8 @@ export default function HomePage() {
             eyebrow={getLaneEyebrow("marketing")}
             title="Marketing"
             description={LANES.marketing.description}
-            stat={marketing.length > 0 ? `${marketing.length}` : "New lane"}
-            statLabel={
-              marketing.length === 1 ? "campaign build" : "campaign builds"
-            }
+            stat={marketingLead ? marketingLead.value : "New lane"}
+            statLabel={marketingLead ? marketingLead.label : "campaign builds"}
             href="/marketing"
             linkLabel="View marketing"
           />
