@@ -7,6 +7,7 @@ import CaseStudySearch, {
 import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import ImageLightbox from "@/components/ImageLightbox";
+import LandingPages from "@/components/LandingPages";
 import PageHeader from "@/components/PageHeader";
 import {
   getCaseStudies,
@@ -160,6 +161,8 @@ export default async function LanePage({
           </div>
         )}
       </Container>
+
+      {lane === "marketing" ? <LandingPages /> : null}
 
       {studies.length > 0 ? (
         <Container as="section" className="pb-20">
