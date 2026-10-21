@@ -29,6 +29,8 @@ export type CaseStudyMeta = {
   canvas?: string;
   /** Caption for the result image shown under the title. No caption, no image. */
   resultCaption?: string;
+  /** The result image under the title, when it differs from the card cover. Defaults to `cover`. */
+  result?: string;
   /** The full screenshot the result image opens. Defaults to `cover`. */
   resultFull?: string;
   video?: string;

@@ -29,6 +29,9 @@
   --color-on-accent: #ffffff; /* 6.01:1 on --accent-strong                */
   --color-code-bg: #1c1b18; /* code blocks stay inverted vs the page    */
   --color-code-fg: #faf7f1;
+  /* Phone mockup body. A real handset, so it stays near-black in both
+     themes; an --edge ring separates it from the dark page. */
+  --color-device: #141311;
 
   /* --- Brand colours for the social glyphs ------------------------------
      Official marks, so they sit outside the site palette on purpose. Each has

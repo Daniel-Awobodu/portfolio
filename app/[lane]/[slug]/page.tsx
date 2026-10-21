@@ -7,6 +7,7 @@ import Container from "@/components/Container";
 import LiveBadge from "@/components/LiveBadge";
 import MdxImage from "@/components/MdxImage";
 import NextStep from "@/components/NextStep";
+import PhoneScroll from "@/components/PhoneScroll";
 import ResultHero from "@/components/ResultHero";
 import StatRow from "@/components/StatRow";
 import TestimonialCard from "@/components/TestimonialCard";
@@ -127,8 +128,8 @@ export default async function CaseStudyPage({
 
         {study.cover && study.resultCaption ? (
           <ResultHero
-            src={study.cover}
-            href={study.resultFull ?? study.cover}
+            src={study.result ?? study.cover}
+            href={study.resultFull ?? study.result ?? study.cover}
             caption={study.resultCaption}
             title={study.title}
           />
@@ -175,7 +176,7 @@ export default async function CaseStudyPage({
           <div className="prose-editorial mt-4">
             <MDXRemote
               source={study.body}
-              components={{ img: MdxImage, NextStep }}
+              components={{ img: MdxImage, NextStep, PhoneScroll }}
             />
           </div>
         </div>
@@ -208,7 +209,9 @@ export default async function CaseStudyPage({
           <div className="flex flex-col justify-between rounded-md border border-hairline bg-card p-6">
             <span className="eyebrow">Your turn</span>
             <p className="mt-3 font-display text-xl leading-snug font-semibold text-ink">
-              Got a bottleneck that looks like this one?
+              {lane === "marketing"
+                ? "Got a product that needs more orders?"
+                : "Got a bottleneck that looks like this one?"}
             </p>
             <div className="mt-6">
               <CTAButton href="/contact">Start a conversation</CTAButton>

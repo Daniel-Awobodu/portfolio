@@ -58,12 +58,7 @@ Until the key is set, the form shows an orange "Setup needed" notice on the page
 
 ## 5. Case study placeholders
 
-The two marketing starter case studies below still ship with the site. Every number in them is a bracket
-token — **no invented figures** — so nothing reads as a false claim while you
-fill them in.
-
-**A note on this:** replace the brackets with real numbers, or delete the metric
-line entirely. The layout handles missing metrics cleanly. Never publish a
+Both lanes now hold real work only. **No invented figures:** never publish a
 number you can't stand behind.
 
 ### Automation
@@ -71,19 +66,12 @@ number you can't stand behind.
 - [x] **Done.** The two automation placeholders were removed. The lane now
       holds real builds only (`order-extraction.mdx`, `order-alerts.mdx`).
 
-### `content/marketing/ecommerce-scale.mdx`
+### Marketing
 
-This one is about your own store, so the client name is already real.
-
-- [ ] `[ROAS: 0.0x]`, `[SPEND: ₦0]`, `[CPP: ₦0]`
-- [ ] `[ADD: your current live figures…]`
-
-### `content/marketing/sales-page-cvr.mdx`
-
-- [ ] `[CLIENT NAME]`
-- [ ] `[0.0%] → [0.0%]`, `[-0%]`
-- [ ] `[3 months]`, `[7]`, `[3]`, `[0%]` in the body
-- [ ] `[ADD: the exact before/after figures…]`
+- [x] **Done.** The two marketing placeholders were removed. The lane now
+      holds the real sofa cover campaign (`sofa-cover.mdx`).
+- [ ] Add the sofa cover ad itself (image or video, and its caption) when
+      it's available.
 
 ### Case study cover images (optional)
 
