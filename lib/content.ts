@@ -25,7 +25,7 @@ export const LANES: Record<Lane, LaneInfo> = {
     label: "Marketing",
     eyebrow: "Lane 02",
     description:
-      "Facebook & Instagram ads, sales pages, and social systems that turn spend into orders.",
+      "Facebook & Instagram ads, and the landing pages that turn that spend into orders.",
     intro:
       "Five years of getting products sold online. Ads, offers and sales pages, measured by orders, not impressions.",
   },

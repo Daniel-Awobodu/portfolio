@@ -61,14 +61,14 @@ export default function CaseStudyCard({
             .join(" · ")}
         </p>
 
-        <h3 className="mt-2.5 font-display text-xl leading-snug font-semibold text-ink">
+        <h2 className="mt-2.5 font-display text-xl leading-snug font-semibold text-ink">
           <Link
             href={`/${study.lane}/${study.slug}`}
             className="after:absolute after:inset-0"
           >
             {study.title}
           </Link>
-        </h3>
+        </h2>
 
         {study.summary ? (
           <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-muted">

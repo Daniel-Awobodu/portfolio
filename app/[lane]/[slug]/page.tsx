@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
@@ -45,6 +47,12 @@ export async function generateMetadata({
   const study = resolved ? getCaseStudy(resolved, slug) : null;
   if (!study) return {};
 
+  // share.jpg sits beside the cover: the same picture at 1200x630 and under
+  // 300 KB, which WhatsApp needs to show a full-width preview.
+  const share = study.cover?.replace(/[^/]+$/, "share.jpg");
+  const shareExists =
+    share && fs.existsSync(path.join(process.cwd(), "public", share));
+
   return {
     title: study.title,
     description: study.summary || site.description,
@@ -54,7 +62,11 @@ export async function generateMetadata({
       title: study.title,
       description: study.summary || site.description,
       url: `/${study.lane}/${study.slug}`,
-      ...(study.cover ? { images: [{ url: study.cover }] } : {}),
+      ...(shareExists
+        ? { images: [{ url: share, width: 1200, height: 630 }] }
+        : study.cover
+          ? { images: [{ url: study.cover }] }
+          : {}),
     },
   };
 }

@@ -45,14 +45,21 @@ Until the key is set, the form shows an orange "Setup needed" notice on the page
       a touch under what a retina screen wants at the largest size. It looks
       good as-is; a bigger file would be sharper.
       **Crop any replacement square (1:1)** — the frames are circles now.
-- [ ] Optional: replace **`public/og.png`** (1200 × 630). This is the preview
-      card people see when your link is shared in WhatsApp, LinkedIn or X.
-      Right now it's a clean typographic card — your photo would work too.
+- [x] **Share card done.** `public/og.jpg` (1200 × 630) shows your photo,
+      headline and two proof numbers when a page is shared on WhatsApp,
+      LinkedIn or X. Each build page shares its own cover instead
+      (`share.jpg` beside each cover). The numbers on the card are part of the
+      image, so remake it if they change a lot.
 
 ## 4. Your domain
 
-- [ ] In `lib/site-config.ts`, confirm `url:` is your real domain. It controls
-      the sitemap and every social share preview. See `DEPLOY.md`.
+- [ ] **danielawobodu.com isn't bought yet.** Until it is, the site uses its
+      Vercel address automatically (`url:` in `lib/site-config.ts` reads it
+      from Vercel at build time), so share previews and the sitemap work now.
+      Once you buy the domain and connect it in Vercel, it switches over by
+      itself. If previews ever show the wrong address, check Vercel → Settings
+      → Environment Variables → "Automatically expose System Environment
+      Variables" is on.
 
 ---
 

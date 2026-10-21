@@ -9,6 +9,19 @@
  * ============================================================================
  */
 
+/**
+ * The card shown when a page link is shared on WhatsApp, LinkedIn or X.
+ * Kept small (under 300 KB) so WhatsApp shows it full width. Pages that set
+ * their own `openGraph` must list it again, since Next replaces the whole
+ * openGraph object rather than merging it.
+ */
+export const shareImage = {
+  url: "/og.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Daniel Awobodu: AI automation and e-commerce growth. 16 automation systems built, 131 orders from one Facebook campaign.",
+};
+
 export const site = {
   name: "Daniel Awobodu",
   /** Used for <title> suffixes and Open Graph. */
@@ -22,8 +35,16 @@ export const site = {
   /** Short strap that sits under the promise. */
   tagline: "Systems that sell. Explained simply.",
 
-  /** Used for canonical URLs, sitemap.xml, robots.txt and Open Graph. */
-  url: "https://danielawobodu.com",
+  /**
+   * Used for canonical URLs, sitemap.xml, robots.txt and Open Graph, so share
+   * previews only work if this address is live. danielawobodu.com isn't
+   * bought yet, so on Vercel this is the project's production address, which
+   * Vercel sets at build time and switches to the custom domain by itself
+   * once one is connected. The fallback only applies to local builds.
+   */
+  url: process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://danielawobodu.com",
 
   /** Default social share / meta description. */
   description:

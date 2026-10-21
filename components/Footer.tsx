@@ -18,8 +18,8 @@ export default function Footer() {
               {site.name}
             </p>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
-              {site.tagline} {site.role} for teams that want to understand what
-              they own.
+              {site.tagline} AI automation and e-commerce growth for teams that
+              want to understand what they own.
             </p>
           </div>
 
