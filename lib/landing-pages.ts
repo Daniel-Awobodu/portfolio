@@ -59,4 +59,18 @@ export const landingPages: LandingPage[] = [
     date: "June 2026",
     note: "A step-by-step order and delivery journey that explains the ₦3,000 confirmation payment up front.",
   },
+  {
+    slug: "home-safe",
+    blurred: true,
+    name: "Mini home safe",
+    date: "March 2026",
+    note: "A dark, premium look with a full spec sheet, a setup video, and delivery times for Lagos and other states.",
+  },
+  {
+    slug: "rice-bucket",
+    blurred: true,
+    name: "Rice bucket",
+    date: "February 2026",
+    note: "Built around one problem, weevils in stored grain, with a spec table and answers to common questions.",
+  },
 ];
