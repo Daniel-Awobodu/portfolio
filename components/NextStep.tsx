@@ -7,9 +7,9 @@ import type { ReactNode } from "react";
  */
 export default function NextStep({ children }: { children: ReactNode }) {
   return (
-    <aside className="rounded-md border border-hairline border-l-2 border-l-accent bg-card px-6 py-5 [&>*+*]:mt-3">
+    <div className="rounded-md border border-hairline border-l-2 border-l-accent bg-card px-6 py-5 [&>*+*]:mt-3">
       <p className="eyebrow">What I&rsquo;d add next</p>
       {children}
-    </aside>
+    </div>
   );
 }

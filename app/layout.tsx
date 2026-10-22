@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
-import { site } from "@/lib/site-config";
+import { shareImage, site } from "@/lib/site-config";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
@@ -41,21 +41,12 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} — ${site.role}`,
     description: site.description,
-    // Replace /public/og.png (1200×630) with a real share card when you can.
-    images: [
-      {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: `${site.name} — ${site.tagline}`,
-      },
-    ],
+    images: [shareImage],
   },
+  // Card type only: X falls back to each page's own og:title, description
+  // and image, so a shared build page shows that build, not the home page.
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — ${site.role}`,
-    description: site.description,
-    images: ["/og.png"],
   },
   robots: {
     index: true,

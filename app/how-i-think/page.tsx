@@ -8,7 +8,7 @@ import ImageLightbox from "@/components/ImageLightbox";
 import PageHeader from "@/components/PageHeader";
 import VideoEmbed from "@/components/VideoEmbed";
 import { getCaseStudy } from "@/lib/content";
-import { site } from "@/lib/site-config";
+import { shareImage, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "How I Think",
@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     description:
       "A maths teacher's habit: I don't just build it, I explain it so you actually own it.",
     url: "/how-i-think",
+    images: [shareImage],
   },
 };
 
@@ -91,7 +92,7 @@ const projectSteps: {
   },
   {
     title: "Build",
-    body: "I build it in n8n or Zapier, connected to the tools you already use, in small pieces you can see working early, so there are no surprises at the end.",
+    body: "I build it in n8n, Make or Zapier, connected to the tools you already use, in small pieces you can see working early, so there are no surprises at the end.",
   },
   {
     title: "Test the edge cases",

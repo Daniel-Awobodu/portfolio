@@ -5,7 +5,7 @@ import ContactForm from "@/components/ContactForm";
 import ContactLinks from "@/components/ContactLinks";
 import PageHeader from "@/components/PageHeader";
 import { getCaseStudies } from "@/lib/content";
-import { contact, site } from "@/lib/site-config";
+import { contact, shareImage, site } from "@/lib/site-config";
 import { topTools } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     description:
       "Tell me what you're trying to automate or sell. I usually reply within a few hours.",
     url: "/contact",
+    images: [shareImage],
   },
 };
 

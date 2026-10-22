@@ -16,7 +16,7 @@ import {
   LANES,
 } from "@/lib/content";
 import { normalise } from "@/lib/search";
-import { site } from "@/lib/site-config";
+import { shareImage, site } from "@/lib/site-config";
 import type { CaseStudy, Lane } from "@/lib/types";
 
 /** Only `automation` and `marketing` exist; anything else 404s at build time. */
@@ -87,6 +87,7 @@ export async function generateMetadata({
       title: `${info.label} — Daniel Awobodu`,
       description: info.description,
       url: `/${info.slug}`,
+      images: [shareImage],
     },
   };
 }
@@ -168,7 +169,9 @@ export default async function LanePage({
         <Container as="section" className="pb-20">
           <div className="flex flex-col items-start gap-6 border-t border-hairline pt-10 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-md font-display text-xl leading-snug font-semibold text-ink sm:text-2xl">
-              Want something like this running in your business?
+              {lane === "marketing"
+                ? "Got a product that needs more orders?"
+                : "Want something like this running in your business?"}
             </p>
             <CTAButton href="/contact">Start a conversation</CTAButton>
           </div>

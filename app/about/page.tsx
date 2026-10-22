@@ -6,7 +6,7 @@ import ContactLinks from "@/components/ContactLinks";
 import CTAButton from "@/components/CTAButton";
 import ImageLightbox from "@/components/ImageLightbox";
 import PageHeader from "@/components/PageHeader";
-import { site } from "@/lib/site-config";
+import { shareImage, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About",
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     description:
       "Maths teacher and growth marketer, now building AI automation systems. The through-line is making complex things simple.",
     url: "/about",
+    images: [shareImage],
   },
 };
 
@@ -142,8 +143,8 @@ export default function AboutPage() {
                 I build AI automations that take repetitive work off a team:
                 capturing orders, following up leads, booking appointments, and
                 reading documents and receipts. Every build comes with a plain
-                explanation, so your team owns it. I still run the ads and sales
-                pages for Quality-Buy.
+                explanation, so your team owns it. I still run the ads and build
+                the landing pages for Quality-Buy.
               </p>
               <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
                 <li>
@@ -152,6 +153,14 @@ export default function AboutPage() {
                     className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
                   >
                     See the automation builds
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/marketing"
+                    className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+                  >
+                    See the marketing work
                   </Link>
                 </li>
                 <li>
