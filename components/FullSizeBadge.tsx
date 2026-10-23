@@ -1,13 +1,14 @@
 /**
  * Corner badge on an image link that opens the full-size screenshot. The
- * parent link carries `group/zoom` so the badge lights up on hover.
+ * parent link carries `group/zoom` so the badge lights up on hover. `top`
+ * moves it up for pictures whose bottom corner holds something worth seeing.
  */
-export default function FullSizeBadge() {
+export default function FullSizeBadge({ top = false }: { top?: boolean }) {
   return (
     <>
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-2.5 bottom-2.5 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card px-2.5 py-1 font-sans text-xs leading-none font-semibold text-ink shadow-sm transition-colors duration-150 group-hover/zoom:border-accent-strong group-hover/zoom:text-accent-strong"
+        className={`pointer-events-none absolute right-2.5 ${top ? "top-2.5" : "bottom-2.5"} inline-flex items-center gap-1.5 rounded-full border border-hairline bg-card px-2.5 py-1 font-sans text-xs leading-none font-semibold text-ink shadow-sm transition-colors duration-150 group-hover/zoom:border-accent-strong group-hover/zoom:text-accent-strong`}
       >
         <svg
           viewBox="0 0 24 24"

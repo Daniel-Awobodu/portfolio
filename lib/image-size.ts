@@ -31,3 +31,15 @@ export function jpegSize(publicPath: string): {
   }
   throw new Error(`No JPEG size found in ${publicPath}`);
 }
+
+/** Width and height of a PNG in /public, from its IHDR header. */
+export function pngSize(publicPath: string): {
+  width: number;
+  height: number;
+} {
+  const buf = fs.readFileSync(path.join(process.cwd(), "public", publicPath));
+  if (buf.toString("ascii", 12, 16) !== "IHDR") {
+    throw new Error(`Not a PNG: ${publicPath}`);
+  }
+  return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+}

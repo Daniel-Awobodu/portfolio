@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import AdPreview from "@/components/AdPreview";
 import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import LiveBadge from "@/components/LiveBadge";
@@ -188,7 +189,7 @@ export default async function CaseStudyPage({
           <div className="prose-editorial mt-4">
             <MDXRemote
               source={study.body}
-              components={{ img: MdxImage, NextStep, PhoneScroll }}
+              components={{ img: MdxImage, AdPreview, NextStep, PhoneScroll }}
             />
           </div>
         </div>

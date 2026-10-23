@@ -77,8 +77,7 @@ number you can't stand behind.
 
 - [x] **Done.** The two marketing placeholders were removed. The lane now
       holds the real sofa cover campaign (`sofa-cover.mdx`).
-- [ ] Add the sofa cover ad itself (image or video, and its caption) when
-      it's available.
+- [x] The sofa cover ad is on the page (`public/case-studies/sofa-cover/ad.png`).
 
 ### Case study cover images (optional)
 
