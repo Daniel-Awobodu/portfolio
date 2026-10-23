@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="10" fill="#1C1B18"/>
-  <text x="32" y="44" text-anchor="middle" fill="#FAF7F1"
-        font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600">DA</text>
+  <rect width="64" height="64" rx="10" fill="#0B6B4C"/>
+  <text x="32" y="43" text-anchor="middle" fill="#FFFFFF"
+        font-family="'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="-1">DA</text>
 </svg>

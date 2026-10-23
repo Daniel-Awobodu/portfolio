@@ -7,9 +7,9 @@ const base =
   "inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-[0.9375rem] font-semibold transition-all duration-150 ease-out";
 
 /**
- * `primary` uses accent-strong (#8F4E14) rather than accent (#B5641A) because
- * white text on accent is 4.37:1 — below AA for button-sized text. On
- * accent-strong it is 6.13:1.
+ * `primary` uses accent-strong (#0B6B4C) rather than accent (#0F8A63) because
+ * white text on accent is 4.34:1 — below AA for button-sized text. On
+ * accent-strong it is 6.52:1.
  */
 const variants: Record<Variant, string> = {
   primary:

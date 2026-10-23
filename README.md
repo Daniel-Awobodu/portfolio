@@ -54,7 +54,7 @@ npm run start   # then open http://localhost:3000
 ## Light and dark mode
 
 There's a small sun/moon button in the top navigation. It switches the whole
-site between the warm light theme and a warm dark one.
+site between the light theme and the dark one.
 
 **How it decides which to show:** first visit follows the visitor's own device
 setting. Once they press the button, that choice is remembered and wins over the
@@ -110,7 +110,7 @@ There are no `.env` files and no other environment variables to set.
   needs a second set of styles.
 - **MDX files on disk** for case studies — no CMS, no database, no external
   service. Add a file, get a page.
-- **Fraunces + Inter** via `next/font`, self-hosted at build time.
+- **Bricolage Grotesque + Inter** via `next/font`, self-hosted at build time.
 - **Vercel free tier** is all it needs.
 
 ```

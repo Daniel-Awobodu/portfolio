@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import { shareImage, site } from "@/lib/site-config";
@@ -8,13 +8,14 @@ import "./globals.css";
 
 /**
  * Both are loaded as variable fonts — one file each, the full 400–600 range we
- * use, and Fraunces keeps its `opsz` axis so `font-optical-sizing: auto` in
- * globals.css actually does something at display sizes.
+ * use, and Bricolage keeps its `opsz` axis so `font-optical-sizing: auto` in
+ * globals.css tightens the headings at display sizes.
  */
-const fraunces = Fraunces({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-fraunces",
+  axes: ["opsz"],
+  variable: "--font-bricolage",
 });
 
 const inter = Inter({
@@ -69,7 +70,7 @@ export const viewport = {
    * would tint the browser chrome to the OS setting while the page showed the
    * other theme. lib/theme.ts keeps this in sync with the live theme instead.
    */
-  themeColor: "#FAF7F1",
+  themeColor: "#F6F7F5",
 
   width: "device-width",
   initialScale: 1,
@@ -87,7 +88,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${inter.variable}`}
+      className={`${bricolage.variable} ${inter.variable}`}
     >
       <head>
         {/* Blocking and first in <head> — resolves the theme before anything
