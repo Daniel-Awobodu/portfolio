@@ -138,15 +138,12 @@ export default function HomePage() {
           ))}
         </ul>
 
-        <p className="mt-10">
-          <Link
-            href="/automation"
-            className="inline-flex items-center gap-1.5 text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4 transition-colors duration-150 hover:text-ink"
-          >
+        <div className="mt-12 flex justify-center">
+          <CTAButton href="/automation">
             See all {automation.length} builds
             <span aria-hidden="true">→</span>
-          </Link>
-        </p>
+          </CTAButton>
+        </div>
       </Container>
 
       {/* ================= 3. PROOF STRIP ================= */}
