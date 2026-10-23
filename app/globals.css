@@ -9,26 +9,26 @@
 
 @theme {
   /* --- Colour: LIGHT (the default) -------------------------------------- */
-  --color-paper: #faf7f1; /* page background, warm off-white          */
-  --color-ink: #1c1b18; /* primary text, warm near-black            */
-  --color-muted: #6e6a62; /* secondary text — 5.03:1 on paper (AA)    */
-  --color-hairline: #e6e0d4; /* borders, dividers                        */
-  --color-edge: #cfc7b8; /* card outlines, firmer than a hairline     */
-  /* CONTRAST RULE — verified against #FAF7F1 paper and #FFFFFF card:
-     --accent is 4.09:1, which clears AA for large text only, so it is used
+  --color-paper: #f6f7f5; /* page background, cool green-tinted white */
+  --color-ink: #101814; /* primary text, green-black — 16.81:1      */
+  --color-muted: #56615b; /* secondary text — 6.00:1 on paper (AA)    */
+  --color-hairline: #e1e6e2; /* borders, dividers                        */
+  --color-edge: #c6cfc9; /* card outlines, firmer than a hairline     */
+  /* CONTRAST RULE — verified against #F6F7F5 paper and #FFFFFF card:
+     --accent is 4.04:1, which clears AA for large text only, so it is used
      ONLY at 26px and above (comfortably past the 24px/18pt threshold).
-     Anything smaller uses --accent-strong at 6.01:1, which clears AA for
+     Anything smaller uses --accent-strong at 6.07:1, which clears AA for
      normal text at any size. The same rule holds in dark mode, where both
      have more headroom still. */
-  --color-accent: #b5641a; /* 4.09:1 — display sizes (≥26px) only      */
-  --color-accent-strong: #8f4e14; /* 6.01:1 — safe at any size                */
+  --color-accent: #0f8a63; /* 4.04:1 — display sizes (≥26px) only      */
+  --color-accent-strong: #0b6b4c; /* 6.07:1 — safe at any size                */
   --color-card: #ffffff; /* raised surfaces                          */
   /* Label colour for text sitting ON an accent fill (buttons, selection).
-     It must flip with the theme: white works on light mode's dark ochre,
-     but dark mode's ochre is light, so white would fail there. */
-  --color-on-accent: #ffffff; /* 6.01:1 on --accent-strong                */
-  --color-code-bg: #1c1b18; /* code blocks stay inverted vs the page    */
-  --color-code-fg: #faf7f1;
+     It must flip with the theme: white works on light mode's deep emerald,
+     but dark mode's emerald is light, so white would fail there. */
+  --color-on-accent: #ffffff; /* 6.52:1 on --accent-strong                */
+  --color-code-bg: #101814; /* code blocks stay inverted vs the page    */
+  --color-code-fg: #f6f7f5;
   /* Phone mockup body. A real handset, so it stays near-black in both
      themes; an --edge ring separates it from the dark page. */
   --color-device: #141311;
@@ -42,10 +42,11 @@
   --color-brand-whatsapp: #1da851;
   --color-brand-linkedin: #0a66c2;
   --color-brand-x: #000000;
-  --color-brand-email: #b5641a; /* no brand mark — uses the site accent    */
+  --color-brand-email: #0f8a63; /* no brand mark — uses the site accent    */
 
   /* --- Type ------------------------------------------------------------- */
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-display:
+    var(--font-bricolage), var(--font-inter), system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   /* --- Layout (drives max-w-shell / max-w-prose) ------------------------ */
@@ -58,11 +59,11 @@
   --radius-md: 8px;
 
   /* --- Elevation (tokenised so it can lift on dark surfaces) ------------ */
-  --shadow-lift: 0 12px 28px -18px rgb(28 27 24 / 0.45);
-  --shadow-button: 0 1px 2px rgb(28 27 24 / 0.12);
+  --shadow-lift: 0 12px 28px -18px rgb(16 24 20 / 0.45);
+  --shadow-button: 0 1px 2px rgb(16 24 20 / 0.12);
   /* Resting cards: just enough lift to read as separate objects. */
   --shadow-card:
-    0 1px 2px rgb(28 27 24 / 0.06), 0 6px 16px -6px rgb(28 27 24 / 0.14);
+    0 1px 2px rgb(16 24 20 / 0.06), 0 6px 16px -6px rgb(16 24 20 / 0.14);
 }
 
 /* ==========================================================================
@@ -97,22 +98,22 @@
      per-theme below so native UI follows the theme actually on screen. */
   color-scheme: light dark;
 
-  --dark-paper: #17140f; /* warm brown-black, deliberately not #000   */
-  --dark-ink: #f3eee4; /* 15.88:1 on paper                          */
-  --dark-muted: #a8a093; /* 7.10:1 on paper                           */
-  --dark-hairline: #332e26;
-  --dark-edge: #4a443a;
-  --dark-accent: #e08c3c; /* 6.98:1 — same ochre hue, lifted for dark  */
-  --dark-accent-strong: #f0a85e; /* 9.15:1 — the "strong" role inverts to lighter */
-  --dark-card: #201c16; /* raised surface, slightly above paper      */
-  --dark-on-accent: #17140f; /* 9.15:1 on --accent-strong                 */
-  --dark-code-bg: #0f0d09; /* recessed rather than inverted             */
-  --dark-code-fg: #f3eee4;
+  --dark-paper: #0e1411; /* green-black, deliberately not #000        */
+  --dark-ink: #e8efea; /* 15.94:1 on paper                          */
+  --dark-muted: #9aa8a0; /* 7.53:1 on paper                           */
+  --dark-hairline: #1f2a24;
+  --dark-edge: #34443b;
+  --dark-accent: #34c38f; /* 8.30:1 — same emerald hue, lifted for dark */
+  --dark-accent-strong: #6ddcae; /* 11.09:1 — the "strong" role inverts to lighter */
+  --dark-card: #151d19; /* raised surface, slightly above paper      */
+  --dark-on-accent: #0e1411; /* 11.09:1 on --accent-strong                */
+  --dark-code-bg: #0a0f0c; /* recessed rather than inverted             */
+  --dark-code-fg: #e8efea;
 
   --dark-brand-whatsapp: #25d366; /* WhatsApp's brighter green reads better here */
   --dark-brand-linkedin: #70b5f9; /* LinkedIn's own dark-UI blue                 */
   --dark-brand-x: #ffffff; /* X's mark inverts on dark by design          */
-  --dark-brand-email: #e08c3c;
+  --dark-brand-email: #34c38f;
 
   /* Shadows read as nothing on a dark ground — deepen them to compensate. */
   --dark-shadow-lift: 0 12px 28px -18px rgb(0 0 0 / 0.8);
