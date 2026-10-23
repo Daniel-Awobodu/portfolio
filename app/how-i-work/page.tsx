@@ -11,18 +11,47 @@ import { getCaseStudy } from "@/lib/content";
 import { shareImage, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "How I Think",
+  title: "How I Work",
   description:
-    "Most automation freelancers can't explain what they built. I can, because I was a teacher before I built systems. Clear handoffs, real documentation, and a system you actually own.",
-  alternates: { canonical: "/how-i-think" },
+    "How a project runs, the rules every build follows, and what your team gets at handoff: a plain guide, a recorded walkthrough, error alerts and two weeks of free fixes.",
+  alternates: { canonical: "/how-i-work" },
   openGraph: {
-    title: `How I Think — ${site.name}`,
+    title: `How I Work — ${site.name}`,
     description:
-      "A maths teacher's habit: I don't just build it, I explain it so you actually own it.",
-    url: "/how-i-think",
+      "Every build comes with a plain guide, a recorded walkthrough and error alerts, so your team can run it without me.",
+    url: "/how-i-work",
     images: [shareImage],
   },
 };
+
+/**
+ * What every client gets with every build. This leads the page: it is the
+ * part a buyer pays for, and each item links to the proof further down.
+ */
+const handover: {
+  title: string;
+  body: string;
+  link?: { href: string; label: string };
+}[] = [
+  {
+    title: "A guide in plain words",
+    body: "What runs, when it runs, and what to do if it stops. Written for the people who use it, not for developers.",
+    link: { href: "#handoff-guide", label: "See a sample guide" },
+  },
+  {
+    title: "A recorded walkthrough",
+    body: "The build explained out loud, step by step, so anyone on your team can learn it, now or a year from now.",
+    link: { href: "#worked-example", label: "Watch one" },
+  },
+  {
+    title: "Error alerts from day one",
+    body: "If any step fails, an alert names the step that broke and goes to me and to someone on your team.",
+  },
+  {
+    title: "Two weeks of free fixes",
+    body: "Anything that breaks in the first two weeks after launch, I fix at no cost while your team settles in.",
+  },
+];
 
 /** Where the teaching happened. Kept factual: school, class, year. */
 const schools = [
@@ -181,205 +210,52 @@ const workedExample = {
   ],
 };
 
-export default function HowIThinkPage() {
+export default function HowIWorkPage() {
   return (
     <>
       <PageHeader
-        eyebrow="The difference"
-        title="I don’t just build it. I explain it."
-        lede="Most people who can wire up an automation cannot tell you how it works. That gap is where projects go to die: the system runs, nobody understands it, and the first time it breaks it gets abandoned."
+        eyebrow="How I work"
+        title="Built to hand over, so your team can run it."
+        lede="Plenty of automations stop working the first time their builder is out of reach, because nobody else knows how they run. Every system I build comes with what your team needs to run it, check it and handle the small things themselves."
       />
 
-      {/* ---------- Thesis: where the habit comes from ---------- */}
+      {/* ---------- What every build comes with ---------- */}
       <Container as="section" className="py-14 md:py-16">
-        <div className="grid gap-10 md:grid-cols-12 md:gap-12">
-          <div className="md:col-span-4">
-            <p className="eyebrow">Teaching background</p>
-            <ul className="mt-5 space-y-5">
-              {schools.map((school) => (
-                <li key={school.name} className="border-l-2 border-edge pl-4">
-                  <p className="font-display text-lg leading-snug font-semibold text-ink">
-                    {school.name}
-                  </p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">
-                    {school.detail}
-                  </p>
-                  <p className="mt-0.5 text-sm leading-relaxed text-muted">
-                    {school.when}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="max-w-prose md:col-span-8">
-            <p className="font-display text-[clamp(1.5rem,1.2rem+1.3vw,2rem)] leading-[1.25] font-semibold text-ink">
-              Before I built systems, I taught. The job was never knowing the
-              answer. It was making someone else see it.
-            </p>
-            <p className="mt-6 text-[1.0625rem] leading-relaxed text-muted">
-              My first classes were five SS1 maths classes at Mainland High
-              School, during my teaching practice. The lesson I still remember
-              is modular arithmetic: sums on a clock in mod 6, mod 12 and mod
-              24, clockwise and anticlockwise. My explanation was correct, and
-              the class still couldn&rsquo;t see it.
-            </p>
-            <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
-              So I went and got a real wall clock, and we worked the sums on it
-              together. For the other modes, I drew a clock on the board with
-              only that many numbers, six for mod 6, and told them to draw their
-              own whenever they got stuck. By the end, almost the whole class
-              had it. It&rsquo;s still the best lesson I&rsquo;ve taught.
-            </p>
-            <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
-              That&rsquo;s how I build. A correct system isn&rsquo;t enough if
-              the people running it can&rsquo;t see how it works. So every build
-              comes with the clock on the table: a plain explanation, a real
-              example and a walkthrough. A system is only worth something if it
-              still runs long after the handoff. I make sure your team
-              understands it too.
-            </p>
-          </div>
-        </div>
-      </Container>
-
-      {/* ---------- Principles, each with the builds that prove it ---------- */}
-      <section className="border-y border-hairline bg-card">
-        <Container className="py-14 md:py-16">
-          <p className="eyebrow">How I build</p>
-          <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
-            Five rules I build by
-          </h2>
-          <p className="mt-4 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
-            Not promises. Each one links to the builds where you can see it
-            working.
-          </p>
-
-          <ol className="mt-10 divide-y divide-hairline border-y border-hairline">
-            {principles.map((principle, index) => (
-              <li
-                key={principle.title}
-                className="grid gap-4 py-7 md:grid-cols-12 md:gap-8"
-              >
-                <div className="flex gap-4 md:col-span-5">
-                  <span
-                    aria-hidden="true"
-                    className="font-display text-2xl leading-none font-semibold text-gold"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="font-display text-xl leading-snug font-semibold text-ink">
-                    {principle.title}
-                  </h3>
-                </div>
-                <div className="md:col-span-7">
-                  <p className="text-[0.9375rem] leading-relaxed text-muted">
-                    {principle.body}
-                  </p>
-                  <p className="mt-4 text-sm font-semibold text-ink">
-                    See it in:
-                  </p>
-                  <ul className="mt-2 space-y-1.5">
-                    {principle.builds
-                      .map((slug) => getCaseStudy("automation", slug))
-                      .filter((study) => study !== null)
-                      .map((study) => (
-                        <li key={study.slug}>
-                          <Link
-                            href={`/automation/${study.slug}`}
-                            className="group/link inline-flex gap-2 text-[0.9375rem] leading-snug font-medium text-accent-strong"
-                          >
-                            <span aria-hidden="true">→</span>
-                            <span className="underline decoration-edge underline-offset-4 transition-colors duration-150 group-hover/link:decoration-accent-strong">
-                              {study.title}
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </section>
-
-      {/* ---------- Worked example: a real build in four sentences ---------- */}
-      <Container as="section" className="py-14 md:py-16">
-        <div className="max-w-prose">
-          <p className="eyebrow">Worked example</p>
-          <h2 className="mt-3 font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
-            A real workflow, in four sentences
-          </h2>
-          <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
-            This is the receipt workflow from my logistics build. It looks busy.
-            Here is everything it does, with nothing left out.
-          </p>
-        </div>
-
-        <figure className="mt-8">
-          <ImageLightbox
-            href={workedExample.image}
-            alt={workedExample.alt}
-            className="group/zoom relative block cursor-zoom-in overflow-hidden rounded-md border border-hairline"
-          >
-            <Image
-              src={workedExample.image}
-              alt={workedExample.alt}
-              width={2384}
-              height={480}
-              sizes="(max-width: 1100px) 100vw, 1036px"
-              className="h-auto w-full"
-            />
-            <FullSizeBadge />
-          </ImageLightbox>
-        </figure>
-
-        <div className="max-w-prose">
-          <ol className="mt-8 space-y-5">
-            {workedExample.sentences.map((sentence, index) => (
-              <li
-                key={sentence}
-                className="flex gap-5 border-b border-hairline pb-5 last:border-0"
-              >
-                <span
-                  aria-hidden="true"
-                  className="font-display text-xl font-semibold text-gold"
-                >
-                  {index + 1}
-                </span>
-                <p className="font-display text-lg leading-snug text-ink sm:text-xl">
-                  {sentence}
-                </p>
-              </li>
-            ))}
-          </ol>
-
-          <p className="mt-8 text-[1.0625rem] leading-relaxed text-muted">
-            That&rsquo;s the whole system. Everything else on that canvas is the
-            plumbing that carries out those four sentences, plus the checks that
-            catch what goes wrong. If someone needs more than four sentences to
-            tell you what your own system does, be suspicious.
-          </p>
-          <h3 className="mt-10 font-display text-xl leading-snug font-semibold text-ink">
-            Hear me walk through it
-          </h3>
-          <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
-            The same receipt build, explained out loud, the way I&rsquo;d hand
-            it over to your team.
-          </p>
-          <VideoEmbed
-            src={workedExample.video}
-            title="Walkthrough: the receipt build"
-          />
-          <p>
-            <Link
-              href={`/automation/${workedExample.slug}`}
-              className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+        <p className="eyebrow">With every build</p>
+        <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
+          What you get, every time
+        </h2>
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {handover.map((item, index) => (
+            <li
+              key={item.title}
+              className="flex flex-col rounded-md border-2 border-edge bg-card p-6 shadow-card"
             >
-              See the full receipt build
-            </Link>
-          </p>
-        </div>
+              <span
+                aria-hidden="true"
+                className="font-display text-2xl leading-none font-semibold text-gold"
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-4 font-display text-xl leading-snug font-semibold text-ink">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
+                {item.body}
+              </p>
+              {item.link ? (
+                <p className="mt-auto pt-4">
+                  <a
+                    href={item.link.href}
+                    className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+                  >
+                    {item.link.label}
+                  </a>
+                </p>
+              ) : null}
+            </li>
+          ))}
+        </ul>
       </Container>
 
       {/* ---------- How a project runs ---------- */}
@@ -449,8 +325,155 @@ export default function HowIThinkPage() {
         </Container>
       </section>
 
+      {/* ---------- Principles, each with the builds that prove it ---------- */}
+      <Container as="section" className="py-14 md:py-16">
+        <p className="eyebrow">How I build</p>
+        <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
+          Five rules I build by
+        </h2>
+        <p className="mt-4 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
+          Not promises. Each one links to the builds where you can see it
+          working.
+        </p>
+
+        <ol className="mt-10 divide-y divide-hairline border-y border-hairline">
+          {principles.map((principle, index) => (
+            <li
+              key={principle.title}
+              className="grid gap-4 py-7 md:grid-cols-12 md:gap-8"
+            >
+              <div className="flex gap-4 md:col-span-5">
+                <span
+                  aria-hidden="true"
+                  className="font-display text-2xl leading-none font-semibold text-gold"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-display text-xl leading-snug font-semibold text-ink">
+                  {principle.title}
+                </h3>
+              </div>
+              <div className="md:col-span-7">
+                <p className="text-[0.9375rem] leading-relaxed text-muted">
+                  {principle.body}
+                </p>
+                <p className="mt-4 text-sm font-semibold text-ink">
+                  See it in:
+                </p>
+                <ul className="mt-2 space-y-1.5">
+                  {principle.builds
+                    .map((slug) => getCaseStudy("automation", slug))
+                    .filter((study) => study !== null)
+                    .map((study) => (
+                      <li key={study.slug}>
+                        <Link
+                          href={`/automation/${study.slug}`}
+                          className="group/link inline-flex gap-2 text-[0.9375rem] leading-snug font-medium text-accent-strong"
+                        >
+                          <span aria-hidden="true">→</span>
+                          <span className="underline decoration-edge underline-offset-4 transition-colors duration-150 group-hover/link:decoration-accent-strong">
+                            {study.title}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Container>
+
+      {/* ---------- Worked example: a real build in four sentences ---------- */}
+      <section
+        id="worked-example"
+        className="scroll-mt-24 border-y border-hairline bg-card"
+      >
+        <Container className="py-14 md:py-16">
+          <div className="max-w-prose">
+            <p className="eyebrow">Worked example</p>
+            <h2 className="mt-3 font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
+              A real workflow, in four sentences
+            </h2>
+            <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
+              This is the receipt workflow from my logistics build. It looks
+              busy. Here is everything it does, with nothing left out.
+            </p>
+          </div>
+
+          <figure className="mt-8">
+            <ImageLightbox
+              href={workedExample.image}
+              alt={workedExample.alt}
+              className="group/zoom relative block cursor-zoom-in overflow-hidden rounded-md border border-hairline"
+            >
+              <Image
+                src={workedExample.image}
+                alt={workedExample.alt}
+                width={2384}
+                height={480}
+                sizes="(max-width: 1100px) 100vw, 1036px"
+                className="h-auto w-full"
+              />
+              <FullSizeBadge />
+            </ImageLightbox>
+          </figure>
+
+          <div className="max-w-prose">
+            <ol className="mt-8 space-y-5">
+              {workedExample.sentences.map((sentence, index) => (
+                <li
+                  key={sentence}
+                  className="flex gap-5 border-b border-hairline pb-5 last:border-0"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="font-display text-xl font-semibold text-gold"
+                  >
+                    {index + 1}
+                  </span>
+                  <p className="font-display text-lg leading-snug text-ink sm:text-xl">
+                    {sentence}
+                  </p>
+                </li>
+              ))}
+            </ol>
+
+            <p className="mt-8 text-[1.0625rem] leading-relaxed text-muted">
+              That&rsquo;s the whole system. Everything else on that canvas is
+              the plumbing that carries out those four sentences, plus the
+              checks that catch what goes wrong. If someone needs more than four
+              sentences to tell you what your own system does, be suspicious.
+            </p>
+            <h3 className="mt-10 font-display text-xl leading-snug font-semibold text-ink">
+              Hear me walk through it
+            </h3>
+            <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted">
+              The same receipt build, explained out loud, the way I&rsquo;d hand
+              it over to your team.
+            </p>
+            <VideoEmbed
+              src={workedExample.video}
+              title="Walkthrough: the receipt build"
+            />
+            <p>
+              <Link
+                href={`/automation/${workedExample.slug}`}
+                className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
+              >
+                See the full receipt build
+              </Link>
+            </p>
+          </div>
+        </Container>
+      </section>
+
       {/* ---------- Sample handoff guide ---------- */}
-      <Container as="section" id="handoff-guide" className="py-14 md:py-16">
+      <Container
+        as="section"
+        id="handoff-guide"
+        className="scroll-mt-24 py-14 md:py-16"
+      >
         <div className="max-w-prose">
           <p className="eyebrow">What you get at handoff</p>
           <h2 className="mt-3 font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
@@ -497,13 +520,53 @@ export default function HowIThinkPage() {
         </article>
       </Container>
 
+      {/* ---------- Why: the teaching, kept short, as the reason ---------- */}
+      <section className="border-y border-hairline bg-card">
+        <Container className="py-14 md:py-16">
+          <div className="grid gap-10 md:grid-cols-12 md:gap-12">
+            <div className="max-w-prose md:col-span-8">
+              <p className="eyebrow">Why I explain everything</p>
+              <h2 className="mt-3 font-display text-[clamp(1.5rem,1.25rem+1vw,2rem)] leading-tight font-semibold text-ink">
+                Before I built systems, I taught maths.
+              </h2>
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
+                In one lesson on clock arithmetic, my explanation was correct
+                and the class still couldn&rsquo;t see it. So I brought in a
+                real wall clock, and we worked the sums on it together. By the
+                end, almost the whole class had it.
+              </p>
+              <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
+                Systems work the same way. A correct build isn&rsquo;t enough if
+                the people running it can&rsquo;t see how it works. That&rsquo;s
+                why every build comes with the guide, the walkthrough and the
+                alerts above.
+              </p>
+            </div>
+            <div className="md:col-span-4">
+              <p className="eyebrow">Teaching background</p>
+              <ul className="mt-5 space-y-4">
+                {schools.map((school) => (
+                  <li key={school.name} className="border-l-2 border-edge pl-4">
+                    <p className="text-[0.9375rem] leading-snug font-semibold text-ink">
+                      {school.name}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
+                      {school.detail} · {school.when}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       {/* ---------- CTA ---------- */}
-      <section className="border-t border-hairline bg-card">
+      <section>
         <Container className="py-14 md:py-16">
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-lg font-display text-[clamp(1.5rem,1.25rem+1vw,2rem)] leading-tight font-semibold text-ink">
-              If you want a system you actually understand, we&rsquo;ll get on
-              well.
+              Want a system your team can run without calling me every week?
             </p>
             <CTAButton href="/contact">Start a conversation</CTAButton>
           </div>
