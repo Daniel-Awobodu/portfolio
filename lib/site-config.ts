@@ -170,7 +170,7 @@ export const WEB3FORMS_ACCESS_KEY: string =
 export const navLinks = [
   { label: "Automation", href: "/automation" },
   { label: "Marketing", href: "/marketing" },
-  { label: "How I Think", href: "/how-i-think" },
+  { label: "How I Work", href: "/how-i-work" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ] as const;

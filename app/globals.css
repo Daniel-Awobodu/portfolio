@@ -9,26 +9,31 @@
 
 @theme {
   /* --- Colour: LIGHT (the default) -------------------------------------- */
-  --color-paper: #f6f7f5; /* page background, cool green-tinted white */
-  --color-ink: #101814; /* primary text, green-black — 16.81:1      */
-  --color-muted: #56615b; /* secondary text — 6.00:1 on paper (AA)    */
-  --color-hairline: #e1e6e2; /* borders, dividers                        */
-  --color-edge: #c6cfc9; /* card outlines, firmer than a hairline     */
-  /* CONTRAST RULE — verified against #F6F7F5 paper and #FFFFFF card:
-     --accent is 4.04:1, which clears AA for large text only, so it is used
-     ONLY at 26px and above (comfortably past the 24px/18pt threshold).
-     Anything smaller uses --accent-strong at 6.07:1, which clears AA for
-     normal text at any size. The same rule holds in dark mode, where both
-     have more headroom still. */
-  --color-accent: #0f8a63; /* 4.04:1 — display sizes (≥26px) only      */
-  --color-accent-strong: #0b6b4c; /* 6.07:1 — safe at any size                */
+  /* Neutral greys: the green lives in the accent and the dark page only,
+     so text, borders and cards carry no tint of their own. */
+  --color-paper: #f7f7f5; /* page background, near-neutral white      */
+  --color-ink: #121513; /* primary text — 17.14:1 on paper          */
+  --color-muted: #5b625e; /* secondary text — 5.84:1 on paper (AA)    */
+  --color-hairline: #e4e6e3; /* borders, dividers                        */
+  --color-edge: #cdd1cd; /* card outlines, firmer than a hairline     */
+  /* Two accents with two jobs. Emerald means "you can act on this":
+     buttons, links, hover and focus. Gold means "proof": the result
+     numbers, the tagline, quote marks and numerals.
+     CONTRAST RULE — verified against #F7F7F5 paper and #FFFFFF card:
+     --accent is 4.05:1, which clears AA for large text only, so it is used
+     ONLY at 26px and above (comfortably past the 24px/18pt threshold), and
+     for borders and rings. Text uses --accent-strong at 6.08:1, or --gold at
+     4.84:1; both clear AA at any size. Dark mode has more headroom still. */
+  --color-accent: #0f8a63; /* 4.05:1 — display sizes and borders only  */
+  --color-accent-strong: #0b6b4c; /* 6.08:1 — links and buttons, any size     */
+  --color-gold: #946300; /* 4.84:1 — proof numbers and highlights    */
   --color-card: #ffffff; /* raised surfaces                          */
   /* Label colour for text sitting ON an accent fill (buttons, selection).
      It must flip with the theme: white works on light mode's deep emerald,
      but dark mode's emerald is light, so white would fail there. */
   --color-on-accent: #ffffff; /* 6.52:1 on --accent-strong                */
-  --color-code-bg: #101814; /* code blocks stay inverted vs the page    */
-  --color-code-fg: #f6f7f5;
+  --color-code-bg: #121513; /* code blocks stay inverted vs the page    */
+  --color-code-fg: #f7f7f5;
   /* Phone mockup body. A real handset, so it stays near-black in both
      themes; an --edge ring separates it from the dark page. */
   --color-device: #141311;
@@ -99,16 +104,17 @@
   color-scheme: light dark;
 
   --dark-paper: #0e1411; /* green-black, deliberately not #000        */
-  --dark-ink: #e8efea; /* 15.94:1 on paper                          */
-  --dark-muted: #9aa8a0; /* 7.53:1 on paper                           */
-  --dark-hairline: #1f2a24;
-  --dark-edge: #34443b;
+  --dark-ink: #eef0ef; /* 16.28:1 on paper, no green tint           */
+  --dark-muted: #a3a9a6; /* 7.79:1 on paper                           */
+  --dark-hairline: #242a28;
+  --dark-edge: #363d3a;
   --dark-accent: #34c38f; /* 8.30:1 — same emerald hue, lifted for dark */
-  --dark-accent-strong: #6ddcae; /* 11.09:1 — the "strong" role inverts to lighter */
-  --dark-card: #151d19; /* raised surface, slightly above paper      */
-  --dark-on-accent: #0e1411; /* 11.09:1 on --accent-strong                */
+  --dark-accent-strong: #4cc995; /* 8.96:1 — links and buttons             */
+  --dark-gold: #f0c05a; /* 11.00:1 — proof numbers and highlights    */
+  --dark-card: #161b19; /* raised surface, near-neutral charcoal     */
+  --dark-on-accent: #0b100e; /* 9.22:1 on --accent-strong                 */
   --dark-code-bg: #0a0f0c; /* recessed rather than inverted             */
-  --dark-code-fg: #e8efea;
+  --dark-code-fg: #eef0ef;
 
   --dark-brand-whatsapp: #25d366; /* WhatsApp's brighter green reads better here */
   --dark-brand-linkedin: #70b5f9; /* LinkedIn's own dark-UI blue                 */
@@ -133,6 +139,7 @@
     --color-edge: var(--dark-edge);
     --color-accent: var(--dark-accent);
     --color-accent-strong: var(--dark-accent-strong);
+    --color-gold: var(--dark-gold);
     --color-card: var(--dark-card);
     --color-on-accent: var(--dark-on-accent);
     --color-code-bg: var(--dark-code-bg);
@@ -157,6 +164,7 @@
   --color-edge: var(--dark-edge);
   --color-accent: var(--dark-accent);
   --color-accent-strong: var(--dark-accent-strong);
+  --color-gold: var(--dark-gold);
   --color-card: var(--dark-card);
   --color-on-accent: var(--dark-on-accent);
   --color-code-bg: var(--dark-code-bg);

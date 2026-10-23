@@ -40,16 +40,16 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="mt-6 font-display text-xl text-accent-strong sm:text-2xl">
+            <p className="mt-6 font-display text-xl text-gold sm:text-2xl">
               {site.tagline}
             </p>
 
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
               I help founders and teams with AI automation and e-commerce
               growth: the work handled, and the system explained. Five years in
-              marketing, a year building automations, and time as a teacher in
-              two schools. That last one is why you will understand what I hand
-              you.
+              marketing and a year building automations. Every build comes with
+              a plain guide, a recorded walkthrough and error alerts, so your
+              team can run it.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
@@ -74,7 +74,7 @@ export default function HomePage() {
                 <li key={item} className="flex items-center gap-2">
                   <span
                     aria-hidden="true"
-                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold"
                   />
                   {item}
                 </li>
@@ -116,7 +116,7 @@ export default function HomePage() {
             </h2>
           </div>
           <p className="max-w-sm text-[0.9375rem] leading-relaxed text-muted">
-            Two portfolio lanes and the habit that runs through both of them.
+            Two portfolio lanes, and how every project is handed over.
           </p>
         </div>
 
@@ -143,12 +143,12 @@ export default function HomePage() {
           />
           <LaneCard
             eyebrow="The difference"
-            title="How I Think"
-            description="A maths teacher’s habit: I don’t just build it, I explain it so you actually own it."
-            stat="2 schools"
-            statLabel="where I taught before this"
-            href="/how-i-think"
-            linkLabel="View how I think"
+            title="How I Work"
+            description="Every build comes with a plain guide, a recorded walkthrough and error alerts, so your team can run it without me."
+            stat="2 weeks"
+            statLabel="of free fixes after launch"
+            href="/how-i-work"
+            linkLabel="View how I work"
           />
         </div>
       </Container>
@@ -170,7 +170,7 @@ export default function HomePage() {
                   href={metric.href}
                   className="flex items-baseline gap-2.5 transition-opacity duration-150 hover:opacity-70"
                 >
-                  <span className="shrink-0 font-display text-xl leading-none font-semibold whitespace-nowrap text-accent-strong sm:text-2xl">
+                  <span className="shrink-0 font-display text-xl leading-none font-semibold whitespace-nowrap text-gold sm:text-2xl">
                     {metric.value}
                   </span>
                   <span className="text-sm text-muted">{metric.label}</span>
@@ -217,14 +217,13 @@ export default function HomePage() {
           <div className="order-2 md:order-1 md:col-span-8">
             <p className="eyebrow">About</p>
             <h2 className="mt-3 max-w-[24ch] font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
-              A maths teacher who turned into a systems builder
+              A marketer who builds the systems behind the sales
             </h2>
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
-              I taught in two schools, making abstract things concrete, and
-              spent five years in growth marketing making products sell.
-              Automation is where those two habits met. The through-line has
-              always been the same: take something tangled, find the structure,
-              explain it back plainly.
+              Five years in growth marketing taught me what makes a product
+              sell. Building automations is how I take the busywork out of
+              selling it. Before either, I taught maths, and it&rsquo;s why I
+              explain every system I hand over.
             </p>
             <p className="mt-7">
               <Link

@@ -10,12 +10,12 @@ import { shareImage, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `${site.name}: UNILAG mathematics education graduate, five years in growth marketing, now building AI automation systems. ${site.tagline}`,
+  description: `${site.name}: five years in growth marketing, now building AI automation systems, with a mathematics education degree from UNILAG. ${site.tagline}`,
   alternates: { canonical: "/about" },
   openGraph: {
     title: `About — ${site.name}`,
     description:
-      "Maths teacher and growth marketer, now building AI automation systems. The through-line is making complex things simple.",
+      "Growth marketer, now building AI automation systems. Trained as a maths teacher, which is why every build comes explained.",
     url: "/about",
     images: [shareImage],
   },
@@ -44,8 +44,8 @@ export default function AboutPage() {
     <>
       <PageHeader
         eyebrow="About"
-        title="Maths teacher, marketer, systems builder."
-        lede="The job titles changed. The habit never did: take something tangled, find the structure underneath it, explain it back in plain words."
+        title="Marketer and systems builder."
+        lede="Five years getting products sold online, and a year building the systems behind them. The habit underneath both: take something tangled, find the structure, explain it back in plain words."
       />
 
       <Container as="section" className="py-14 md:py-16">
@@ -165,7 +165,7 @@ export default function AboutPage() {
                 </li>
                 <li>
                   <Link
-                    href="/how-i-think"
+                    href="/how-i-work"
                     className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
                   >
                     How I work
@@ -181,7 +181,7 @@ export default function AboutPage() {
                 {site.experience.map((item) => (
                   <div key={item.label} className="bg-card px-5 py-5">
                     <dt className="eyebrow">{item.label}</dt>
-                    <dd className="mt-2 font-display text-[1.625rem] leading-none font-semibold text-accent">
+                    <dd className="mt-2 font-display text-[1.625rem] leading-none font-semibold text-gold">
                       {item.value}
                     </dd>
                   </div>

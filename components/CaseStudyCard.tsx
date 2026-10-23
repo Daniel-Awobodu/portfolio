@@ -79,7 +79,7 @@ export default function CaseStudyCard({
         <div className="mt-auto pt-6">
           {topMetric ? (
             <div className="border-t border-hairline pt-4">
-              <p className="font-display text-xl leading-none font-semibold text-accent-strong">
+              <p className="font-display text-xl leading-none font-semibold text-gold">
                 {topMetric.value}
               </p>
               <p className="mt-1 text-sm text-muted">{topMetric.label}</p>

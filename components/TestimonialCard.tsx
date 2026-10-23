@@ -37,7 +37,7 @@ export default function TestimonialCard({
       <svg
         aria-hidden="true"
         viewBox="0 0 32 24"
-        className="h-6 w-8 text-accent"
+        className="h-6 w-8 text-gold"
         fill="currentColor"
       >
         <path d="M0 24V14.4C0 6.6 4.3 1.6 12.2 0l1.5 3.3C9.4 4.6 7.3 7.4 7 11h6v13H0Zm18.3 0V14.4C18.3 6.6 22.6 1.6 30.5 0L32 3.3c-4.3 1.3-6.4 4.1-6.7 7.7h6V24H18.3Z" />

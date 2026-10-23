@@ -70,7 +70,7 @@ export const viewport = {
    * would tint the browser chrome to the OS setting while the page showed the
    * other theme. lib/theme.ts keeps this in sync with the live theme instead.
    */
-  themeColor: "#F6F7F5",
+  themeColor: "#F7F7F5",
 
   width: "device-width",
   initialScale: 1,

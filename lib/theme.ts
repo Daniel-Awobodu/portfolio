@@ -9,7 +9,7 @@ export const THEME_STORAGE_KEY = "theme";
  * address bar always matches the page rather than the OS setting.
  */
 export const THEME_COLORS: Record<Theme, string> = {
-  light: "#F6F7F5",
+  light: "#F7F7F5",
   dark: "#0E1411",
 };
 

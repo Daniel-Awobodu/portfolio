@@ -117,7 +117,7 @@ export default function ContactPage() {
               </ol>
               <p className="mt-6">
                 <Link
-                  href="/how-i-think"
+                  href="/how-i-work"
                   className="text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4"
                 >
                   See how a whole project runs
