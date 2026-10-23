@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import CaseStudyCard from "@/components/CaseStudyCard";
 import CTAButton from "@/components/CTAButton";
 import Container from "@/components/Container";
 import ContactLinks from "@/components/ContactLinks";
@@ -7,7 +8,7 @@ import LaneCard from "@/components/LaneCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import {
   getCaseStudies,
-  getLaneEyebrow,
+  getCaseStudy,
   getProofMetrics,
   LANES,
 } from "@/lib/content";
@@ -21,7 +22,16 @@ export default function HomePage() {
   const marketingLead = marketing[0]?.metrics[0];
   const automation = getCaseStudies("automation");
   const automationTools = countTools(automation);
-  const proof = getProofMetrics();
+  // Automation is the main offer, so its results lead the strip.
+  const proof = [...getProofMetrics()].sort(
+    (a, b) =>
+      Number(b.href.startsWith("/automation")) -
+      Number(a.href.startsWith("/automation")),
+  );
+  // The builds that open the page: both live ones, then the biggest brief.
+  const featured = ["order-alerts", "order-extraction", "voice-receptionist"]
+    .map((slug) => getCaseStudy("automation", slug))
+    .filter((study) => study !== null);
 
   return (
     <>
@@ -106,51 +116,37 @@ export default function HomePage() {
         </div>
       </Container>
 
-      {/* ================= 2. THREE LANES ================= */}
+      {/* ================= 2. AUTOMATION BUILDS ================= */}
       <Container as="section" id="work" className="scroll-mt-24 py-16 md:py-20">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="eyebrow">The work</p>
+            <p className="eyebrow">My main offer</p>
             <h2 className="mt-3 font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
-              Three ways I&rsquo;m useful
+              Automation builds
             </h2>
           </div>
           <p className="max-w-sm text-[0.9375rem] leading-relaxed text-muted">
-            Two portfolio lanes, and how every project is handed over.
+            {LANES.automation.description}
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {/* Both numbers are counted from the build files: the eyebrow's
-              build count and the tools used across all of them. */}
-          <LaneCard
-            eyebrow={getLaneEyebrow("automation")}
-            title="Automation"
-            description={LANES.automation.description}
-            stat={`${automationTools}`}
-            statLabel="tools connected across the builds"
+        <ul className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((study, index) => (
+            <li key={study.slug}>
+              <CaseStudyCard study={study} priority={index === 0} />
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-10">
+          <Link
             href="/automation"
-            linkLabel="View automation"
-          />
-          <LaneCard
-            eyebrow={getLaneEyebrow("marketing")}
-            title="Marketing"
-            description={LANES.marketing.description}
-            stat={marketingLead ? marketingLead.value : "New lane"}
-            statLabel={marketingLead ? marketingLead.label : "campaign builds"}
-            href="/marketing"
-            linkLabel="View marketing"
-          />
-          <LaneCard
-            eyebrow="The difference"
-            title="How I Work"
-            description="Every build comes with a plain guide, a recorded walkthrough and error alerts, so your team can run it without me."
-            stat="2 weeks"
-            statLabel="of free fixes after launch"
-            href="/how-i-work"
-            linkLabel="View how I work"
-          />
-        </div>
+            className="inline-flex items-center gap-1.5 text-[0.9375rem] font-semibold text-accent-strong underline underline-offset-4 transition-colors duration-150 hover:text-ink"
+          >
+            See all {automation.length} builds
+            <span aria-hidden="true">→</span>
+          </Link>
+        </p>
       </Container>
 
       {/* ================= 3. PROOF STRIP ================= */}
@@ -211,7 +207,38 @@ export default function HomePage() {
         </p>
       </Container>
 
-      {/* ================= 5. ABOUT TEASER ================= */}
+      {/* ================= 5. ALSO ================= */}
+      <Container
+        as="section"
+        className="border-b border-hairline py-16 md:py-20"
+      >
+        <p className="eyebrow">Also</p>
+        <h2 className="mt-3 font-display text-[clamp(1.5rem,1.25rem+1vw,2rem)] leading-tight font-semibold text-ink">
+          Beyond the builds
+        </h2>
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <LaneCard
+            eyebrow="E-commerce growth"
+            title="Marketing"
+            description={LANES.marketing.description}
+            stat={marketingLead ? marketingLead.value : "New lane"}
+            statLabel={marketingLead ? marketingLead.label : "campaign builds"}
+            href="/marketing"
+            linkLabel="View marketing"
+          />
+          <LaneCard
+            eyebrow="The difference"
+            title="How I Work"
+            description="Every build comes with a plain guide, a recorded walkthrough and error alerts, so your team can run it without me."
+            stat="2 weeks"
+            statLabel="of free fixes after launch"
+            href="/how-i-work"
+            linkLabel="View how I work"
+          />
+        </div>
+      </Container>
+
+      {/* ================= 6. ABOUT TEASER ================= */}
       <Container as="section" className="py-16 md:py-20">
         <div className="grid items-center gap-8 md:grid-cols-12 md:gap-12">
           <div className="order-2 md:order-1 md:col-span-8">
@@ -251,7 +278,7 @@ export default function HomePage() {
         </div>
       </Container>
 
-      {/* ================= 6. CONTACT BAND ================= */}
+      {/* ================= 7. CONTACT BAND ================= */}
       <section
         id="contact"
         className="scroll-mt-24 border-t border-hairline bg-card"
