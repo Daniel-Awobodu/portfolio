@@ -53,22 +53,15 @@ const handover: {
   },
 ];
 
-/** Where the teaching happened. Kept factual: school, class, year. */
-const schools = [
+/** The training behind the way the builds are made. */
+const background = [
   {
     name: "University of Lagos",
-    detail: "B.Sc. (Ed.) Mathematics",
-    when: "Graduated 2022",
+    detail: "B.Sc. (Ed.) Mathematics · Graduated 2022",
   },
   {
-    name: "Mainland High School, Lagos",
-    detail: "Mathematics, SS1A to SS1E",
-    when: "2021 · Teaching practice, about six months",
-  },
-  {
-    name: "Busy Fingers School, Lagos",
-    detail: "Basic 3 (primary), most subjects including maths",
-    when: "2024 · My NYSC year",
+    name: "TS Academy",
+    detail: `AI & Automation · Certified 2026, capstone graded ${site.certification.capstone.grade}`,
   },
 ];
 
@@ -520,38 +513,39 @@ export default function HowIWorkPage() {
         </article>
       </Container>
 
-      {/* ---------- Why: the teaching, kept short, as the reason ---------- */}
+      {/* ---------- Why: the mathematics, as the reason ---------- */}
       <section className="border-y border-hairline bg-card">
         <Container className="py-14 md:py-16">
           <div className="grid gap-10 md:grid-cols-12 md:gap-12">
             <div className="max-w-prose md:col-span-8">
-              <p className="eyebrow">Why I explain everything</p>
+              <p className="eyebrow">
+                Why my builds are structured and explained
+              </p>
               <h2 className="mt-3 font-display text-[clamp(1.5rem,1.25rem+1vw,2rem)] leading-tight font-semibold text-ink">
-                Before I built systems, I taught maths.
+                I&rsquo;m a mathematician by training.
               </h2>
               <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
-                In one lesson on clock arithmetic, my explanation was correct
-                and the class still couldn&rsquo;t see it. So I brought in a
-                real wall clock, and we worked the sums on it together. By the
-                end, almost the whole class had it.
+                Mathematics is the habit of finding the structure under a messy
+                problem and checking that every step holds. That&rsquo;s how I
+                build: each workflow is broken into clear steps, and each step
+                is checked before anything depends on it.
               </p>
               <p className="mt-5 text-[1.0625rem] leading-relaxed text-muted">
-                Systems work the same way. A correct build isn&rsquo;t enough if
-                the people running it can&rsquo;t see how it works. That&rsquo;s
-                why every build comes with the guide, the walkthrough and the
-                alerts above.
+                A system is only useful if the people running it can see how it
+                works. That&rsquo;s why every build comes with the guide, the
+                walkthrough and the alerts above.
               </p>
             </div>
             <div className="md:col-span-4">
-              <p className="eyebrow">Teaching background</p>
+              <p className="eyebrow">Background</p>
               <ul className="mt-5 space-y-4">
-                {schools.map((school) => (
-                  <li key={school.name} className="border-l-2 border-edge pl-4">
+                {background.map((item) => (
+                  <li key={item.name} className="border-l-2 border-edge pl-4">
                     <p className="text-[0.9375rem] leading-snug font-semibold text-ink">
-                      {school.name}
+                      {item.name}
                     </p>
                     <p className="mt-1 text-sm leading-relaxed text-muted">
-                      {school.detail} · {school.when}
+                      {item.detail}
                     </p>
                   </li>
                 ))}

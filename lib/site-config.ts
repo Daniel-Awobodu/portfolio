@@ -86,7 +86,7 @@ export const site = {
   experience: [
     { label: "Growth marketing", value: "5 years" },
     { label: "AI automation", value: "1 year" },
-    { label: "Teaching", value: "2 schools" },
+    { label: "Mathematics", value: "B.Sc." },
   ],
 } as const;
 
