@@ -132,7 +132,7 @@ export default function LandingGallery({ pages }: { pages: GalleryPage[] }) {
           </p>
           {page.orders ? (
             <div className="mt-6 max-w-xs border-t border-hairline pt-5">
-              <p className="font-display text-[1.75rem] leading-none font-semibold text-accent">
+              <p className="font-display text-[1.75rem] leading-none font-semibold text-gold">
                 {page.orders.toLocaleString("en-GB")}
               </p>
               <p className="mt-1.5 text-sm text-muted">

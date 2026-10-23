@@ -38,7 +38,7 @@ export default function LaneCard({
       </p>
 
       <div className="mt-auto pt-7">
-        <p className="font-display text-[1.75rem] leading-none font-semibold text-accent">
+        <p className="font-display text-[1.75rem] leading-none font-semibold text-gold">
           {stat}
         </p>
         <p className="mt-1.5 text-sm text-muted">{statLabel}</p>

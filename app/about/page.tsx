@@ -181,7 +181,7 @@ export default function AboutPage() {
                 {site.experience.map((item) => (
                   <div key={item.label} className="bg-card px-5 py-5">
                     <dt className="eyebrow">{item.label}</dt>
-                    <dd className="mt-2 font-display text-[1.625rem] leading-none font-semibold text-accent">
+                    <dd className="mt-2 font-display text-[1.625rem] leading-none font-semibold text-gold">
                       {item.value}
                     </dd>
                   </div>

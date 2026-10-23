@@ -21,7 +21,7 @@ export default function StatRow({
         <div key={metric.label} className="bg-card px-5 py-6">
           <dt className="eyebrow">{metric.label}</dt>
           {/* Large display type, so --accent (4.13:1) clears AA for large text. */}
-          <dd className="mt-2 font-display text-[1.625rem] leading-tight font-semibold text-accent sm:text-[1.75rem]">
+          <dd className="mt-2 font-display text-[1.625rem] leading-tight font-semibold text-gold sm:text-[1.75rem]">
             {metric.value}
           </dd>
         </div>

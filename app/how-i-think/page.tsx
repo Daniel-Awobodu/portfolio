@@ -263,7 +263,7 @@ export default function HowIThinkPage() {
                 <div className="flex gap-4 md:col-span-5">
                   <span
                     aria-hidden="true"
-                    className="font-display text-2xl leading-none font-semibold text-accent-strong"
+                    className="font-display text-2xl leading-none font-semibold text-gold"
                   >
                     {String(index + 1).padStart(2, "0")}
                   </span>
@@ -343,7 +343,7 @@ export default function HowIThinkPage() {
               >
                 <span
                   aria-hidden="true"
-                  className="font-display text-xl font-semibold text-accent-strong"
+                  className="font-display text-xl font-semibold text-gold"
                 >
                   {index + 1}
                 </span>

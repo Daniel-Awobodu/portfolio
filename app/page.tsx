@@ -40,7 +40,7 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="mt-6 font-display text-xl text-accent-strong sm:text-2xl">
+            <p className="mt-6 font-display text-xl text-gold sm:text-2xl">
               {site.tagline}
             </p>
 
@@ -74,7 +74,7 @@ export default function HomePage() {
                 <li key={item} className="flex items-center gap-2">
                   <span
                     aria-hidden="true"
-                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold"
                   />
                   {item}
                 </li>
@@ -170,7 +170,7 @@ export default function HomePage() {
                   href={metric.href}
                   className="flex items-baseline gap-2.5 transition-opacity duration-150 hover:opacity-70"
                 >
-                  <span className="shrink-0 font-display text-xl leading-none font-semibold whitespace-nowrap text-accent-strong sm:text-2xl">
+                  <span className="shrink-0 font-display text-xl leading-none font-semibold whitespace-nowrap text-gold sm:text-2xl">
                     {metric.value}
                   </span>
                   <span className="text-sm text-muted">{metric.label}</span>
