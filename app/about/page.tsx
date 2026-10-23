@@ -10,12 +10,12 @@ import { shareImage, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `${site.name}: five years in growth marketing, now building AI automation systems, with a mathematics education degree from UNILAG. ${site.tagline}`,
+  description: `${site.name}: a mathematician by training (B.Sc. (Ed.) Mathematics, UNILAG), five years in growth marketing, now building AI automation systems. ${site.tagline}`,
   alternates: { canonical: "/about" },
   openGraph: {
     title: `About — ${site.name}`,
     description:
-      "Growth marketer, now building AI automation systems. Trained as a maths teacher, which is why every build comes explained.",
+      "Mathematician by training and growth marketer, now building AI automation systems that are clearly structured and explained.",
     url: "/about",
     images: [shareImage],
   },
@@ -44,7 +44,7 @@ export default function AboutPage() {
     <>
       <PageHeader
         eyebrow="About"
-        title="Marketer and systems builder."
+        title="Mathematician, marketer, systems builder."
         lede="Five years getting products sold online, and a year building the systems behind them. The habit underneath both: take something tangled, find the structure, explain it back in plain words."
       />
 
@@ -83,12 +83,18 @@ export default function AboutPage() {
               </h2>
               <div className="mt-5 space-y-5 text-[1.0625rem] leading-relaxed text-muted [&_a]:text-accent-strong [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:decoration-2">
                 <p>
-                  I earned a B.Sc. (Ed.) Mathematics from the University of
-                  Lagos in 2022, and I taught in two schools: maths to five SS1
-                  classes at Mainland High School during my teaching practice,
-                  then a primary class at Busy Fingers School for my NYSC year.
-                  Both came down to the same job: turning abstract ideas into
-                  something a student could hold onto.
+                  I&rsquo;m a mathematician by training, with a B.Sc. (Ed.)
+                  Mathematics from the University of Lagos, 2022. Maths gave me
+                  the habit everything else is built on: find the structure
+                  under a messy problem, then check every step.
+                </p>
+                <p>
+                  My teaching practice during the degree, and my NYSC year after
+                  it, put me in front of real classes and taught me to explain
+                  hard ideas plainly. In one lesson on clock arithmetic, my
+                  explanation was correct and the class still couldn&rsquo;t see
+                  it. So I brought in a real wall clock, and we worked the sums
+                  on it together. By the end, almost the whole class had it.
                 </p>
                 <p>
                   Alongside that, I spent five years in growth marketing:
@@ -127,11 +133,10 @@ export default function AboutPage() {
                   and building systems like them became the work.
                 </p>
                 <p>
-                  The through-line is the same one from the classroom. A
-                  business process and a maths problem fail for the same reason:
-                  nobody has looked at the structure. Find the structure, build
-                  the system, then explain it so the person who owns it actually
-                  owns it.
+                  The through-line is the mathematics. A business process and a
+                  maths problem fail for the same reason: nobody has looked at
+                  the structure. Find the structure, build the system, then
+                  explain it so the person who owns it actually owns it.
                 </p>
               </div>
 
@@ -177,7 +182,7 @@ export default function AboutPage() {
               <h2 className="mt-12 font-display text-2xl leading-tight font-semibold text-ink">
                 Experience
               </h2>
-              <dl className="mt-5 grid gap-px overflow-hidden rounded-md border border-hairline bg-hairline sm:grid-cols-3">
+              <dl className="mt-5 grid gap-px overflow-hidden rounded-md border border-hairline bg-hairline sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
                 {site.experience.map((item) => (
                   <div key={item.label} className="bg-card px-5 py-5">
                     <dt className="eyebrow">{item.label}</dt>

@@ -246,8 +246,8 @@ export default function HomePage() {
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
               Five years in growth marketing taught me what makes a product
               sell. Building automations is how I take the busywork out of
-              selling it. Before either, I taught maths, and it&rsquo;s why I
-              explain every system I hand over.
+              selling it. I&rsquo;m a mathematician by training, so every build
+              has a clear structure, and I explain it in plain words.
             </p>
             <p className="mt-7">
               <Link
