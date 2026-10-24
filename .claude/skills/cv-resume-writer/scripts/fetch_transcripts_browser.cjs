@@ -136,6 +136,13 @@ async function openTranscript(page) {
     } catch (err) {
       m = { ...(m || { id: c.id, title: c.title }), error: String(err).slice(0, 300) };
       console.log(`  error ${c.id}: ${m.error.split("\n")[0]}`);
+      // A redirect to google.com/sorry surfaces as a failed tunnel when that host is not reachable.
+      if (/ERR_TUNNEL_CONNECTION_FAILED|ERR_PROXY_CONNECTION_FAILED/.test(m.error)) {
+        console.log("STOP: YouTube is redirecting to its unusual-traffic page. Try again later.");
+        process.exitCode = 3;
+        await page.close().catch(() => {});
+        break;
+      }
     } finally {
       pages[c.id] = m;
       write("pages.json", pages);
