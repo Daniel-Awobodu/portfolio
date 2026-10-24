@@ -138,11 +138,22 @@ export default function HomePage() {
           ))}
         </ul>
 
-        <div className="mt-12 flex justify-center">
+        <div className="mt-12 flex flex-col items-center gap-5 text-center">
           <CTAButton href="/automation">
             See all {automation.length} builds
             <span aria-hidden="true">→</span>
           </CTAButton>
+          {/* For the visitor who doesn't see their own business above. */}
+          <p className="max-w-md text-[0.9375rem] leading-relaxed text-muted">
+            Don&rsquo;t see your kind of business?{" "}
+            <Link
+              href="/contact"
+              className="font-semibold text-accent-strong underline underline-offset-4 transition-colors duration-150 hover:text-ink"
+            >
+              Tell me how it runs
+            </Link>
+            , and I&rsquo;ll tell you what I&rsquo;d automate.
+          </p>
         </div>
       </Container>
 
@@ -283,13 +294,15 @@ export default function HomePage() {
         <Container>
           <div className="py-16 md:py-20">
             <p className="eyebrow">Contact</p>
-            <h2 className="mt-3 max-w-[20ch] font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
-              Tell me what you&rsquo;re trying to automate or sell
+            <h2 className="mt-3 max-w-[24ch] font-display text-[clamp(1.75rem,1.4rem+1.6vw,2.5rem)] leading-tight font-semibold text-ink">
+              Not sure what to automate? Tell me about your business.
             </h2>
             <p className="mt-5 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
-              One message is enough to start. Tell me the bottleneck or the
-              product, and I&rsquo;ll tell you straight whether I&rsquo;m the
-              right person for it. I usually reply within a few hours.
+              Tell me how your business runs today, and I&rsquo;ll show you what
+              can run on its own: orders, follow-ups, bookings, client messages,
+              the reports nobody enjoys. The first call is free, and if
+              automation isn&rsquo;t worth it for you, I&rsquo;ll say so. I
+              usually reply within a few hours.
             </p>
 
             <div className="mt-9">

@@ -20,7 +20,7 @@ function validate(values: Fields): Errors {
     errors.email = "Please enter a valid email address so I can reply.";
   }
   if (values.message.trim().length < 10) {
-    errors.message = "A sentence or two about the project is enough.";
+    errors.message = "A sentence or two about your business is enough.";
   }
 
   return errors;
@@ -204,7 +204,7 @@ export default function ContactForm() {
           htmlFor={`${id}-message`}
           className="block text-sm font-semibold text-ink"
         >
-          What are you trying to automate or sell?
+          Tell me about your business, or what you&rsquo;d like to automate
         </label>
         <textarea
           id={`${id}-message`}
