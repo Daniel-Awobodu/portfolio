@@ -5,13 +5,15 @@ import DemoScenes from "@/components/demo/DemoScenes";
 import { useDemoClock } from "@/components/demo/useDemoClock";
 import type { Demo } from "@/lib/demos/types";
 
-/** The size the preview is drawn at, then scaled to fit the card. */
-const W = 720;
-const H = 450;
+/** The sizes the preview is drawn at, then scaled to fit the card: the
+ *  desktop player's layout, or the phone player's on a portrait card. */
+const WIDE = { w: 720, h: 450, narrow: false };
+const TALL = { w: 400, h: 500, narrow: true };
 
 /**
- * A build's walkthrough playing silently on its card: a scaled-down copy of
- * the desktop player, with the caption kept at a readable size. It plays
+ * A build's walkthrough playing silently on its card: a scaled copy of the
+ * desktop player, or of the phone player on a portrait card, with the
+ * caption kept at a readable size. It plays
  * while `run` is set, starting over once it has finished, and reports the end
  * so the card can move on to its pictures.
  */
@@ -33,6 +35,7 @@ export default function DemoPreview({
   const { starts, total, time, playing, setPlaying, play, beatAt } =
     useDemoClock(demo, 33);
   const [scale, setScale] = useState(0.5);
+  const [layout, setLayout] = useState(WIDE);
   const wrapRef = useRef<HTMLDivElement>(null);
   const ended = time >= total;
   const endedRef = useRef(onEnd);
@@ -43,7 +46,9 @@ export default function DemoPreview({
     if (!el) return;
     const observer = new ResizeObserver(([entry]) => {
       const box = entry.contentRect;
-      setScale(Math.max(box.width / W, box.height / H));
+      const next = box.height > box.width * 0.9 ? TALL : WIDE;
+      setLayout(next);
+      setScale(Math.max(box.width / next.w, box.height / next.h));
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -74,15 +79,19 @@ export default function DemoPreview({
     >
       <div
         className="pointer-events-none absolute top-0 left-0 origin-top-left [container-type:size]"
-        style={{ width: W, height: H, transform: `scale(${scale})` }}
+        style={{
+          width: layout.w,
+          height: layout.h,
+          transform: `scale(${scale})`,
+        }}
       >
         <DemoScenes
           demo={demo}
           beatIndex={index}
           t={t}
-          width={W}
-          height={H}
-          narrow={false}
+          width={layout.w}
+          height={layout.h}
+          narrow={layout.narrow}
           reduced={false}
           onReplay={play}
         />

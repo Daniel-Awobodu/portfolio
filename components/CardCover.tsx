@@ -308,13 +308,24 @@ function DemoCover({
           >
             {slide.src ? (
               seen || index === n ? (
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  fill
-                  sizes={SIZES}
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
-                />
+                <>
+                  {/* On a portrait phone card the whole picture shows,
+                      over a blurred copy of itself. */}
+                  <Image
+                    src={slide.src}
+                    alt=""
+                    fill
+                    sizes={SIZES}
+                    className="scale-110 object-cover opacity-60 blur-xl sm:hidden"
+                  />
+                  <Image
+                    src={slide.src}
+                    alt={slide.alt}
+                    fill
+                    sizes={SIZES}
+                    className="object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03] sm:object-cover"
+                  />
+                </>
               ) : null
             ) : (
               <DemoPreview

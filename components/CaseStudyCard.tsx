@@ -29,7 +29,10 @@ export default function CaseStudyCard({
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-md border-2 border-edge bg-card shadow-card transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lift">
-      <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-hairline bg-paper">
+      {/* On phones, a card with a walkthrough is portrait, like the full player. */}
+      <div
+        className={`relative w-full overflow-hidden border-b border-hairline bg-paper ${demo ? "aspect-[4/5] sm:aspect-[16/10]" : "aspect-[16/10]"}`}
+      >
         {study.cover ? (
           <CardCover
             cover={study.cover}
@@ -53,7 +56,10 @@ export default function CaseStudyCard({
           </div>
         )}
         {study.live ? (
-          <LiveBadge className="pointer-events-none absolute top-3 left-3 z-10" />
+          <LiveBadge
+            compact
+            className="pointer-events-none absolute top-3 left-3 z-10"
+          />
         ) : null}
       </div>
 
