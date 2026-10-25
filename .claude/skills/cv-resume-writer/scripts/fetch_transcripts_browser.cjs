@@ -9,7 +9,9 @@
 // Needs: npm ci (installs the pinned Playwright). On Windows it drives the built-in Edge;
 // elsewhere also run: npx playwright install chromium
 // Usage: node scripts/fetch_transcripts_browser.cjs [CANDIDATES.json] [OUT_DIR]
-//          [--top 20] [--per-channel 2] [--months 6] [--pause 20] [--limit N] [--headed]
+//          [--top 20] [--per-channel 2] [--months 6] [--pause 20] [--limit N] [--headed | --headless]
+// The browser window is visible on Windows (so the page behaves as it does for a person) and
+// hidden elsewhere; --headed / --headless override that.
 // Defaults: research/candidates.json next to this script's folder, and ./out.
 // CANDIDATES.json is a list of {id, title, channel, view_count}, best first.
 // Videos already handled (OUT_DIR/pages.json) are not loaded again, so a stopped run can resume.
@@ -22,11 +24,13 @@ function arg(name, dflt) {
   const i = flags.indexOf(`--${name}`);
   return i >= 0 ? Number(flags[i + 1]) : dflt;
 }
-const positional = flags.filter((a, i) => !a.startsWith("--") && !(i > 0 && flags[i - 1].startsWith("--") && flags[i - 1] !== "--headed"));
+const VALUE_FLAGS = new Set(["--top", "--per-channel", "--months", "--pause", "--limit"]);
+const positional = flags.filter((a, i) => !a.startsWith("--") && !VALUE_FLAGS.has(flags[i - 1]));
 const candFile = positional[0] || path.join(__dirname, "..", "research", "candidates.json");
 const outDir = positional[1] || "out";
 const TOP = arg("top", 20), PER_CHANNEL = arg("per-channel", 2), MONTHS = arg("months", 6);
-const PAUSE = arg("pause", 20) * 1000, LIMIT = arg("limit", Infinity), HEADED = flags.includes("--headed");
+const PAUSE = arg("pause", 20) * 1000, LIMIT = arg("limit", Infinity);
+const HEADED = flags.includes("--headed") || (process.platform === "win32" && !flags.includes("--headless"));
 // Windows already has Edge, which saves downloading Playwright's Chromium.
 const CHANNEL = process.env.PW_CHANNEL || (process.platform === "win32" ? "msedge" : undefined);
 const BASE = process.env.YT_BASE || "https://www.youtube.com"; // YT_BASE: tests only
@@ -34,6 +38,7 @@ const cutoff = new Date(Date.now() - MONTHS * 30.44 * 864e5).toISOString().slice
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const write = (f, o) => fs.writeFileSync(path.join(outDir, f), JSON.stringify(o, null, 2));
+const firstLine = (e) => String((e && e.message) || e).split("\n")[0];
 const read = (f, d) => (fs.existsSync(path.join(outDir, f)) ? JSON.parse(fs.readFileSync(path.join(outDir, f))) : d);
 
 function* find(o, key) {
@@ -85,34 +90,142 @@ function textFromTranscriptJson(json) {
   return parts.join(" ");
 }
 
-async function openTranscript(page) {
+const SEGMENTS = "ytd-transcript-segment-renderer .segment-text, transcript-segment-view-model .yt-core-attributed-string";
+let allowMedia = false;
+
+// First element matching any of the selectors that is actually visible (hidden copies are skipped).
+async function firstVisible(page, selectors, timeout) {
+  const deadline = Date.now() + timeout;
+  do {
+    for (const sel of selectors) {
+      const loc = (typeof sel === "string" ? page.locator(sel) : sel(page)).filter({ visible: true }).first();
+      if (await loc.count().catch(() => 0)) return loc;
+    }
+    await sleep(500);
+  } while (Date.now() < deadline);
+  return null;
+}
+
+async function openTranscript(page, steps) {
   const resp = page
-    .waitForResponse((r) => r.url().includes("/youtubei/v1/get_transcript") && r.ok(), { timeout: 45000 })
+    .waitForResponse((r) => r.url().includes("/youtubei/v1/get_transcript"), { timeout: 60000 })
     .catch(() => null);
-  await page.locator("ytd-watch-metadata, #below").first().waitFor({ timeout: 30000 }).catch(() => {});
-  // The button sits at the bottom of the description, which may need expanding first.
-  const expand = page.locator("ytd-watch-metadata #description-inline-expander #expand, tp-yt-paper-button#expand, #description #expand").first();
-  await expand.waitFor({ state: "visible", timeout: 15000 }).then(() => expand.click()).catch(() => {});
-  let btn = page.getByRole("button", { name: /show transcript/i }).first();
-  if (!(await btn.waitFor({ state: "visible", timeout: 10000 }).then(() => true, () => false))) {
-    // Older layout: "..." menu under the video -> "Show transcript".
-    await page.locator("ytd-watch-metadata #button-shape button[aria-label*='More actions' i], ytd-menu-renderer yt-button-shape button[aria-label*='More actions' i]").first().click({ timeout: 10000 });
-    btn = page.getByRole("option", { name: /show transcript/i }).or(page.getByText(/^show transcript$/i)).first();
+  const meta = page.locator("ytd-watch-metadata").first();
+  await meta.waitFor({ timeout: 30000 }).catch(() => steps.push("no video description block"));
+  await meta.scrollIntoViewIfNeeded().catch(() => {});
+  // The button sits at the bottom of the description, which starts collapsed.
+  const expand = await firstVisible(page, [
+    "ytd-watch-metadata tp-yt-paper-button#expand",
+    "ytd-watch-metadata #description-inline-expander #expand",
+    "ytd-watch-metadata #description #expand",
+    "ytd-watch-metadata #description-inner",
+  ], 10000);
+  if (expand) {
+    await expand.click().then(() => steps.push("expanded description"), (e) => steps.push(`expand failed: ${firstLine(e)}`));
+  } else steps.push("no description expander");
+  let btn = await firstVisible(page, [
+    "ytd-video-description-transcript-section-renderer button",
+    (p) => p.getByRole("button", { name: /transcript/i }),
+    "button[aria-label*='transcript' i]",
+  ], 10000);
+  if (!btn) {
+    // Older layout: the "..." menu under the video has "Show transcript".
+    const more = await firstVisible(page, [
+      "ytd-watch-metadata button[aria-label*='more actions' i]",
+      "#actions button[aria-label*='more actions' i]",
+    ], 5000);
+    if (more) {
+      await more.click().catch(() => {});
+      steps.push("opened the ... menu");
+      btn = await firstVisible(page, [
+        (p) => p.getByRole("menuitem", { name: /transcript/i }),
+        (p) => p.getByRole("option", { name: /transcript/i }),
+        "ytd-menu-service-item-renderer:has-text('transcript')",
+      ], 5000);
+    }
   }
-  await btn.scrollIntoViewIfNeeded().catch(() => {});
-  await btn.click({ timeout: 15000 });
+  if (btn) {
+    steps.push("clicked the transcript button");
+    await btn.scrollIntoViewIfNeeded().catch(() => {});
+    await btn.click({ timeout: 10000 });
+  } else {
+    // The panel is usually already on the page, just hidden: open it directly.
+    const opened = await page.evaluate(() => {
+      const el = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]');
+      if (el) el.setAttribute("visibility", "ENGAGEMENT_PANEL_VISIBILITY_EXPANDED");
+      return Boolean(el);
+    });
+    steps.push(opened ? "opened the hidden transcript panel" : "no transcript panel on the page");
+    if (!opened) throw new Error("no transcript button or panel on the page");
+  }
 
   const r = await resp;
-  let text = r ? textFromTranscriptJson(await r.json().catch(() => ({}))) : "";
+  let text = "";
+  if (r) {
+    steps.push(`transcript request answered ${r.status()}`);
+    if (r.ok()) text = textFromTranscriptJson(await r.json().catch(() => ({})));
+  }
   if (!text.trim()) {
     // Fall back to the rendered panel if the response shape changes.
-    const seg = page.locator("ytd-transcript-segment-renderer .segment-text, transcript-segment-view-model .yt-core-attributed-string");
+    const seg = page.locator(SEGMENTS);
     await seg.first().waitFor({ timeout: 20000 });
     await sleep(1500);
     text = (await seg.allInnerTexts()).join(" ");
   }
   const lang = await page.locator("ytd-transcript-footer-renderer yt-dropdown-menu, ytd-transcript-footer-renderer").first().innerText({ timeout: 3000 }).catch(() => "");
-  return { text: text.replace(/\s+/g, " ").trim(), panel_language: lang.trim().split("\n")[0] || null };
+  return { text: text.replace(/\s+/g, " ").trim(), source: `transcript panel (${lang.trim().split("\n")[0] || "?"})` };
+}
+
+function textFromCaptions(body) {
+  try {
+    const j = JSON.parse(body);
+    return (j.events || []).map((e) => (e.segs || []).map((x) => x.utf8 || "").join("")).join(" ");
+  } catch {
+    return body.replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+      .replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  }
+}
+
+// Last resort: switch on English captions in YouTube's own player, as the CC button does.
+async function captionsFromPlayer(page, steps) {
+  allowMedia = true; // the player only fetches captions once the video can load
+  try {
+    await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
+    await page.waitForFunction(() => document.getElementById("movie_player")?.loadModule, null, { timeout: 30000 });
+    const resp = page.waitForResponse((r) => r.url().includes("/api/timedtext") && r.ok(), { timeout: 45000 });
+    await page.evaluate(() => {
+      const p = document.getElementById("movie_player");
+      if (p.mute) p.mute();
+      if (p.playVideo) p.playVideo();
+      p.loadModule("captions");
+      const list = (p.getOption && p.getOption("captions", "tracklist")) || [];
+      p.setOption("captions", "track", list.find((t) => (t.languageCode || "").startsWith("en")) || { languageCode: "en" });
+    });
+    steps.push("asked the player for English captions");
+    const body = await (await resp).text();
+    await page.evaluate(() => document.getElementById("movie_player")?.pauseVideo?.()).catch(() => {});
+    return { text: textFromCaptions(body).replace(/\s+/g, " ").trim(), source: "player captions" };
+  } finally {
+    allowMedia = false;
+  }
+}
+
+// What the page looked like when a transcript couldn't be found, so the selectors can be fixed.
+async function saveDebug(page, id, steps) {
+  const dir = path.join(outDir, "debug");
+  await page.screenshot({ path: path.join(dir, `${id}.png`), fullPage: true }).catch(() => {});
+  const info = await page.evaluate(() => ({
+    url: location.href,
+    userAgent: navigator.userAgent,
+    transcriptSection: Boolean(document.querySelector("ytd-video-description-transcript-section-renderer")),
+    panels: [...document.querySelectorAll("ytd-engagement-panel-section-list-renderer")]
+      .map((e) => `${e.getAttribute("target-id")}=${e.getAttribute("visibility")}`),
+    buttons: [...document.querySelectorAll("button, tp-yt-paper-button, [role=button]")]
+      .map((b) => (b.getAttribute("aria-label") || b.textContent || "").replace(/\s+/g, " ").trim().slice(0, 50))
+      .filter(Boolean).slice(0, 200),
+    metadataHtml: (document.querySelector("ytd-watch-metadata") || { outerHTML: "" }).outerHTML.slice(0, 30000),
+  })).catch((e) => ({ evaluateError: String(e) }));
+  fs.writeFileSync(path.join(dir, `${id}.json`), JSON.stringify({ steps, ...info }, null, 2));
 }
 
 (async () => {
@@ -138,8 +251,11 @@ async function openTranscript(page) {
     browser = await chromium.launch(launchOpts);
   }
   const ctx = await browser.newContext({ locale: "en-US", viewport: { width: 1366, height: 900 } });
-  // No need to stream video or images to read a transcript.
-  await ctx.route("**/*", (r) => (["media", "image", "font"].includes(r.request().resourceType()) ? r.abort() : r.continue()));
+  // No need to stream video or images to read a transcript (media is let through for the player fallback).
+  await ctx.route("**/*", (r) => {
+    const type = r.request().resourceType();
+    return type === "image" || type === "font" || (type === "media" && !allowMedia) ? r.abort() : r.continue();
+  });
 
   let loaded = 0, failedInARow = 0, stopped = false;
   for (const c of cands) {
@@ -149,6 +265,7 @@ async function openTranscript(page) {
     if (m && !m.error && !m.qualifies) continue; // already known not to qualify
     const page = await ctx.newPage();
     let fetched = false;
+    const steps = [];
     try {
       loaded++;
       await page.goto(`${BASE}/watch?v=${c.id}&hl=en`, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -168,14 +285,18 @@ async function openTranscript(page) {
         : channelFull ? `already have ${PER_CHANNEL} from this channel` : "";
       if (m.qualifies && !channelFull) {
         fetched = true;
-        const { text, panel_language } = await openTranscript(page);
-        if (text.split(" ").length < 100) throw new Error(`transcript too short (${text.length} chars)`);
-        m.panel_language = panel_language;
+        const words = (g) => (g && g.text ? g.text.split(" ").length : 0);
+        let got = await openTranscript(page, steps).catch((e) => steps.push(`transcript panel failed: ${firstLine(e)}`));
+        if (words(got) < 100) got = await captionsFromPlayer(page, steps).catch((e) => steps.push(`player captions failed: ${firstLine(e)}`));
+        if (words(got) < 100) throw new Error(`no transcript found (${steps.join(" > ")})`);
+        const { text, source } = got;
+        m.transcript_source = source;
+        m.steps = steps;
         m.transcript_words = text.split(" ").length;
         const n = String(chosen.length + 1).padStart(2, "0");
         fs.writeFileSync(path.join(outDir, "transcripts", `${n}_${m.id}.txt`),
           `# ${m.title}\n# ${m.channel} | uploaded ${m.upload_date} | ${m.view_count.toLocaleString("en")} views | ` +
-          `${Math.floor(m.duration / 60)} min | transcript panel (${panel_language || "?"}; tracks ${m.caption_tracks.join(", ")})\n` +
+          `${Math.floor(m.duration / 60)} min | ${source}; tracks ${m.caption_tracks.join(", ")}\n` +
           `# ${m.url}\n\n${text}\n`);
         chosen.push(m);
         perChannel[m.channel] = (perChannel[m.channel] || 0) + 1;
@@ -188,13 +309,14 @@ async function openTranscript(page) {
     } catch (err) {
       m = { ...(m || { id: c.id, title: c.title }), error: String(err).slice(0, 300) };
       console.log(`  problem with ${c.id}: ${m.error.split("\n")[0]}`);
-      await page.screenshot({ path: path.join(outDir, "debug", `${c.id}.png`) }).catch(() => {});
+      if (fetched) await saveDebug(page, c.id, steps);
+      else await page.screenshot({ path: path.join(outDir, "debug", `${c.id}.png`) }).catch(() => {});
       // A redirect to google.com/sorry surfaces as a failed tunnel when that host is not reachable.
       if (/ERR_TUNNEL_CONNECTION_FAILED|ERR_PROXY_CONNECTION_FAILED/.test(m.error)) {
         console.log("STOP: YouTube is redirecting to its 'unusual traffic' page. Wait a few hours and run it again.");
         stopped = true;
       } else if (fetched && ++failedInARow >= 3 && !chosen.length) {
-        console.log("STOP: the transcript panel wasn't found on 3 videos in a row. Please send Claude the 'out' folder as it is.");
+        console.log("STOP: no transcript found on 3 videos in a row. Please zip the 'out' folder and send it to Claude.");
         stopped = true;
       }
     } finally {

@@ -27,7 +27,7 @@ YouTube blocks the cloud server Claude runs on, so the transcripts have to be do
    ```
 
    The first downloads about 4 MB. The second uses the Microsoft Edge already on your PC, so there's no browser to download. If Windows asks whether to allow network access, click **Allow**.
-3. Leave the window open. Lines like `got 05/20: ...` appear as transcripts are saved. When it says **Done!**, it's finished.
+3. An Edge window opens and goes through the videos by itself. Leave it alone and don't close it. The video area may stay black; that's normal, since the videos don't need to play. Lines like `got 05/20: ...` appear in the black window as transcripts are saved. When it says **Done!**, it's finished.
 
 ## 4. Send the results to Claude
 
