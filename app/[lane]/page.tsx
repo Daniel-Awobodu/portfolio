@@ -111,9 +111,10 @@ export default async function LanePage({
         eyebrow={getLaneEyebrow(lane)}
         title={info.label}
         lede={info.intro}
+        compact={lane === "automation"}
       >
         {lane === "automation" ? (
-          <p className="mt-5 inline-flex max-w-full items-start gap-2 rounded-md border border-edge bg-card px-4 py-2 text-sm leading-relaxed text-ink">
+          <p className="mt-4 inline-flex max-w-full items-start gap-2 rounded-md border border-edge bg-card px-4 py-2 text-sm leading-relaxed text-ink">
             <span
               aria-hidden="true"
               className="font-semibold text-accent-strong"
@@ -135,7 +136,14 @@ export default async function LanePage({
         ) : null}
       </PageHeader>
 
-      <Container as="section" className="py-14 md:py-16">
+      <Container
+        as="section"
+        className={
+          lane === "automation"
+            ? "pt-8 pb-14 md:pt-10 md:pb-16"
+            : "py-14 md:py-16"
+        }
+      >
         {lane === "automation" && studies.length > 0 ? (
           <CaseStudySearch studies={studies.map(toSearchable)} />
         ) : studies.length > 0 ? (
