@@ -18,7 +18,7 @@ export const LANES: Record<Lane, LaneInfo> = {
     description:
       "AI workflows that take repetitive work off your team: capturing orders, qualifying and following up leads, booking appointments, and reading documents and receipts.",
     intro:
-      "Systems that do the work nobody should be doing by hand. Builds marked Live run every day in real businesses: my own e-commerce store, and SpotShop. The rest were built to real industry briefs and tested end to end with live tools. Each one starts with the bottleneck, shows the wiring, then explains it in plain language.",
+      "Systems that do the work nobody should be doing by hand. Builds marked Live run every day in real businesses. Each one starts with the bottleneck, shows the wiring, then explains it in plain language.",
   },
   marketing: {
     slug: "marketing",
