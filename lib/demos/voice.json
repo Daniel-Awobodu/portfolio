@@ -2,257 +2,257 @@
   "order-alerts": [
     {
       "text": "Chioma sees one of our ads and orders a sofa cover on the landing page.",
-      "ms": 5512
+      "ms": 4859
     },
     {
       "text": "Her order is placed. Every order is paid on delivery.",
-      "ms": 3631
+      "ms": 3135
     },
     {
       "text": "It arrives as an email in our Gmail inbox. Before, it could sit there unseen for up to two hours.",
-      "ms": 7288
+      "ms": 6452
     },
     {
       "text": "Every 15 minutes, Zapier checks the inbox for new emails that match the order search.",
-      "ms": 5799
+      "ms": 5146
     },
     {
       "text": "Only real orders match. Newsletters and other emails are ignored.",
-      "ms": 4519
+      "ms": 3971
     },
     {
       "text": "The order details go straight into a WhatsApp message.",
-      "ms": 3265
+      "ms": 2873
     },
     {
       "text": "Within 15 minutes of the order, my partner has it on WhatsApp, with everything needed to call her.",
-      "ms": 6504
+      "ms": 5642
     },
     {
       "text": "He calls Chioma to confirm while she\u2019s still keen to buy.",
-      "ms": 4258
+      "ms": 3736
     },
     {
       "text": "From a new order to WhatsApp in 15 minutes, not two hours.",
-      "ms": 4441
+      "ms": 3918
     }
   ],
   "order-extraction": [
     {
       "text": "Over a thousand past orders sat in our Gmail inbox, one email each, with no customer list.",
-      "ms": 5825
+      "ms": 5094
     },
     {
       "text": "Each product had its own order form, so no two emails looked quite the same.",
-      "ms": 4859
+      "ms": 4284
     },
     {
       "text": "One run of the backfill workflow in n8n starts the job.",
-      "ms": 4807
+      "ms": 4232
     },
     {
       "text": "It pulls every past order email from Gmail.",
-      "ms": 3422
+      "ms": 2873
     },
     {
       "text": "It reads the orders already in the sheet",
-      "ms": 2664
+      "ms": 2325
     },
     {
       "text": "and skips them, so no order can ever be logged twice.",
-      "ms": 3814
+      "ms": 3370
     },
     {
       "text": "Then it works through the orders in paced batches.",
-      "ms": 4127
+      "ms": 3657
     },
     {
       "text": "Each email goes to the order reader, a separate workflow.",
-      "ms": 3944
+      "ms": 3500
     },
     {
       "text": "The AI, Llama 3.1 running on Groq, reads the email for meaning, wherever each detail sits.",
-      "ms": 6818
+      "ms": 6034
     },
     {
       "text": "An order is only kept if it has a usable phone number. This one does.",
-      "ms": 4807
+      "ms": 4258
     },
     {
       "text": "For bundles, the real quantity comes from the price table, not a guess.",
-      "ms": 4389
+      "ms": 3892
     },
     {
       "text": "The pieces come together as one clean order.",
-      "ms": 2900
+      "ms": 2560
     },
     {
       "text": "Back in the backfill, it paces itself, then writes the order, keyed to its Gmail ID.",
-      "ms": 6269
+      "ms": 5538
     },
     {
       "text": "Order after order, the sheet fills up: all one thousand, one hundred and forty-five, in a single day.",
-      "ms": 5747
+      "ms": 5042
     },
     {
       "text": "Orders that fail the checks, and duplicates, go to the Invalid tab with the reason. Nothing is lost.",
-      "ms": 6531
+      "ms": 5799
     },
     {
       "text": "From a buried inbox to a customer list we can sell to.",
-      "ms": 3736
+      "ms": 3318
     }
   ],
   "voice-receptionist": [
     {
       "text": "Ada calls the clinic to book a cleaning.",
-      "ms": 2586
+      "ms": 2273
     },
     {
       "text": "The AI receptionist answers straight away, and asks what she needs.",
-      "ms": 4101
+      "ms": 3631
     },
     {
       "text": "The agent asks the workflow for open times. A switch sends it down the availability path.",
-      "ms": 6165
-    },
-    {
-      "text": "A sheet points it to the Abuja branch\u2019s own calendar, and it reads that day\u2019s bookings.",
-      "ms": 5669
-    },
-    {
-      "text": "It finds the free one-hour slots, never the lunch hour, and sends back the first three.",
-      "ms": 6687
-    },
-    {
-      "text": "Ada picks 5pm, and the agent reads her name and number back to check them.",
-      "ms": 5904
-    },
-    {
-      "text": "Meanwhile, someone at the clinic books 5pm for another patient.",
-      "ms": 3866
-    },
-    {
-      "text": "Before booking, the workflow checks 5pm again. It has just been taken.",
-      "ms": 5642
-    },
-    {
-      "text": "So it finds three new times and sends those back instead.",
-      "ms": 4362
-    },
-    {
-      "text": "The agent tells Ada 5pm has gone and offers the new times.",
-      "ms": 4284
-    },
-    {
-      "text": "4pm is still free, so the booking goes into the Abuja calendar.",
-      "ms": 4232
-    },
-    {
-      "text": "The agent confirms on the call. A short while later, a text goes out through Termii.",
-      "ms": 4728
-    },
-    {
-      "text": "The booking sits in the Abuja calendar, with her name, number and the reason for the visit.",
       "ms": 5486
     },
     {
+      "text": "A sheet points it to the Abuja branch\u2019s own calendar, and it reads that day\u2019s bookings.",
+      "ms": 5042
+    },
+    {
+      "text": "It finds the free one-hour slots, never the lunch hour, and sends back the first three.",
+      "ms": 5851
+    },
+    {
+      "text": "Ada picks 5pm, and the agent reads her name and number back to check them.",
+      "ms": 5251
+    },
+    {
+      "text": "Meanwhile, someone at the clinic books 5pm for another patient.",
+      "ms": 3422
+    },
+    {
+      "text": "Before booking, the workflow checks 5pm again. It has just been taken.",
+      "ms": 4310
+    },
+    {
+      "text": "So it finds three new times and sends those back instead.",
+      "ms": 3840
+    },
+    {
+      "text": "The agent tells Ada 5pm has gone and offers the new times.",
+      "ms": 3788
+    },
+    {
+      "text": "4pm is still free, so the booking goes into the Abuja calendar.",
+      "ms": 3709
+    },
+    {
+      "text": "The agent confirms on the call. A short while later, a text goes out through Termii.",
+      "ms": 4180
+    },
+    {
+      "text": "The booking sits in the Abuja calendar, with her name, number and the reason for the visit.",
+      "ms": 4859
+    },
+    {
       "text": "Ada gets a text with the branch, date and time.",
-      "ms": 3579
+      "ms": 3135
     },
     {
       "text": "Every call answered, every booking in the right branch\u2019s diary.",
-      "ms": 3866
+      "ms": 3370
     }
   ],
   "whatsapp-receipts": [
     {
       "text": "Tunde, a driver, buys fuel and gets a paper receipt.",
-      "ms": 3788
+      "ms": 3344
     },
     {
       "text": "He opens the company\u2019s WhatsApp chat and snaps a photo of it.",
-      "ms": 4441
+      "ms": 3892
     },
     {
       "text": "He sends the photo. That\u2019s all he has to do.",
-      "ms": 3762
+      "ms": 3082
     },
     {
       "text": "The photo reaches the workflow in n8n, and it starts.",
-      "ms": 3918
+      "ms": 3448
     },
     {
       "text": "It checks the message is a photo or a PDF before going any further.",
-      "ms": 4780
+      "ms": 4232
     },
     {
       "text": "The receipt file is downloaded from WhatsApp.",
-      "ms": 3291
+      "ms": 2847
     },
     {
       "text": "Photos and PDFs are read differently. This one is a photo.",
-      "ms": 4049
-    },
-    {
-      "text": "AI reads the vendor, date, total, tax and category, and flags anything it isn\u2019t sure of.",
-      "ms": 6217
-    },
-    {
-      "text": "The sender\u2019s number is matched to the driver list in Airtable.",
-      "ms": 4127
-    },
-    {
-      "text": "His name is attached. An unknown number would be saved as Unknown Driver, never dropped.",
-      "ms": 6400
-    },
-    {
-      "text": "The reading and the driver are put together as one record.",
-      "ms": 4023
-    },
-    {
-      "text": "Every field was read clearly, so it carries on. An unclear receipt would go to a review log instead.",
-      "ms": 6243
-    },
-    {
-      "text": "It looks for this month\u2019s folder in Google Drive.",
-      "ms": 3135
-    },
-    {
-      "text": "The folder already exists, so no duplicate is made.",
-      "ms": 2821
-    },
-    {
-      "text": "The receipt is pointed at the October 2026 folder.",
       "ms": 3553
     },
     {
-      "text": "The photo is uploaded, named by date, vendor and driver.",
-      "ms": 3500
+      "text": "AI reads the vendor, date, total, tax and category, and flags anything it isn\u2019t sure of.",
+      "ms": 5512
     },
     {
-      "text": "In Google Drive, it lands in October 2026, easy to find without opening it.",
-      "ms": 5433
+      "text": "The sender\u2019s number is matched to the driver list in Airtable.",
+      "ms": 3605
     },
     {
-      "text": "Next, a row is added to the expense sheet.",
-      "ms": 2952
+      "text": "His name is attached. An unknown number would be saved as Unknown Driver, never dropped.",
+      "ms": 5564
     },
     {
-      "text": "Driver, vendor, date, total, tax, category and a link to the file, all in one row.",
-      "ms": 6609
+      "text": "The reading and the driver are put together as one record.",
+      "ms": 3396
     },
     {
-      "text": "Finally, the driver gets a WhatsApp reply.",
+      "text": "Every field was read clearly, so it carries on. An unclear receipt would go to a review log instead.",
+      "ms": 5538
+    },
+    {
+      "text": "It looks for this month\u2019s folder in Google Drive.",
       "ms": 2743
     },
     {
+      "text": "The folder already exists, so no duplicate is made.",
+      "ms": 2482
+    },
+    {
+      "text": "The receipt is pointed at the October 2026 folder.",
+      "ms": 3135
+    },
+    {
+      "text": "The photo is uploaded, named by date, vendor and driver.",
+      "ms": 3056
+    },
+    {
+      "text": "In Google Drive, it lands in October 2026, easy to find without opening it.",
+      "ms": 4780
+    },
+    {
+      "text": "Next, a row is added to the expense sheet.",
+      "ms": 2508
+    },
+    {
+      "text": "Driver, vendor, date, total, tax, category and a link to the file, all in one row.",
+      "ms": 5825
+    },
+    {
+      "text": "Finally, the driver gets a WhatsApp reply.",
+      "ms": 2377
+    },
+    {
       "text": "Tunde sees exactly what was logged, about a minute after sending it.",
-      "ms": 3866
+      "ms": 3370
     },
     {
       "text": "From a photo on WhatsApp to a filed, logged expense.",
-      "ms": 4075
+      "ms": 3605
     }
   ]
 }

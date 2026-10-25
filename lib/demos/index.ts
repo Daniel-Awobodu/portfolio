@@ -7,7 +7,7 @@ import { voiceReceptionist } from "@/lib/demos/voice-receptionist";
 import { whatsappReceipts } from "@/lib/demos/whatsapp-receipts";
 
 /** A beat lasts at least this long after its narration ends. */
-const VOICE_TAIL_MS = 700;
+const VOICE_TAIL_MS = 400;
 
 type Clip = { text: string; ms: number } | null;
 
