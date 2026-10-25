@@ -16,15 +16,17 @@ YouTube blocks the cloud server Claude runs on, so the transcripts have to be do
 ## 3. Run it
 
 1. Click the address bar at the top of File Explorer (where the folder path is shown), type `cmd` and press **Enter**. A black Command Prompt window opens in this folder.
-2. Paste these three commands one at a time (Ctrl+V or right-click to paste), pressing **Enter** after each and waiting for it to finish:
+2. Paste these two commands **one at a time** (Ctrl+V or right-click to paste), pressing **Enter** after each and waiting for it to finish:
 
    ```
-   npm install playwright@1.63.0
-   npx playwright install chromium
+   npm ci
+   ```
+
+   ```
    node scripts/fetch_transcripts_browser.cjs
    ```
 
-   If Windows asks whether to allow network access, click **Allow**.
+   The first downloads about 4 MB. The second uses the Microsoft Edge already on your PC, so there's no browser to download. If Windows asks whether to allow network access, click **Allow**.
 3. Leave the window open. Lines like `got 05/20: ...` appear as transcripts are saved. When it says **Done!**, it's finished.
 
 ## 4. Send the results to Claude

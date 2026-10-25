@@ -6,7 +6,8 @@
 // generates). It goes one page at a time with a pause between them. If YouTube shows its
 // "unusual traffic" page, it stops at once; wait a few hours and run it again.
 //
-// Needs: npm install playwright@1.63.0 && npx playwright install chromium
+// Needs: npm ci (installs the pinned Playwright). On Windows it drives the built-in Edge;
+// elsewhere also run: npx playwright install chromium
 // Usage: node scripts/fetch_transcripts_browser.cjs [CANDIDATES.json] [OUT_DIR]
 //          [--top 20] [--per-channel 2] [--months 6] [--pause 20] [--limit N] [--headed]
 // Defaults: research/candidates.json next to this script's folder, and ./out.
@@ -26,6 +27,8 @@ const candFile = positional[0] || path.join(__dirname, "..", "research", "candid
 const outDir = positional[1] || "out";
 const TOP = arg("top", 20), PER_CHANNEL = arg("per-channel", 2), MONTHS = arg("months", 6);
 const PAUSE = arg("pause", 20) * 1000, LIMIT = arg("limit", Infinity), HEADED = flags.includes("--headed");
+// Windows already has Edge, which saves downloading Playwright's Chromium.
+const CHANNEL = process.env.PW_CHANNEL || (process.platform === "win32" ? "msedge" : undefined);
 const BASE = process.env.YT_BASE || "https://www.youtube.com"; // YT_BASE: tests only
 const cutoff = new Date(Date.now() - MONTHS * 30.44 * 864e5).toISOString().slice(0, 10).replace(/-/g, "");
 
@@ -122,10 +125,18 @@ async function openTranscript(page) {
   for (const m of chosen) perChannel[m.channel] = (perChannel[m.channel] || 0) + 1;
   console.log(`Looking for the ${TOP} most-viewed videos uploaded since ${cutoff} (${cands.length} candidates).\n`);
 
-  const browser = await chromium.launch({
+  const launchOpts = {
     headless: !HEADED,
     proxy: process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY, bypass: "localhost,127.0.0.1" } : undefined,
-  });
+  };
+  let browser;
+  try {
+    browser = await chromium.launch({ ...launchOpts, channel: CHANNEL });
+  } catch (err) {
+    if (!CHANNEL) throw err;
+    console.log(`Couldn't start ${CHANNEL}; using Playwright's own Chromium instead.`);
+    browser = await chromium.launch(launchOpts);
+  }
   const ctx = await browser.newContext({ locale: "en-US", viewport: { width: 1366, height: 900 } });
   // No need to stream video or images to read a transcript.
   await ctx.route("**/*", (r) => (["media", "image", "font"].includes(r.request().resourceType()) ? r.abort() : r.continue()));

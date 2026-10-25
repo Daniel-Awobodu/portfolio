@@ -1,0 +1,8 @@
+{
+  "name": "cv-resume-writer-research",
+  "private": true,
+  "description": "Downloads the YouTube transcripts this skill was built from (see RUN-ON-WINDOWS.md).",
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}
