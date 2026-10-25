@@ -354,22 +354,6 @@ export default function WorkflowDemo({
       >
         <button
           type="button"
-          onClick={() => step(-1)}
-          aria-label="Previous step"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-white/10"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-            <path
-              d="M6 5v14M18 5 9 12l9 7V5Z"
-              fill="currentColor"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <button
-          type="button"
           onClick={toggle}
           aria-label={playing ? "Pause" : ended ? "Watch again" : "Play"}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#4cc995] text-[#0b100e] hover:bg-[#6ddcae]"
@@ -388,22 +372,6 @@ export default function WorkflowDemo({
             </svg>
           )}
         </button>
-        <button
-          type="button"
-          onClick={() => step(1)}
-          aria-label="Next step"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-white/10"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-            <path
-              d="M18 5v14M6 5l9 7-9 7V5Z"
-              fill="currentColor"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
 
         <input
           type="range"
@@ -421,11 +389,8 @@ export default function WorkflowDemo({
           className="min-w-0 flex-1 cursor-pointer accent-[#4cc995]"
         />
 
-        <span className="hidden shrink-0 text-[12px] tabular-nums text-[#a3a9a6] sm:inline">
-          {fmt(time)} / {fmt(total)}
-        </span>
         <span className="shrink-0 text-[12px] tabular-nums text-[#a3a9a6]">
-          {index + 1}/{demo.beats.length}
+          {fmt(time)} / {fmt(total)}
         </span>
 
         {voiced ? (

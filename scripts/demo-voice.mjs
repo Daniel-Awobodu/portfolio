@@ -1,16 +1,19 @@
 /*
  * Makes the narration clips for the "Watch it run" demos with ElevenLabs:
- * one clip per beat, read from its caption, in the voice set below. Clips
+ * one clip per beat, read from its caption, in Daniel's cloned voice. Clips
  * whose text hasn't changed are kept, so re-running only pays for new lines.
  *
- *   ELEVENLABS_API_KEY=… ELEVENLABS_VOICE_ID=… \
- *     node --experimental-strip-types scripts/demo-voice.mjs [slug …]
+ *   node --experimental-strip-types scripts/demo-voice.mjs [slug …]
+ *
+ * The API key comes from ELEVENLABS_API_KEY, or from the environment's
+ * network secrets, which add it to requests on the way out. Set
+ * ELEVENLABS_VOICE_ID to use another voice.
  *
  * Writes public/demos/<slug>/voice/NN.mp3 and records each clip's text and
  * length in lib/demos/voice.json, which the player reads. `--fake` makes
  * silent clips of a plausible length instead, for testing without a key.
  */
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { clipPath, narration } from "../lib/demos/narration.ts";
@@ -20,12 +23,23 @@ const args = process.argv.slice(2);
 const fake = args.includes("--fake");
 const only = args.filter((a) => !a.startsWith("--"));
 
+// Node's fetch only goes through a proxy when told to, so rerun with it on.
+if (process.env.HTTPS_PROXY && !process.env.NODE_USE_ENV_PROXY) {
+  const run = spawnSync(
+    process.execPath,
+    [...process.execArgv, ...process.argv.slice(1)],
+    { stdio: "inherit", env: { ...process.env, NODE_USE_ENV_PROXY: "1" } },
+  );
+  process.exit(run.status ?? 1);
+}
+
 const key = process.env.ELEVENLABS_API_KEY;
-const voice = process.env.ELEVENLABS_VOICE_ID;
+const voice = process.env.ELEVENLABS_VOICE_ID ?? "i9sr2Eu9ynYVEaDDkF8I";
 const model = process.env.ELEVENLABS_MODEL ?? "eleven_multilingual_v2";
-if (!fake && (!key || !voice)) {
-  console.error("Set ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID first.");
-  process.exit(1);
+if (!fake && !key) {
+  console.warn(
+    "No ELEVENLABS_API_KEY; relying on a network secret to add the key.",
+  );
 }
 
 const dir = path.join(root, "lib/demos");
@@ -71,7 +85,7 @@ async function speak(text, previous, next) {
   const res = await fetch(url, {
     method: "POST",
     headers: {
-      "xi-api-key": key,
+      ...(key ? { "xi-api-key": key } : {}),
       "Content-Type": "application/json",
       Accept: "audio/mpeg",
     },
@@ -88,6 +102,11 @@ async function speak(text, previous, next) {
       },
     }),
   });
+  if (res.status === 401) {
+    throw new Error(
+      "ElevenLabs refused the key (401). Check the API key in the environment settings.",
+    );
+  }
   if (!res.ok) throw new Error(`ElevenLabs ${res.status}: ${await res.text()}`);
   return Buffer.from(await res.arrayBuffer());
 }
@@ -100,8 +119,8 @@ for (const demo of demos) {
   for (let i = 0; i < lines.length; i += 1) {
     const file = path.join(root, "public", clipPath(demo.slug, i));
     if (clips[i]?.text === lines[i] && fs.existsSync(file)) continue;
-    fs.mkdirSync(path.dirname(file), { recursive: true });
     if (fake) {
+      fs.mkdirSync(path.dirname(file), { recursive: true });
       const length = Math.max(1, lines[i].length / 15).toFixed(2);
       execFileSync("ffmpeg", [
         "-loglevel",
@@ -122,13 +141,15 @@ for (const demo of demos) {
         file,
       ]);
     } else {
-      fs.writeFileSync(file, await speak(lines[i], lines[i - 1], lines[i + 1]));
+      const audio = await speak(lines[i], lines[i - 1], lines[i + 1]);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, audio);
     }
     clips[i] = { text: lines[i], ms: Math.round(seconds(file) * 1000) };
+    manifest[demo.slug] = clips.slice(0, lines.length);
+    // Saved as it goes, so a run that stops early never pays twice.
+    fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2) + "\n");
     made += 1;
   }
-  manifest[demo.slug] = clips.slice(0, lines.length);
   console.log(`${demo.slug}: ${made} new clip(s), ${lines.length} in all`);
 }
-
-fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2) + "\n");
