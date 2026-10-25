@@ -106,12 +106,33 @@ async function firstVisible(page, selectors, timeout) {
   return null;
 }
 
+// YouTube's cookie pop-up can appear a few seconds after the page loads, over everything else.
+async function dismissConsent(page, steps) {
+  const btn = await firstVisible(page, [(p) => p.getByRole("button", { name: /^reject all$/i })], 0);
+  if (btn && (await btn.click().then(() => true, () => false))) {
+    steps.push("closed the cookie pop-up");
+    await sleep(1500);
+  }
+}
+
+// A click blocked by a pop-up that just appeared: close it and try once more.
+async function click(page, loc, steps) {
+  try {
+    await loc.click({ timeout: 10000 });
+  } catch {
+    await dismissConsent(page, steps);
+    await loc.click({ timeout: 10000 });
+  }
+}
+
 async function openTranscript(page, steps) {
   const resp = page
     .waitForResponse((r) => r.url().includes("/youtubei/v1/get_transcript"), { timeout: 60000 })
     .catch(() => null);
   const meta = page.locator("ytd-watch-metadata").first();
   await meta.waitFor({ timeout: 30000 }).catch(() => steps.push("no video description block"));
+  await sleep(2000);
+  await dismissConsent(page, steps);
   await meta.scrollIntoViewIfNeeded().catch(() => {});
   // The button sits at the bottom of the description, which starts collapsed.
   const expand = await firstVisible(page, [
@@ -121,7 +142,7 @@ async function openTranscript(page, steps) {
     "ytd-watch-metadata #description-inner",
   ], 10000);
   if (expand) {
-    await expand.click().then(() => steps.push("expanded description"), (e) => steps.push(`expand failed: ${firstLine(e)}`));
+    await click(page, expand, steps).then(() => steps.push("expanded description"), (e) => steps.push(`expand failed: ${firstLine(e)}`));
   } else steps.push("no description expander");
   let btn = await firstVisible(page, [
     "ytd-video-description-transcript-section-renderer button",
@@ -135,7 +156,7 @@ async function openTranscript(page, steps) {
       "#actions button[aria-label*='more actions' i]",
     ], 5000);
     if (more) {
-      await more.click().catch(() => {});
+      await click(page, more, steps).catch(() => {});
       steps.push("opened the ... menu");
       btn = await firstVisible(page, [
         (p) => p.getByRole("menuitem", { name: /transcript/i }),
@@ -145,9 +166,10 @@ async function openTranscript(page, steps) {
     }
   }
   if (btn) {
+    await dismissConsent(page, steps);
     steps.push("clicked the transcript button");
     await btn.scrollIntoViewIfNeeded().catch(() => {});
-    await btn.click({ timeout: 10000 });
+    await click(page, btn, steps);
   } else {
     // The panel is usually already on the page, just hidden: open it directly.
     const opened = await page.evaluate(() => {
@@ -159,7 +181,11 @@ async function openTranscript(page, steps) {
     if (!opened) throw new Error("no transcript button or panel on the page");
   }
 
-  const r = await resp;
+  const r = await Promise.race([resp, sleep(8000).then(() => "slow")]).then(async (x) => {
+    if (x !== "slow") return x;
+    await dismissConsent(page, steps); // a pop-up that arrived late can hold the panel back
+    return resp;
+  });
   let text = "";
   if (r) {
     steps.push(`transcript request answered ${r.status()}`);
@@ -192,6 +218,8 @@ async function captionsFromPlayer(page, steps) {
   try {
     await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
     await page.waitForFunction(() => document.getElementById("movie_player")?.loadModule, null, { timeout: 30000 });
+    await sleep(2000);
+    await dismissConsent(page, steps);
     const resp = page.waitForResponse((r) => r.url().includes("/api/timedtext") && r.ok(), { timeout: 45000 });
     await page.evaluate(() => {
       const p = document.getElementById("movie_player");
