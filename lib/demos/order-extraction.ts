@@ -432,6 +432,7 @@ export const orderExtraction: Demo = {
       duration: 4800,
       caption:
         "AI (Llama 3.1, on Groq) reads the email for meaning, wherever each detail sits.",
+      say: "The AI, Llama 3.1 running on Groq, reads the email for meaning, wherever each detail sits.",
       output: [
         ["customer", "Ifeoma Nwosu"],
         ["phone", "0816 ••• 2290"],
@@ -493,6 +494,7 @@ export const orderExtraction: Demo = {
       duration: 5600,
       caption:
         "Order after order, the sheet fills up: all 1,145, in a single day.",
+      say: "Order after order, the sheet fills up: all one thousand, one hundred and forty-five, in a single day.",
     },
     {
       scene: "sheet",
