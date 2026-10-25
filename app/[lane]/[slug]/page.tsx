@@ -15,6 +15,7 @@ import ResultHero from "@/components/ResultHero";
 import StatRow from "@/components/StatRow";
 import TestimonialCard from "@/components/TestimonialCard";
 import VideoEmbed from "@/components/VideoEmbed";
+import WorkflowDemo from "@/components/demo/WorkflowDemo";
 import {
   getCaseStudy,
   getCaseStudySlugs,
@@ -22,6 +23,7 @@ import {
   LANE_SLUGS,
   LANES,
 } from "@/lib/content";
+import { demoDuration, demos } from "@/lib/demos";
 import { site } from "@/lib/site-config";
 import { testimonialsFor } from "@/lib/testimonials";
 import type { Lane } from "@/lib/types";
@@ -97,6 +99,7 @@ export default async function CaseStudyPage({
   const next = getNextCaseStudy(lane, slug);
   const laneInfo = LANES[lane];
   const quotes = lane === "automation" ? testimonialsFor(study.slug) : [];
+  const demo = demos[study.slug];
 
   // Automation builds made to a brief name their industry, not a client.
   const clientLabel =
@@ -161,6 +164,26 @@ export default async function CaseStudyPage({
 
       {/* ---------- Metrics + walkthrough ---------- */}
       <Container className="py-12 md:py-14">
+        {demo ? (
+          <section aria-labelledby="demo-heading" className="mb-12">
+            <p className="eyebrow">Watch it run</p>
+            <h2
+              id="demo-heading"
+              className="mt-3 font-display text-[clamp(1.5rem,1.25rem+1vw,2rem)] leading-tight font-semibold text-ink"
+            >
+              See this build work, step by step
+            </h2>
+            <p className="mt-3 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
+              A {Math.round(demoDuration(demo) / 1000)}-second simulation of the
+              real workflow, {demo.journey}, using sample data. Press play, or
+              step through it.
+            </p>
+            <div className="mt-6">
+              <WorkflowDemo demo={demo} />
+            </div>
+          </section>
+        ) : null}
+
         <StatRow metrics={study.metrics} />
 
         {quotes.length > 0 ? (

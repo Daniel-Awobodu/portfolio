@@ -50,7 +50,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="Contact"
         title="Tell me what you’re trying to automate or sell."
-        lede="State your business problem and walk me through how you handle it today: the manual steps and the tools you already use. We’ll plan the fix together, then I’ll build a workflow around the way your business actually runs."
+        lede="State your business problem and walk me through how you handle it today: the manual steps and the tools you already use. Not sure what needs automating? Just tell me how your business runs, and I’ll point out what could run on its own. We’ll plan the fix together, then I’ll build a workflow around the way your business actually runs."
       >
         <ul
           aria-label="Availability"

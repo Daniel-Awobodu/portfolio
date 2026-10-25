@@ -15,6 +15,7 @@ import {
   LANE_SLUGS,
   LANES,
 } from "@/lib/content";
+import { demos } from "@/lib/demos";
 import { normalise } from "@/lib/search";
 import { shareImage, site } from "@/lib/site-config";
 import type { CaseStudy, Lane } from "@/lib/types";
@@ -63,7 +64,7 @@ function toSearchable({ body, ...study }: CaseStudy): SearchableStudy {
       withoutImages(body),
     ].join(" "),
   );
-  return { ...study, haystack };
+  return { ...study, haystack, demo: demos[study.slug] };
 }
 
 function resolveLane(value: string): Lane | null {
@@ -141,7 +142,11 @@ export default async function LanePage({
           <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {studies.map((study, index) => (
               <li key={study.slug}>
-                <CaseStudyCard study={study} priority={index < 3} />
+                <CaseStudyCard
+                  study={study}
+                  priority={index < 3}
+                  demo={demos[study.slug]}
+                />
               </li>
             ))}
           </ul>

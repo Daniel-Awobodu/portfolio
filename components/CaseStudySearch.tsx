@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import CaseStudyCard from "./CaseStudyCard";
 import { normalise } from "@/lib/search";
 import { toolName } from "@/lib/tools";
+import type { Demo } from "@/lib/demos/types";
 import type { CaseStudyMeta } from "@/lib/types";
 
 const CHIP_LIMIT = 10;
@@ -11,6 +12,8 @@ const CHIP_LIMIT = 10;
 export type SearchableStudy = CaseStudyMeta & {
   /** Every searchable word for this study, pre-normalised on the server. */
   haystack: string;
+  /** The build's walkthrough, played on its card. */
+  demo?: Demo;
 };
 
 /**
@@ -64,9 +67,7 @@ export default function CaseStudySearch({
           terms.every((term) => study.haystack.includes(term)),
         );
 
-  const activeTool = tools.find(
-    (tool) => normalise(tool) === normalise(query),
-  );
+  const activeTool = tools.find((tool) => normalise(tool) === normalise(query));
 
   return (
     <div>
@@ -136,7 +137,11 @@ export default function CaseStudySearch({
         <ul className="mt-5 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((study, index) => (
             <li key={study.slug}>
-              <CaseStudyCard study={study} priority={index < 3} />
+              <CaseStudyCard
+                study={study}
+                priority={index < 3}
+                demo={study.demo}
+              />
             </li>
           ))}
         </ul>
