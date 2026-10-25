@@ -135,6 +135,9 @@ export type Beat = BeatBase &
         messages: ChatMessage[];
         /** A key of `threads`; the demo's `chat` when omitted. */
         thread?: string;
+        /** The last message first arrives as a notification on the lock
+         *  screen, then opens in the thread. */
+        notify?: boolean;
       }
     | {
         scene: "canvas";

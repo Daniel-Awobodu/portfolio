@@ -110,7 +110,7 @@ function Bubble({
         ) : null}
         {message.text ? (
           <p
-            className={`text-[4.3cqw] leading-snug whitespace-pre-line ${sms && mine ? "text-white" : "text-[#111b21]"}`}
+            className={`${sms ? "text-[5cqw]" : "text-[4.3cqw]"} leading-snug whitespace-pre-line ${sms && mine ? "text-white" : "text-[#111b21]"}`}
           >
             {message.text}
           </p>
@@ -261,12 +261,58 @@ function Camera({ demo, t }: { demo: Demo; t: number }) {
   );
 }
 
+/** When a notified message opens in its thread, as progress through the beat. */
+const OPEN_AT = 0.5;
+
+/** The lock screen, with a new message dropping in as a notification. */
+function LockScreen({
+  thread,
+  message,
+  t,
+}: {
+  thread: ChatThread;
+  message: ChatMessage;
+  t: number;
+}) {
+  const drop = easeOut(span(t, 0.08, 0.2));
+  return (
+    <div className="flex h-full flex-col items-center bg-[linear-gradient(160deg,#1f3a5f,#0d1b2a_60%,#2a1f3d)] px-[5cqw] pt-[20cqw] text-white">
+      <p className="text-[4cqw] opacity-80">Monday 2 November</p>
+      <p className="text-[19cqw] leading-none font-light tracking-tight">
+        {message.time}
+      </p>
+      <div
+        className="mt-[8cqw] w-full rounded-[4cqw] bg-white/85 px-[4cqw] py-[3cqw] text-[#111] shadow-lg backdrop-blur"
+        style={{
+          opacity: drop,
+          transform: `translateY(${(1 - drop) * -40}px)`,
+        }}
+      >
+        <p className="flex items-center gap-[2cqw] text-[3.4cqw] text-[#555]">
+          <span className="flex h-[5cqw] w-[5cqw] items-center justify-center rounded-[1.2cqw] bg-[#34c759] text-[3cqw] text-white">
+            ✉
+          </span>
+          <span className="font-semibold tracking-wide uppercase">
+            Messages
+          </span>
+          <span className="ml-auto">now</span>
+        </p>
+        <p className="mt-[1.5cqw] text-[4.2cqw] font-semibold">
+          {thread.contact}
+        </p>
+        <p className="line-clamp-3 text-[4cqw] leading-snug">{message.text}</p>
+      </div>
+    </div>
+  );
+}
+
 /** The phone scenes: the paper receipt, the camera, and the WhatsApp chat. */
 export default function PhoneScene({
   demo,
   scene,
   messages,
   thread,
+  notify = false,
   t,
 }: {
   demo: Demo;
@@ -274,6 +320,8 @@ export default function PhoneScene({
   messages: ChatMessage[];
   /** A key of the demo's `threads`; its `chat` when omitted. */
   thread?: string;
+  /** Show the last message arriving on the lock screen first. */
+  notify?: boolean;
   t: number;
 }) {
   if (scene === "object") {
@@ -304,11 +352,23 @@ export default function PhoneScene({
       <Phone>
         {scene === "camera" ? (
           <Camera demo={demo} t={t} />
+        ) : notify && t < OPEN_AT ? (
+          <LockScreen
+            thread={thread ? demo.threads![thread] : demo.chat!}
+            message={messages[messages.length - 1]}
+            t={t}
+          />
         ) : (
           <Chat
             demo={demo}
             thread={thread ? demo.threads![thread] : demo.chat!}
-            messages={messages}
+            messages={
+              notify
+                ? messages.map((m) =>
+                    m.at !== undefined ? { ...m, at: OPEN_AT } : m,
+                  )
+                : messages
+            }
             t={t}
           />
         )}

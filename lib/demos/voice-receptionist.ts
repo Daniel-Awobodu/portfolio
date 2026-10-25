@@ -439,7 +439,8 @@ export const voiceReceptionist: Demo = {
     {
       scene: "chat",
       thread: "sms",
-      duration: 4400,
+      notify: true,
+      duration: 6400,
       caption: "Ada gets a text with the branch, date and time.",
       messages: [
         {

@@ -68,6 +68,7 @@ export default function DemoScenes({
           scene={beat.scene}
           messages={beat.scene === "chat" ? beat.messages : []}
           thread={beat.scene === "chat" ? beat.thread : undefined}
+          notify={beat.scene === "chat" && beat.notify}
           t={t}
         />
       ) : null}
