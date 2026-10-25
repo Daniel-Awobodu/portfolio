@@ -291,9 +291,6 @@ export default function WorkflowDemo({
           <span className="rounded-full bg-black/60 px-3 py-1 text-[clamp(10px,1.4cqw,13px)] font-semibold tracking-wide text-white uppercase">
             {label}
           </span>
-          <span className="rounded-full bg-black/60 px-3 py-1 text-[clamp(10px,1.3cqw,12px)] text-[#c9cfcc]">
-            Simulation · sample data
-          </span>
         </div>
 
         {/* Caption */}
