@@ -338,12 +338,15 @@ function DemoCover({
         ))}
       </div>
 
-      {/* What's showing. A walkthrough is always marked as a simulation. */}
-      <span
-        className={`pointer-events-none absolute left-3 z-10 rounded-full bg-black/75 px-2 py-0.5 text-[11px] font-medium text-white ${live ? "top-11" : "top-3"}`}
-      >
-        {index === 0 ? "Simulation · sample data" : slides[index].label}
-      </span>
+      {/* Names the picture showing; the build page says the walkthrough is a
+          simulation with sample data. */}
+      {index > 0 ? (
+        <span
+          className={`pointer-events-none absolute left-3 z-10 rounded-full bg-black/75 px-2 py-0.5 text-[11px] font-medium text-white ${live ? "top-11" : "top-3"}`}
+        >
+          {slides[index].label}
+        </span>
+      ) : null}
 
       {/* Above the card's full-size link, so these don't open the build. */}
       <div className="absolute top-3 right-3 z-10 flex gap-1.5">
