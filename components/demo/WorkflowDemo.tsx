@@ -3,14 +3,14 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
   type KeyboardEvent,
 } from "react";
-import { DriveScene, EndScene, SheetScene } from "@/components/demo/AppScenes";
-import CanvasScene from "@/components/demo/CanvasScene";
-import PhoneScene from "@/components/demo/PhoneScene";
+import DemoScenes, { sceneLabel } from "@/components/demo/DemoScenes";
+import { unlockAudio } from "@/components/demo/narrator";
+import { useDemoClock } from "@/components/demo/useDemoClock";
+import { clipPath } from "@/lib/demos/narration";
 import type { Demo } from "@/lib/demos/types";
 
 const fmt = (ms: number) => {
@@ -22,37 +22,57 @@ const fmt = (ms: number) => {
  * "Watch it run": a scripted walkthrough of one build, played like a video.
  * Every frame is drawn from the current time, so play, pause, step and seek
  * always land exactly. It starts on a poster with a play button, pauses when
- * scrolled away, and can go full screen.
+ * scrolled away, and can go full screen. Opened from a card (`startFull`), it
+ * plays straight away in full screen and closes when full screen ends.
+ * When the build has narration, it plays only once the visitor has chosen to
+ * watch, and can be muted.
  */
-export default function WorkflowDemo({ demo }: { demo: Demo }) {
-  const starts = useMemo(() => {
-    let acc = 0;
-    return demo.beats.map((beat) => {
-      const start = acc;
-      acc += beat.duration;
-      return start;
-    });
-  }, [demo]);
-  const total =
-    starts[starts.length - 1] + demo.beats[demo.beats.length - 1].duration;
+export default function WorkflowDemo({
+  demo,
+  startFull = false,
+  onClose,
+  audio,
+}: {
+  demo: Demo;
+  startFull?: boolean;
+  onClose?: () => void;
+  /** A narration element already unlocked by the tap that opened this. */
+  audio?: HTMLAudioElement;
+}) {
+  const {
+    starts,
+    total,
+    time,
+    setTime,
+    playing,
+    setPlaying,
+    play: run,
+    beatAt,
+  } = useDemoClock(demo);
 
-  const [time, setTime] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState(startFull);
   const [full, setFull] = useState(false);
   const [size, setSize] = useState({ w: 1036, h: 648 });
   const [reduced, setReduced] = useState(false);
+  const [sound, setSound] = useState(true);
+  // Bumped on every seek, so the narration jumps with the picture.
+  const [cue, setCue] = useState(0);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const timeRef = useRef(0);
+  const wasFullscreen = useRef(false);
+  const audioRef = useRef<HTMLAudioElement | null>(audio ?? null);
+  const timeRef = useRef(time);
   timeRef.current = time;
+  const voiced = Boolean(demo.voice);
 
   // Before the first play, the cover shows the busiest moment: the first
   // workflow step with the most output, mostly done.
   const outputRows = (i: number) => {
     const b = demo.beats[i];
-    return b.scene === "canvas" ? (b.output?.length ?? 0) : -1;
+    return b.scene === "canvas" || b.scene === "zap"
+      ? (b.output?.length ?? 0)
+      : -1;
   };
   const posterBeat = demo.beats.reduce(
     (best, _, i) => (outputRows(i) > outputRows(best) ? i : best),
@@ -62,11 +82,6 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
     ? time
     : starts[posterBeat] + demo.beats[posterBeat].duration * 0.8;
 
-  const beatAt = (ms: number) => {
-    let i = starts.length - 1;
-    while (i > 0 && starts[i] > ms) i -= 1;
-    return i;
-  };
   // The step the controls act on, and the frame on screen (the cover, before
   // the first play).
   const index = beatAt(time);
@@ -78,20 +93,6 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
   useEffect(() => {
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
-
-  // The playback clock.
-  useEffect(() => {
-    if (!playing) return;
-    let last = performance.now();
-    let frame = requestAnimationFrame(function tick(now) {
-      const next = Math.min(total, timeRef.current + (now - last));
-      last = now;
-      setTime(next);
-      if (next >= total) setPlaying(false);
-      else frame = requestAnimationFrame(tick);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [playing, total]);
 
   // Scenes lay out from the stage's real size.
   useEffect(() => {
@@ -117,51 +118,113 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [setPlaying]);
 
   useEffect(() => {
-    const onChange = () => setFull(Boolean(document.fullscreenElement));
+    const onChange = () => {
+      const now = Boolean(document.fullscreenElement);
+      setFull(now);
+      if (now) wasFullscreen.current = true;
+      else if (wasFullscreen.current && startFull) onClose?.();
+    };
     document.addEventListener("fullscreenchange", onChange);
     return () => document.removeEventListener("fullscreenchange", onChange);
-  }, []);
+  }, [startFull, onClose]);
+
+  // Narration: the current beat's clip, from the right point in it, while
+  // playing with sound on.
+  useEffect(() => {
+    if (!voiced) return;
+    const el = (audioRef.current ??= new Audio());
+    const clip = demo.voice?.[index] ?? null;
+    const offset = timeRef.current - starts[index];
+    if (!sound || !playing || !clip || offset >= clip) {
+      el.pause();
+      return;
+    }
+    const src = clipPath(demo.slug, index);
+    if (!el.src.endsWith(src)) el.src = src;
+    el.currentTime = offset / 1000;
+    el.play().catch(() => {});
+  }, [voiced, demo, sound, playing, index, cue, starts]);
+
+  useEffect(() => () => audioRef.current?.pause(), []);
+
+  /** Called from taps, so iPhones allow the narration that follows. */
+  const unlock = () => {
+    if (!voiced) return;
+    unlockAudio((audioRef.current ??= new Audio()));
+  };
 
   const play = useCallback(() => {
     setStarted(true);
-    if (timeRef.current >= total) setTime(0);
-    setPlaying(true);
-  }, [total]);
+    run();
+  }, [run]);
 
-  const toggle = () => (playing ? setPlaying(false) : play());
+  const enterFull = useCallback(async () => {
+    const el = wrapRef.current;
+    if (!el) return;
+    if (el.requestFullscreen) {
+      try {
+        await el.requestFullscreen();
+        return;
+      } catch {
+        // Falls through to covering the page.
+      }
+    }
+    // iPhone Safari has no element full screen; cover the page instead.
+    setFull(true);
+  }, []);
+
+  // Opened from a card: straight into full screen, playing from the start.
+  useEffect(() => {
+    if (!startFull) return;
+    enterFull();
+    run();
+    stageRef.current?.focus({ preventScroll: true });
+    // Runs once, when the player opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // While it covers the page, the page behind it doesn't scroll.
+  useEffect(() => {
+    if (!full || document.fullscreenElement) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [full]);
+
+  const toggle = () => {
+    unlock();
+    if (playing) setPlaying(false);
+    else play();
+  };
 
   const step = (dir: 1 | -1) => {
     setStarted(true);
     setPlaying(false);
     if (dir === 1) {
       setTime(index + 1 < starts.length ? starts[index + 1] : total);
+      setCue((c) => c + 1);
     } else {
       // Back to the start of this step, or the previous one if already there.
       const target =
         time - starts[index] > 600 || index === 0 ? index : index - 1;
       setTime(starts[target]);
+      setCue((c) => c + 1);
     }
   };
 
   const toggleFull = async () => {
-    const el = wrapRef.current;
-    if (!el) return;
     if (document.fullscreenElement) {
       await document.exitFullscreen();
     } else if (full) {
       setFull(false);
-    } else if (el.requestFullscreen) {
-      try {
-        await el.requestFullscreen();
-      } catch {
-        setFull(true);
-      }
+      if (startFull) onClose?.();
     } else {
-      // iPhone Safari has no element full screen; cover the page instead.
-      setFull(true);
+      await enterFull();
     }
   };
 
@@ -178,21 +241,26 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
       step(-1);
     } else if (event.key === "Escape" && full && !document.fullscreenElement) {
       setFull(false);
+      if (startFull) onClose?.();
     }
   };
 
   const narrow = size.w < 640;
-  const scene = beat.scene;
-  const label = demo.sceneLabels[scene];
+  const label = sceneLabel(demo, beat);
 
   return (
     <div
       ref={wrapRef}
       onKeyDown={onKeyDown}
+      role={startFull ? "dialog" : undefined}
+      aria-modal={startFull || undefined}
+      aria-label={startFull ? `Walkthrough: ${demo.end.headline}` : undefined}
       className={
         full
           ? "fixed inset-0 z-[60] flex flex-col justify-center bg-black p-2 sm:p-4"
-          : "overflow-hidden rounded-xl border border-[#2a302d] bg-[#0b100e] shadow-card"
+          : startFull
+            ? "fixed inset-0 z-[60] flex flex-col justify-center bg-black"
+            : "overflow-hidden rounded-xl border border-[#2a302d] bg-[#0b100e] shadow-card"
       }
     >
       <div
@@ -202,44 +270,21 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
         aria-label={`Walkthrough: ${demo.end.headline}`}
         tabIndex={0}
         className={`relative mx-auto aspect-[4/5] w-full overflow-hidden bg-[#0b100e] [container-type:size] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#4cc995] sm:aspect-[16/10] ${
-          full
+          full || startFull
             ? "max-w-[calc((100dvh-6.5rem)*0.8)] rounded-lg sm:max-w-[calc((100dvh-6.5rem)*1.6)]"
             : ""
         }`}
       >
-        {/* Scenes */}
-        <div
-          key={scene}
-          className="demo-fade absolute inset-0"
-          aria-hidden="true"
-        >
-          {scene === "object" || scene === "camera" || scene === "chat" ? (
-            <PhoneScene
-              demo={demo}
-              scene={scene}
-              messages={beat.scene === "chat" ? beat.messages : []}
-              t={t}
-            />
-          ) : null}
-          {scene === "canvas" ? (
-            <CanvasScene
-              demo={demo}
-              beatIndex={shownIndex}
-              t={t}
-              width={size.w}
-              height={size.h}
-              narrow={narrow}
-              reduced={reduced}
-            />
-          ) : null}
-          {scene === "drive" ? (
-            <DriveScene demo={demo} t={t} narrow={narrow} />
-          ) : null}
-          {scene === "sheet" ? (
-            <SheetScene demo={demo} t={t} narrow={narrow} />
-          ) : null}
-        </div>
-        {scene === "end" ? <EndScene demo={demo} onReplay={play} /> : null}
+        <DemoScenes
+          demo={demo}
+          beatIndex={shownIndex}
+          t={t}
+          width={size.w}
+          height={size.h}
+          narrow={narrow}
+          reduced={reduced}
+          onReplay={play}
+        />
 
         {/* Scene tag and honesty badge */}
         <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-[clamp(8px,2cqw,16px)]">
@@ -252,7 +297,7 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
         </div>
 
         {/* Caption */}
-        {!started ? null : scene !== "end" ? (
+        {!started ? null : beat.scene !== "end" ? (
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent px-[clamp(12px,4cqw,40px)] pt-[6cqh] pb-[clamp(10px,2.4cqh,20px)]">
             <p
               aria-live="polite"
@@ -271,8 +316,11 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
         {!started ? (
           <button
             type="button"
-            onClick={play}
-            className="group absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/55 text-white"
+            onClick={() => {
+              unlock();
+              play();
+            }}
+            className="group absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.7),rgba(0,0,0,0.35))] text-white"
           >
             <span className="flex h-[clamp(56px,10cqw,84px)] w-[clamp(56px,10cqw,84px)] items-center justify-center rounded-full bg-[#4cc995] text-[#0b100e] shadow-lg transition-transform duration-150 group-hover:scale-105">
               <svg
@@ -299,7 +347,7 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
       {/* Controls */}
       <div
         className={`mx-auto flex w-full items-center gap-2 px-3 py-2.5 text-[#d7dbd9] sm:gap-3 sm:px-4 ${
-          full
+          full || startFull
             ? "max-w-[calc((100dvh-6.5rem)*0.8)] sm:max-w-[calc((100dvh-6.5rem)*1.6)]"
             : ""
         }`}
@@ -366,6 +414,7 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
           onChange={(event) => {
             setStarted(true);
             setTime(Number(event.target.value));
+            setCue((c) => c + 1);
           }}
           aria-label="Position in the walkthrough"
           aria-valuetext={`Step ${index + 1} of ${demo.beats.length}: ${demo.beats[index].caption}`}
@@ -379,10 +428,41 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
           {index + 1}/{demo.beats.length}
         </span>
 
+        {voiced ? (
+          <button
+            type="button"
+            onClick={() => {
+              unlock();
+              setSound((on) => !on);
+            }}
+            aria-label={sound ? "Mute the narration" : "Turn the narration on"}
+            aria-pressed={!sound}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-white/10"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor" />
+              {sound ? (
+                <path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" />
+              ) : (
+                <path d="m17 9 5 6M22 9l-5 6" />
+              )}
+            </svg>
+          </button>
+        ) : null}
+
         <button
           type="button"
           onClick={toggleFull}
-          aria-label={full ? "Exit full screen" : "Full screen"}
+          aria-label={full || startFull ? "Exit full screen" : "Full screen"}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-white/10"
         >
           <svg
@@ -394,7 +474,7 @@ export default function WorkflowDemo({ demo }: { demo: Demo }) {
             strokeLinecap="round"
             aria-hidden="true"
           >
-            {full ? (
+            {full || startFull ? (
               <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
             ) : (
               <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />

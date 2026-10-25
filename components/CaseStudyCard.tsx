@@ -1,6 +1,7 @@
 import Link from "next/link";
 import CardCover from "@/components/CardCover";
 import LiveBadge from "@/components/LiveBadge";
+import type { Demo } from "@/lib/demos/types";
 import type { CaseStudyMeta } from "@/lib/types";
 
 const VISIBLE_TOOLS = 3;
@@ -15,9 +16,12 @@ const chipClass =
 export default function CaseStudyCard({
   study,
   priority = false,
+  demo,
 }: {
   study: CaseStudyMeta;
   priority?: boolean;
+  /** The build's walkthrough, played on the cover. */
+  demo?: Demo;
 }) {
   const topMetric = study.metrics[0];
   // The full list is on the build page; the card keeps to one or two rows.
@@ -32,6 +36,8 @@ export default function CaseStudyCard({
             canvas={study.canvas}
             title={study.title}
             priority={priority}
+            demo={demo}
+            live={study.live}
           />
         ) : (
           /* No cover set — a quiet editorial panel rather than a broken image.

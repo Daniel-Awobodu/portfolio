@@ -18,6 +18,7 @@ const photo: ChatMessage = { from: "me", image: true, time: "08:42" };
 
 export const whatsappReceipts: Demo = {
   slug: "whatsapp-receipts",
+  journey: "from the driver’s phone to the expense sheet",
   sceneLabels: {
     object: "At the fuel station",
     camera: "Driver’s phone",

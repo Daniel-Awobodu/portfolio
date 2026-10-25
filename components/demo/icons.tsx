@@ -18,6 +18,17 @@ export const NODE_COLORS: Record<NodeKind, string> = {
   drive: "#facc15",
   sheets: "#34d399",
   whatsapp: "#25d366",
+  trigger: "#ff6d5a",
+  model: "#f97316",
+  gmail: "#ea4335",
+  loop: "#5eead4",
+  subflow: "#fb923c",
+  wait: "#f472b6",
+  table: "#f59e0b",
+  merge: "#fb923c",
+  calendar: "#4285f4",
+  respond: "#f472b6",
+  sms: "#38bdf8",
 };
 
 export function NodeGlyph({ kind }: { kind: NodeKind }) {
@@ -91,6 +102,81 @@ export function NodeGlyph({ kind }: { kind: NodeKind }) {
         <g {...stroke}>
           <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" />
           <path d="M8 11h8v7H8zM8 14.5h8M12 11v7" />
+        </g>
+      );
+    case "trigger":
+      return (
+        <g {...stroke}>
+          <path d="M9 4v7M9 4a2 2 0 0 1 4 0v5l4 1a2 2 0 0 1 1.5 2.2L18 17a4 4 0 0 1-4 3h-2a4 4 0 0 1-3.2-1.6L5.5 14a1.6 1.6 0 0 1 2.4-2.1L9 13" />
+        </g>
+      );
+    case "model":
+      return (
+        <g {...stroke}>
+          <rect x="6" y="6" width="12" height="12" rx="2" />
+          <path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" />
+        </g>
+      );
+    case "gmail":
+      return (
+        <g {...stroke}>
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
+        </g>
+      );
+    case "loop":
+      return (
+        <g {...stroke}>
+          <path d="M4 12a7 7 0 0 1 12.5-4.3L19 10" />
+          <path d="M19 4v6h-6" />
+          <path d="M20 12a7 7 0 0 1-12.5 4.3" />
+        </g>
+      );
+    case "subflow":
+      return (
+        <g {...stroke}>
+          <path d="M8 4H5v16h3" />
+          <path d="M10 12h10M16 8l4 4-4 4" />
+        </g>
+      );
+    case "wait":
+      return (
+        <g {...stroke}>
+          <path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9s10 4 10 9" />
+        </g>
+      );
+    case "table":
+      return (
+        <g {...stroke}>
+          <rect x="3" y="4" width="18" height="16" rx="1.5" />
+          <path d="M3 9.5h18M3 15h18M9 4v16M15 4v16" />
+        </g>
+      );
+    case "merge":
+      return (
+        <g {...stroke}>
+          <path d="M4 5h5l5 7h6M4 19h5l5-7M17 9l3 3-3 3" />
+        </g>
+      );
+    case "calendar":
+      return (
+        <g {...stroke}>
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 10h18M8 3v4M16 3v4" />
+        </g>
+      );
+    case "respond":
+      return (
+        <g {...stroke}>
+          <path d="M10 8 4 13l6 5" />
+          <path d="M4 13h10a6 6 0 0 0 6-6V5" />
+        </g>
+      );
+    case "sms":
+      return (
+        <g {...stroke}>
+          <path d="M4 5h16v11H9l-5 4V5Z" />
+          <path d="M8 10h8" />
         </g>
       );
     case "whatsapp":

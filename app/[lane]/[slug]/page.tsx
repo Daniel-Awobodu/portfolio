@@ -175,8 +175,8 @@ export default async function CaseStudyPage({
             </h2>
             <p className="mt-3 max-w-prose text-[1.0625rem] leading-relaxed text-muted">
               A {Math.round(demoDuration(demo) / 1000)}-second simulation of the
-              real workflow, from the driver&rsquo;s phone to the expense sheet,
-              using sample data. Press play, or step through it.
+              real workflow, {demo.journey}, using sample data. Press play, or
+              step through it.
             </p>
             <div className="mt-6">
               <WorkflowDemo demo={demo} />

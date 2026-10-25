@@ -12,6 +12,7 @@ import {
   getProofMetrics,
   LANES,
 } from "@/lib/content";
+import { demos } from "@/lib/demos";
 import { site } from "@/lib/site-config";
 import { testimonials } from "@/lib/testimonials";
 import { countTools } from "@/lib/tools";
@@ -133,7 +134,11 @@ export default function HomePage() {
         <ul className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((study, index) => (
             <li key={study.slug}>
-              <CaseStudyCard study={study} priority={index === 0} />
+              <CaseStudyCard
+                study={study}
+                priority={index === 0}
+                demo={demos[study.slug]}
+              />
             </li>
           ))}
         </ul>

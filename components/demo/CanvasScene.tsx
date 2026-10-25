@@ -1,13 +1,17 @@
 import { easeInOut, span } from "@/components/demo/anim";
 import { NODE_COLORS, NodeGlyph } from "@/components/demo/icons";
-import type { Beat, Demo, DemoNode } from "@/lib/demos/types";
+import type { Beat, Demo, DemoNode, Workflow } from "@/lib/demos/types";
 
 type CanvasBeat = Extract<Beat, { scene: "canvas" }>;
 
 const NODE = 60;
-const ROW_CENTER = 225;
 
 type Point = { x: number; y: number };
+
+/** The workflow a canvas beat runs in. */
+export function flowOf(demo: Demo, beat: CanvasBeat): Workflow {
+  return beat.flow ? demo.workflows![beat.flow] : demo.workflow!;
+}
 
 function edgePoints(from: DemoNode, to: DemoNode) {
   const a = { x: from.x + NODE, y: from.y + NODE / 2 };
@@ -44,6 +48,8 @@ function wrap(text: string, max: number) {
  * The n8n-style canvas. The camera follows the run node by node: a data dot
  * travels the connection, the node spins while it works, then shows a check.
  * Branches the run doesn't take stay dimmed, so the whole design is visible.
+ * A beat can pass straight through a few steps (`via`) on its way to the one
+ * it stops at, and a workflow can run more than once (`run`).
  */
 export default function CanvasScene({
   demo,
@@ -65,50 +71,85 @@ export default function CanvasScene({
   const beat = demo.beats[beatIndex];
   if (beat.scene !== "canvas") return null;
 
-  const nodes = new Map(demo.workflow.nodes.map((n) => [n.id, n]));
-  const canvasBeats = demo.beats
+  const workflow = flowOf(demo, beat);
+  const nodes = new Map(workflow.nodes.map((n) => [n.id, n]));
+
+  // This run's beats, in order.
+  const runBeats = demo.beats
     .map((b, i) => ({ b, i }))
-    .filter((x): x is { b: CanvasBeat; i: number } => x.b.scene === "canvas");
-  const runPath = canvasBeats.map((x) => x.b.node);
-  const prevId = [...canvasBeats].reverse().find((x) => x.i < beatIndex)
-    ?.b.node;
+    .filter(
+      (x): x is { b: CanvasBeat; i: number } =>
+        x.b.scene === "canvas" &&
+        (x.b.flow ?? "") === (beat.flow ?? "") &&
+        (x.b.run ?? 0) === (beat.run ?? 0),
+    );
+  const runPath = runBeats.flatMap((x) => [...(x.b.via ?? []), x.b.node]);
+  const earlier = runBeats.filter((x) => x.i < beatIndex);
+  const prevId = earlier[earlier.length - 1]?.b.node;
+
+  // The stops on the way here: from the last node, through any pass-through
+  // steps, to this beat's node.
+  const path = [...(prevId ? [prevId] : []), ...(beat.via ?? []), beat.node]
+    .map((id) => nodes.get(id)!)
+    .filter(Boolean);
+  const segments = path.length - 1;
+  const travelEnd =
+    segments > 0 ? Math.min(0.6, 0.3 + 0.1 * (segments - 1)) : 0.3;
+  const runEnd = travelEnd + (1 - travelEnd) * 0.5;
+
+  const progress =
+    segments > 0 && !reduced ? easeInOut(span(t, 0, travelEnd)) * segments : 0;
+  const seg = Math.min(segments - 1, Math.floor(progress));
+  const local = segments > 0 ? progress - Math.max(0, seg) : 0;
+  const arrived = segments === 0 || reduced || t >= travelEnd;
+  const running = t >= travelEnd && t < runEnd;
+  const done = t >= runEnd;
 
   const node = nodes.get(beat.node)!;
-  const prev = prevId ? nodes.get(prevId) : undefined;
-
-  // Phases within the beat: travel, then run, then done.
-  const travel = prev && !reduced ? easeInOut(span(t, 0, 0.3)) : 1;
-  const running = t >= 0.3 && t < 0.65;
-  const done = t >= 0.65;
-
   const visited = new Set(
-    canvasBeats.filter((x) => x.i < beatIndex).map((x) => x.b.node),
+    earlier.flatMap((x) => [...(x.b.via ?? []), x.b.node]),
   );
+  // Pass-through steps light up as the data reaches them.
+  path.forEach((n, k) => {
+    const passThrough = (k > 0 || !prevId) && k < segments;
+    if (passThrough && (arrived || progress >= k)) visited.add(n.id);
+  });
   if (done) visited.add(node.id);
   const onPath = new Set(runPath);
 
-  // Camera: glide from the previous node to this one.
-  const from = prev ?? node;
-  const cx = from.x + (node.x - from.x) * travel + NODE / 2;
+  // Camera: glide along the path, following each node's row.
+  const centre = (n: DemoNode) => ({
+    x: n.x + NODE / 2,
+    y: n.y + NODE / 2,
+  });
+  const from = arrived || segments === 0 ? node : path[Math.max(0, seg)];
+  const to = arrived || segments === 0 ? node : path[Math.max(0, seg) + 1];
+  const k = arrived ? 1 : local;
+  const cx = centre(from).x + (centre(to).x - centre(from).x) * k;
+  const rowY = centre(from).y + (centre(to).y - centre(from).y) * k;
   const vw = narrow ? 470 : 760;
   const vh = vw * (height / Math.max(1, width));
   // On tall narrow screens the nodes sit high, leaving room for the output
   // panel underneath.
-  const cy = narrow ? ROW_CENTER + vh * 0.18 : ROW_CENTER;
+  const cy = narrow ? rowY + vh * 0.18 : rowY;
 
   const traversed = (a: string, b: string) => {
-    const ia = runPath.indexOf(a);
-    const ib = runPath.indexOf(b);
-    return (
-      ia !== -1 &&
-      ib === ia + 1 &&
-      visited.has(a) &&
-      (visited.has(b) || b === node.id)
-    );
+    for (let i = 0; i < runPath.length - 1; i += 1) {
+      if (runPath[i] === a && runPath[i + 1] === b) {
+        return visited.has(a) && (visited.has(b) || (b === node.id && arrived));
+      }
+    }
+    return false;
   };
 
+  const dot =
+    !arrived && segments > 0
+      ? bezier(edgePoints(path[seg], path[seg + 1]), local)
+      : null;
+
   const outputRows = beat.output ?? [];
-  const showOutput = outputRows.length > 0 && t >= 0.32;
+  const outStart = travelEnd + 0.02;
+  const showOutput = outputRows.length > 0 && t >= outStart;
 
   return (
     <div className="absolute inset-0 bg-[#1b1d1c]">
@@ -131,15 +172,49 @@ export default function CanvasScene({
         <rect
           x={-2000}
           y={-2000}
-          width={8000}
-          height={5000}
+          width={9000}
+          height={6000}
           fill="url(#demo-dots)"
         />
 
         {/* Connections */}
-        {demo.workflow.edges.map((edge) => {
+        {workflow.edges.map((edge) => {
           const a = nodes.get(edge.from)!;
           const b = nodes.get(edge.to)!;
+          if (edge.model) {
+            const x1 = a.x + NODE / 2;
+            const y1 = a.y + NODE;
+            const x2 = b.x + NODE / 2;
+            const y2 = b.y + 6;
+            return (
+              <path
+                key={`${edge.from}-${edge.to}`}
+                d={`M${x1},${y1} C${x1},${y1 + 40} ${x2},${y2 - 40} ${x2},${y2}`}
+                fill="none"
+                stroke={visited.has(a.id) ? "#4cc995" : "#5b605e"}
+                strokeWidth="1.5"
+                strokeDasharray="4 4"
+              />
+            );
+          }
+          // A loop back to an earlier step runs underneath the row.
+          if (b.x <= a.x) {
+            const low = Math.max(a.y, b.y) + NODE + 58;
+            const ax = a.x + NODE;
+            const ay = a.y + NODE / 2;
+            const by = b.y + NODE / 2;
+            return (
+              <path
+                key={`${edge.from}-${edge.to}`}
+                d={`M${ax},${ay} h18 V${low} H${b.x - 18} V${by} h18`}
+                fill="none"
+                stroke="#5b605e"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+                opacity="0.7"
+              />
+            );
+          }
           const p = edgePoints(a, b);
           const lit = traversed(edge.from, edge.to);
           const branch = !(onPath.has(edge.from) && onPath.has(edge.to));
@@ -168,31 +243,26 @@ export default function CanvasScene({
           );
         })}
 
-        {/* The data travelling into the current node */}
-        {prev && travel < 1
-          ? (() => {
-              const pos = bezier(edgePoints(prev, node), travel);
-              return (
-                <g>
-                  <circle
-                    cx={pos.x}
-                    cy={pos.y}
-                    r="9"
-                    fill="#4cc995"
-                    opacity="0.25"
-                  />
-                  <circle cx={pos.x} cy={pos.y} r="5" fill="#4cc995" />
-                </g>
-              );
-            })()
-          : null}
+        {/* The data travelling to the current node */}
+        {dot ? (
+          <g>
+            <circle cx={dot.x} cy={dot.y} r="9" fill="#4cc995" opacity="0.25" />
+            <circle cx={dot.x} cy={dot.y} r="5" fill="#4cc995" />
+          </g>
+        ) : null}
 
         {/* Nodes */}
-        {demo.workflow.nodes.map((n) => {
+        {workflow.nodes.map((n) => {
           const isActive = n.id === node.id;
-          const isDone = visited.has(n.id);
-          const branch = !onPath.has(n.id);
+          // A sub-node works alongside its parent.
+          const parent = workflow.edges.find(
+            (e) => e.model && e.to === n.id,
+          )?.from;
+          const isDone = parent ? visited.has(parent) : visited.has(n.id);
+          const isBusy = parent === node.id && running;
+          const branch = parent ? !onPath.has(parent) : !onPath.has(n.id);
           const lines = wrap(n.label, narrow ? 13 : 15);
+          const lit = isActive || isDone || isBusy;
           return (
             <g
               key={n.id}
@@ -212,30 +282,58 @@ export default function CanvasScene({
                   opacity={0.25 + 0.25 * Math.sin(t * Math.PI * 6)}
                 />
               ) : null}
-              <rect
-                width={NODE}
-                height={NODE}
-                rx={10}
-                fill="#2a2d2c"
-                stroke={isActive || isDone ? "#4cc995" : "#4a4f4d"}
-                strokeWidth={isActive ? 2.5 : 1.5}
-              />
-              {isActive && running ? (
+              {n.round ? (
+                <circle
+                  cx={NODE / 2}
+                  cy={NODE / 2}
+                  r={NODE / 2 - 4}
+                  fill="#2a2d2c"
+                  stroke={lit ? "#4cc995" : "#4a4f4d"}
+                  strokeWidth={isBusy ? 2.5 : 1.5}
+                />
+              ) : (
                 <rect
                   width={NODE}
                   height={NODE}
                   rx={10}
-                  fill="none"
-                  stroke="#d4ffe9"
-                  strokeWidth="2.5"
-                  strokeDasharray="40 200"
-                  strokeDashoffset={-((t - 0.3) / 0.35) * 480}
+                  fill="#2a2d2c"
+                  stroke={lit ? "#4cc995" : "#4a4f4d"}
+                  strokeWidth={isActive ? 2.5 : 1.5}
                 />
+              )}
+              {(isActive && running) || isBusy ? (
+                n.round ? (
+                  <circle
+                    cx={NODE / 2}
+                    cy={NODE / 2}
+                    r={NODE / 2 - 4}
+                    fill="none"
+                    stroke="#d4ffe9"
+                    strokeWidth="2.5"
+                    strokeDasharray="30 200"
+                    strokeDashoffset={
+                      -((t - travelEnd) / (runEnd - travelEnd)) * 320
+                    }
+                  />
+                ) : (
+                  <rect
+                    width={NODE}
+                    height={NODE}
+                    rx={10}
+                    fill="none"
+                    stroke="#d4ffe9"
+                    strokeWidth="2.5"
+                    strokeDasharray="40 200"
+                    strokeDashoffset={
+                      -((t - travelEnd) / (runEnd - travelEnd)) * 480
+                    }
+                  />
+                )
               ) : null}
               <g transform="translate(18,18)">
                 <NodeGlyph kind={n.kind} />
               </g>
-              {isDone ? (
+              {isDone && !n.round ? (
                 <g transform={`translate(${NODE - 4},4)`}>
                   <circle r="8" fill="#4cc995" />
                   <path
@@ -294,7 +392,11 @@ export default function CanvasScene({
             Output · {node.label}
           </p>
           {outputRows.map(([key, value], i) => {
-            const shown = t >= 0.36 + (i * 0.4) / outputRows.length;
+            const shown =
+              t >=
+              outStart +
+                0.03 +
+                (i * (0.9 - outStart) * 0.6) / outputRows.length;
             return (
               <p
                 key={key}
