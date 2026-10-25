@@ -15,6 +15,11 @@
 // Defaults: research/candidates.json next to this script's folder, and ./out.
 // CANDIDATES.json is a list of {id, title, channel, view_count}, best first.
 // Videos already handled (OUT_DIR/pages.json) are not loaded again, so a stopped run can resume.
+//
+// --list: YouTube refuses transcript requests from a browser a program is driving (it answers
+// 400), even on a home PC. This mode only checks the videos' dates and languages, then writes
+// OUT_DIR/save-these-20.html: the 20 picks plus a "Save transcript" favourite that saves the
+// transcript YouTube shows in your own browser as a text file.
 const fs = require("fs");
 const path = require("path");
 const { chromium } = require("playwright");
@@ -30,6 +35,7 @@ const candFile = positional[0] || path.join(__dirname, "..", "research", "candid
 const outDir = positional[1] || "out";
 const TOP = arg("top", 20), PER_CHANNEL = arg("per-channel", 2), MONTHS = arg("months", 6);
 const PAUSE = arg("pause", 20) * 1000, LIMIT = arg("limit", Infinity);
+const LIST = flags.includes("--list");
 const HEADED = flags.includes("--headed") || (process.platform === "win32" && !flags.includes("--headless"));
 // Windows already has Edge, which saves downloading Playwright's Chromium.
 const CHANNEL = process.env.PW_CHANNEL || (process.platform === "win32" ? "msedge" : undefined);
@@ -256,6 +262,130 @@ async function saveDebug(page, id, steps) {
   fs.writeFileSync(path.join(dir, `${id}.json`), JSON.stringify({ steps, ...info }, null, 2));
 }
 
+const qualifies = (m) => m.upload_date >= cutoff && m.english && !m.was_live && m.duration >= 180;
+const whyNot = (m) =>
+  m.upload_date < cutoff ? "older than the window" : !m.english ? `not English (${m.spoken_language})` : m.was_live ? "livestream" : "too short";
+const esc = (x) => String(x).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+
+// Runs in your own browser as the "Save transcript" favourite (serialised into a javascript: link,
+// so it must stay self-contained and free of // comments). It saves the transcript YouTube shows.
+async function saveTranscript() {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const all = (sel) => [...document.querySelectorAll(sel)];
+  const visible = (e) => e && e.getClientRects().length > 0;
+  const SEG = "ytd-transcript-segment-renderer .segment-text, transcript-segment-view-model .yt-core-attributed-string";
+  const id = new URLSearchParams(location.search).get("v");
+  if (!id) return alert("Open one of the YouTube videos first, then click Save transcript.");
+  if (!all(SEG).length) {
+    const expand = all("ytd-watch-metadata tp-yt-paper-button#expand, ytd-watch-metadata #expand").find(visible);
+    if (expand) expand.click();
+    await sleep(1000);
+    const btn = all("ytd-video-description-transcript-section-renderer button, button[aria-label*='transcript' i]").find(visible);
+    if (btn) btn.click();
+    for (let i = 0; i < 40 && !all(SEG).length; i++) await sleep(500);
+    await sleep(1500);
+  }
+  const text = all(SEG).map((e) => e.textContent).join(" ").replace(/\s+/g, " ").trim();
+  const words = text ? text.split(" ").length : 0;
+  if (words < 100) return alert("The transcript didn't load. Click '...more' under the video, then 'Show transcript'. When the text appears, click Save transcript again.");
+  const pr = window.ytInitialPlayerResponse || {};
+  const vd = pr.videoDetails || {};
+  const fresh = vd.videoId === id;
+  const mf = (fresh && (pr.microformat || {}).playerMicroformatRenderer) || {};
+  const player = document.getElementById("movie_player");
+  const data = (player && player.getVideoData && player.getVideoData()) || {};
+  const title = data.title || (fresh && vd.title) || document.title.replace(/ - YouTube$/, "");
+  const head = [
+    `# ${title}`,
+    `# ${data.author || (fresh && vd.author) || "?"} | uploaded ${(mf.uploadDate || "?").slice(0, 10).replace(/-/g, "")} | ` +
+      `${fresh ? Number(vd.viewCount).toLocaleString("en") : "?"} views | ${fresh ? Math.floor(vd.lengthSeconds / 60) : "?"} min | saved by hand from the transcript panel`,
+    `# https://www.youtube.com/watch?v=${id}`,
+  ];
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([head.join("\n") + "\n\n" + text + "\n"], { type: "text/plain" }));
+  a.download = `${id}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  alert(`Saved ${id}.txt (${words} words). Close this tab and open the next video.`);
+}
+
+// Check dates and languages only, and pick the top videos (no transcripts).
+async function pickVideos(ctx, cands, pages) {
+  const picked = [], perChannel = {};
+  let stopped = false;
+  for (const c of cands) {
+    if (picked.length >= TOP) break;
+    let m = pages[c.id];
+    if (!m || !m.upload_date) {
+      const page = await ctx.newPage();
+      try {
+        await page.goto(`${BASE}/watch?v=${c.id}&hl=en`, { waitUntil: "domcontentloaded", timeout: 60000 });
+        await passConsent(page);
+        if (/google\.com\/sorry/.test(page.url())) throw new Error("ERR_TUNNEL_CONNECTION_FAILED (unusual-traffic page)");
+        await page.waitForFunction(() => window.ytInitialPlayerResponse, null, { timeout: 30000 });
+        m = metaFrom(await page.evaluate(() => window.ytInitialPlayerResponse), c.id);
+      } catch (err) {
+        m = { id: c.id, title: c.title, error: firstLine(err) };
+        stopped = /ERR_TUNNEL_CONNECTION_FAILED|ERR_PROXY_CONNECTION_FAILED/.test(m.error);
+      } finally {
+        await page.close().catch(() => {});
+      }
+      pages[c.id] = m;
+      write("pages.json", pages);
+      if (stopped) {
+        console.log("STOP: YouTube is showing its 'unusual traffic' page. Wait a few hours and run it again.");
+        break;
+      }
+      await sleep(5000);
+    }
+    if (!m.upload_date) {
+      console.log(`  problem with ${c.id}: ${m.error}`);
+      continue;
+    }
+    const full = (perChannel[m.channel] || 0) >= PER_CHANNEL;
+    if (!qualifies(m) || full) {
+      console.log(`  skipped (${!qualifies(m) ? whyNot(m) : `already have ${PER_CHANNEL} from this channel`}): ${m.title}`);
+      continue;
+    }
+    picked.push(m);
+    perChannel[m.channel] = (perChannel[m.channel] || 0) + 1;
+    console.log(`  picked ${String(picked.length).padStart(2, "0")}/${TOP}: ${m.channel}: ${m.title}`);
+  }
+  return { picked, stopped };
+}
+
+function writeListPage(picked) {
+  const href = "javascript:" + encodeURIComponent(`(${saveTranscript.toString()})()`);
+  const rows = picked.map((m, i) => `<tr><td><input type="checkbox" aria-label="Saved"></td><td>${i + 1}</td>
+    <td><a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.title)}</a></td><td>${esc(m.channel)}</td>
+    <td>${m.view_count.toLocaleString("en")}</td><td>${m.upload_date.replace(/(\d{4})(\d\d)(\d\d)/, "$1-$2-$3")}</td></tr>`).join("\n");
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Save these ${picked.length} transcripts</title><style>
+body{font:16px/1.5 system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;color:#1a1a1a;background:#fff}
+h1{font-size:1.6rem} ol.steps li{margin:.5rem 0} table{border-collapse:collapse;width:100%;margin-top:1.5rem}
+td,th{border-bottom:1px solid #ddd;padding:.45rem .5rem;text-align:left;vertical-align:top} th{background:#f4f4f4}
+a.bm{display:inline-block;background:#c00;color:#fff;padding:.4rem .9rem;border-radius:6px;text-decoration:none;font-weight:600}
+textarea{width:100%;height:4.5rem;font:12px monospace} small{color:#555}
+</style></head><body>
+<h1>Save these ${picked.length} transcripts</h1>
+<ol class="steps">
+<li>Press <b>Ctrl+Shift+B</b> to show the favourites bar, then drag this red button onto it: <a class="bm" href="${esc(href)}">Save transcript</a>
+<br><small>If dragging doesn't work: right-click the favourites bar, choose <b>Add page</b> (or <b>Add favourite</b>), name it <i>Save transcript</i>, and paste the text below as the URL.</small>
+<textarea readonly onclick="this.select()">${esc(href)}</textarea></li>
+<li>Click video 1 in the list. It opens in a new tab.</li>
+<li>If a cookie message appears, click <b>Reject all</b>. Then click <b>Save transcript</b> on the favourites bar and wait a few seconds. A file downloads and a message says <i>Saved</i>.</li>
+<li>Close that tab, tick the box, and do the next video.</li>
+<li>When all ${picked.length} are saved, open your <b>Downloads</b> folder, select the ${picked.length} <b>.txt</b> files, right-click and choose <b>Compress to ZIP file</b>, then send the zip to Claude.</li>
+</ol>
+<table><thead><tr><th>Saved</th><th>#</th><th>Video</th><th>Channel</th><th>Views</th><th>Uploaded</th></tr></thead><tbody>
+${rows}
+</tbody></table></body></html>`;
+  const file = path.resolve(outDir, `save-these-${picked.length}.html`);
+  fs.writeFileSync(file, html);
+  return file;
+}
+
 (async () => {
   fs.mkdirSync(path.join(outDir, "transcripts"), { recursive: true });
   fs.mkdirSync(path.join(outDir, "debug"), { recursive: true });
@@ -284,6 +414,17 @@ async function saveDebug(page, id, steps) {
     const type = r.request().resourceType();
     return type === "image" || type === "font" || (type === "media" && !allowMedia) ? r.abort() : r.continue();
   });
+
+  if (LIST) {
+    const { picked, stopped } = await pickVideos(ctx, cands, read("pages.json", {}));
+    await browser.close();
+    write("picked.json", picked);
+    const file = writeListPage(picked);
+    console.log(`\nPicked ${picked.length} videos. Open this page and follow the steps on it:\n${file}`);
+    if (process.platform === "win32") require("child_process").exec(`start "" "${file}"`);
+    process.exitCode = stopped ? 3 : 0;
+    return;
+  }
 
   let loaded = 0, failedInARow = 0, stopped = false;
   for (const c of cands) {
