@@ -125,6 +125,7 @@ export const crmFollowUps: Demo = {
       duration: 5000,
       caption:
         "On day seven she replies at 8:58, two minutes before the next follow-up was due.",
+      say: "On day seven she replies at eight fifty-eight, two minutes before the next follow-up was due.",
     },
     {
       scene: "steps",

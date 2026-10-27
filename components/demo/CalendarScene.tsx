@@ -170,11 +170,11 @@ export default function CalendarScene({
                             {event.title}
                           </p>
                           <p className="truncate opacity-90">
-                            {hourLabel(event.start)
+                            {hourLabel(Math.round(event.start))
                               .toLowerCase()
                               .replace(" ", "")}
                             {"-"}
-                            {hourLabel(event.end)
+                            {hourLabel(Math.round(event.end))
                               .toLowerCase()
                               .replace(" ", "")}
                           </p>

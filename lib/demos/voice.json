@@ -1,4 +1,38 @@
 {
+  "appointment-reminders": [
+    {
+      "text": "Patients get a text 24 hours before their visit, and another 2 hours before.",
+      "ms": 4441
+    },
+    {
+      "text": "Every reminder comes from the clinic's own calendar.",
+      "ms": 2638
+    },
+    {
+      "text": "On Tuesday at 8am, her 2-hour reminder is due. Anything already sent is skipped, then it waits briefly.",
+      "ms": 6452
+    },
+    {
+      "text": "In that moment, a receptionist moves Ngozi to 3pm.",
+      "ms": 3683
+    },
+    {
+      "text": "Seconds before sending, the live calendar is checked again, and the change is spotted.",
+      "ms": 4833
+    },
+    {
+      "text": "The 10am reminder never goes out, and the reason is logged. Nothing is skipped silently.",
+      "ms": 4519
+    },
+    {
+      "text": "A moved appointment counts as a new one, so she gets the right reminder: 3pm, not 10am.",
+      "ms": 4780
+    },
+    {
+      "text": "Every reminder checked against the calendar, right before it sends.",
+      "ms": 3527
+    }
+  ],
   "order-alerts": [
     {
       "text": "Chioma sees one of our ads and orders a sofa cover on the landing page.",
