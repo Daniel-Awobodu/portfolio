@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { easeInOut, easeOut, reveal, span } from "@/components/demo/anim";
+import { AirtableScene, N8nTableScene } from "@/components/demo/TableApps";
 import type { Demo } from "@/lib/demos/types";
 
 /** A plain browser window filling most of the stage. */
@@ -277,6 +278,12 @@ export function SheetScene({
   mode?: "type" | "stream" | "invalid" | "filter";
 }) {
   const sheet = demo.sheet!;
+  if (sheet.app === "airtable" && (mode === "type" || !mode)) {
+    return <AirtableScene sheet={sheet} t={t} narrow={narrow} />;
+  }
+  if (sheet.app === "n8n" && (mode === "type" || !mode)) {
+    return <N8nTableScene sheet={sheet} t={t} narrow={narrow} />;
+  }
   const frame = (children: ReactNode, fx: string, tab: number) => (
     <Window
       title={`${sheet.title} · ${sheet.app === "airtable" ? "Airtable" : sheet.app === "n8n" ? "n8n Data Table" : "Google Sheets"}`}

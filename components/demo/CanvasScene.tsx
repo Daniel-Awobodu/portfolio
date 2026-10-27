@@ -131,7 +131,14 @@ export default function CanvasScene({
   const vh = vw * (height / Math.max(1, width));
   // On tall narrow screens the nodes sit high, leaving room for the output
   // panel underneath.
-  const cy = narrow ? rowY + vh * 0.18 : rowY;
+  // With the output shown under the node, the camera sits lower so the node
+  // rides high and its data has room beneath it.
+  const under = !!demo.outputUnder;
+  const cy = under
+    ? rowY + vh * (narrow ? 0.24 : 0.17)
+    : narrow
+      ? rowY + vh * 0.18
+      : rowY;
 
   const traversed = (a: string, b: string) => {
     for (let i = 0; i < runPath.length - 1; i += 1) {
@@ -377,8 +384,60 @@ export default function CanvasScene({
         })}
       </svg>
 
+      {/* What the node produced, in a card hanging under the node */}
+      {showOutput && under
+        ? (() => {
+            const scale = width / vw;
+            const labelLines = wrap(node.label, narrow ? 13 : 15).length;
+            const below =
+              node.y + NODE + 18 + labelLines * 14 + (node.sub ? 6 : -6);
+            const top = height / 2 + (below - cy) * scale + 10;
+            const panelW = Math.min(narrow ? width - 24 : 380, width - 24);
+            const centreX = width / 2 + (node.x + NODE / 2 - cx) * scale;
+            const left = Math.min(
+              Math.max(centreX - panelW / 2, 12),
+              width - panelW - 12,
+            );
+            const arrow = Math.min(Math.max(centreX - left, 18), panelW - 18);
+            return (
+              <div
+                aria-hidden="true"
+                className="demo-fade absolute rounded-lg border border-[#4cc995]/40 bg-[#111413]/95 px-3 py-2.5 font-mono text-[13px] leading-relaxed text-[#d7dbd9] shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                style={{ top, left, width: panelW }}
+              >
+                <span
+                  className="absolute -top-[7px] h-3 w-3 rotate-45 border-t border-l border-[#4cc995]/40 bg-[#111413]"
+                  style={{ left: arrow - 6 }}
+                />
+                <p className="mb-1 flex items-center gap-2 font-sans text-[10.5px] font-semibold tracking-wide text-[#4cc995] uppercase">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#4cc995]" />
+                  Test data
+                </p>
+                {outputRows.map(([key, value], i) => {
+                  const shown =
+                    t >=
+                    outStart +
+                      0.03 +
+                      (i * (0.9 - outStart) * 0.6) / outputRows.length;
+                  return (
+                    <p
+                      key={key}
+                      className={`flex gap-3 transition-opacity duration-200 ${shown ? "opacity-100" : "opacity-0"}`}
+                    >
+                      <span className="w-[6.5rem] shrink-0 text-[#8ab4f8]">
+                        {key}
+                      </span>
+                      <span className="min-w-0 text-white">{value}</span>
+                    </p>
+                  );
+                })}
+              </div>
+            );
+          })()
+        : null}
+
       {/* What the node produced, like n8n's output panel */}
-      {showOutput ? (
+      {showOutput && !under ? (
         <div
           aria-hidden="true"
           className={`demo-fade absolute rounded-lg border border-white/10 bg-[#111413]/95 p-3 font-mono text-[12px] leading-relaxed text-[#d7dbd9] shadow-lg ${

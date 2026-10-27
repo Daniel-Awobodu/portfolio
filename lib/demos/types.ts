@@ -29,7 +29,17 @@ export type NodeKind =
   | "merge"
   | "calendar"
   | "respond"
-  | "sms";
+  | "sms"
+  | "hubspot"
+  | "chat";
+
+export type FieldKind =
+  | "text"
+  | "select"
+  | "number"
+  | "date"
+  | "currency"
+  | "long";
 
 /** One node on the workflow canvas, in canvas units (a node is 60 wide). */
 export type DemoNode = {
@@ -198,6 +208,8 @@ export type Demo = {
   receipt?: Receipt;
   workflow?: Workflow;
   workflows?: Record<string, Workflow>;
+  /** Canvas output shows in a card under the node, not in a side panel. */
+  outputUnder?: boolean;
   drive?: {
     path: string[];
     folders: string[];
@@ -230,6 +242,12 @@ export type Demo = {
     newRows?: string[][];
     /** "filter" mode: the sheet narrowed to one product, as a search. */
     filter?: { label: string; rows: string[][]; rowNumbers: number[] };
+    /** Airtable and n8n: each column's field type, for its header icon. */
+    fieldKinds?: FieldKind[];
+    /** Airtable: the base's tables, shown as tabs. */
+    tables?: string[];
+    /** n8n: each row's createdAt. */
+    createdAt?: string[];
   };
   /** The AI reading an email into a clean record ("extract" scenes). The
    *  email is `inbox.open`; each row lines up with one of its body lines. */
@@ -301,16 +319,15 @@ export type Demo = {
     { title: string; items: { title: string; kind: NodeKind }[] }
   >;
   /** A CRM contact record ("crm" scenes). */
+  /** HubSpot's Contacts and Tasks tables ("crm" scenes). */
   crm?: {
-    app: string;
-    name: string;
-    initials: string;
-    fields: Output;
-    /** The field that changes when the lead replies, before and after. */
-    status: { label: string; from: string; to: string };
-    activity: { text: string; time: string }[];
-    reply: { text: string; time: string };
-    task: string;
+    /** Contacts already in the table, under the new lead. */
+    contacts: { name: string; initials: string; stage: string }[];
+    lead: { name: string; initials: string; email: string; phone: string };
+    /** The lead's lifecycle stage: on arrival, during the sequence, after
+     *  the reply. */
+    stages: { lead: string; sequence: string; responded: string };
+    task: { title: string; stage: string };
   };
   end: { headline: string; points: { value: string; label: string }[] };
   beats: Beat[];

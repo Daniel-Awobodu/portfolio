@@ -204,7 +204,10 @@ export const appointmentReminders: Demo = {
     newRow: ["Ngozi Eze", "Tue 10:00", "2h", "Skipped", "Moved to 15:00"],
     wideColumns: [0, 1, 2, 3, 4],
     narrowColumns: [0, 2, 3, 4],
+    fieldKinds: ["text", "text", "text", "select", "text"],
+    createdAt: ["Nov 2, 10:00", "Nov 2, 11:00", "Nov 3, 08:01"],
   },
+  outputUnder: true,
   end: {
     headline: "Reminders that match the calendar when they send.",
     points: [
@@ -276,7 +279,7 @@ export const appointmentReminders: Demo = {
       thread: "sms",
       duration: 5000,
       caption:
-        "A moved appointment counts as a new one, so she gets the right reminder: 3pm, not 10am.",
+        "A moved appointment counts as a new one. At 1pm, two hours before, she gets the right reminder: 3pm, not 10am.",
       messages: [
         {
           from: "them",

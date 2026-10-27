@@ -110,7 +110,10 @@ export const whatsappBakery: Demo = {
     ],
     wideColumns: [0, 1, 2, 3, 4, 5],
     narrowColumns: [1, 2, 3],
+    fieldKinds: ["text", "text", "date", "long", "currency", "select"],
+    tables: ["Menu", "Orders", "Conversations", "Message Log", "Bakery Info"],
   },
+  outputUnder: true,
   workflow: {
     label: "Every evening at 6pm · n8n",
     nodes: [

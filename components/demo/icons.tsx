@@ -30,6 +30,8 @@ export const NODE_COLORS: Record<NodeKind, string> = {
   calendar: "#4285f4",
   respond: "#f472b6",
   sms: "#38bdf8",
+  hubspot: "#ff7a59",
+  chat: "#cbd5e1",
 };
 
 export function NodeGlyph({ kind }: { kind: NodeKind }) {
@@ -179,6 +181,22 @@ export function NodeGlyph({ kind }: { kind: NodeKind }) {
           <path d="M10 8 4 13l6 5" />
           <path d="M4 13h10a6 6 0 0 0 6-6V5" />
         </g>
+      );
+    case "hubspot":
+      return (
+        <g {...stroke}>
+          <circle cx="14" cy="14" r="4" />
+          <path d="M14 10V5M14 5h0M17 17l3.5 3.5M10.5 11.5 5 7" />
+          <circle cx="14" cy="4" r="1.6" fill={c} />
+          <circle cx="4.5" cy="6.5" r="1.6" fill={c} />
+        </g>
+      );
+    case "chat":
+      return (
+        <path
+          d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1Z"
+          {...stroke}
+        />
       );
     case "sms":
       return (
