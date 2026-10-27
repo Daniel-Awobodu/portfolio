@@ -74,11 +74,13 @@ export default function InboxScene({
   t,
   narrow,
   mode,
+  show = 0,
 }: {
   demo: Demo;
   t: number;
   narrow: boolean;
-  mode: "arrive" | "match" | "pile" | "open";
+  mode: "arrive" | "match" | "pile" | "open" | "thread";
+  show?: number;
 }) {
   const inbox = demo.inbox!;
   const searching = mode === "match";
@@ -87,7 +89,53 @@ export default function InboxScene({
     : "";
 
   let body: ReactNode;
-  if (mode === "open" && inbox.open) {
+  if (mode === "thread" && inbox.thread) {
+    const thread = inbox.thread;
+    const messages = thread.messages.slice(0, show);
+    const fresh = easeOut(span(t, 0.12, 0.26));
+    body = (
+      <div className="flex h-full flex-col overflow-hidden p-[clamp(10px,2.2cqw,22px)] text-[#202124]">
+        <p className="text-[clamp(14px,2.2cqw,20px)] leading-snug">
+          {thread.subject}
+          <span className="ml-2 rounded bg-[#e8eaed] px-1.5 py-0.5 align-middle text-[0.6em] text-[#5f6368]">
+            {messages.length} in this thread
+          </span>
+        </p>
+        <div className="mt-[clamp(6px,1.6cqh,14px)] flex min-h-0 flex-1 flex-col justify-end gap-[clamp(5px,1.2cqh,10px)]">
+          {messages.map((m, i) => {
+            const isNew = i === messages.length - 1;
+            return (
+              <div
+                key={i}
+                className={`rounded-lg border px-3 py-[clamp(5px,1.1cqh,9px)] text-[clamp(11px,1.45cqw,14px)] ${isNew ? "border-[#1a73e8] bg-[#f2f6fc]" : "border-[#e3e6e8]"}`}
+                style={
+                  isNew
+                    ? {
+                        opacity: fresh,
+                        transform: `translateY(${(1 - fresh) * 10}px)`,
+                      }
+                    : undefined
+                }
+              >
+                <p className="flex items-center gap-2">
+                  <span className="truncate font-semibold">{m.from}</span>
+                  {m.note ? (
+                    <span className="shrink-0 rounded bg-[#e6f4ea] px-1.5 text-[0.85em] font-medium text-[#188038]">
+                      {m.note}
+                    </span>
+                  ) : null}
+                  <span className="ml-auto shrink-0 text-[0.9em] text-[#5f6368]">
+                    {m.time}
+                  </span>
+                </p>
+                <p className="mt-0.5 line-clamp-2 text-[#3c4043]">{m.body}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  } else if (mode === "open" && inbox.open) {
     const open = inbox.open;
     body = (
       <div className="h-full overflow-hidden p-[clamp(12px,2.6cqw,24px)] text-[#202124]">
@@ -222,7 +270,7 @@ export default function InboxScene({
                 {search || "Search mail"}
               </span>
             </p>
-            {!narrow ? (
+            {!narrow && mode !== "thread" ? (
               <span className="shrink-0 text-[12px] text-[#5f6368]">
                 1-50 of {inbox.count}
               </span>

@@ -1,9 +1,13 @@
+import { appointmentReminders } from "@/lib/demos/appointment-reminders";
+import { crmFollowUps } from "@/lib/demos/crm-follow-ups";
+import { dentalChatbot } from "@/lib/demos/dental-chatbot";
 import { narration } from "@/lib/demos/narration";
 import { orderAlerts } from "@/lib/demos/order-alerts";
 import { orderExtraction } from "@/lib/demos/order-extraction";
 import type { Demo } from "@/lib/demos/types";
 import clips from "@/lib/demos/voice.json";
 import { voiceReceptionist } from "@/lib/demos/voice-receptionist";
+import { whatsappBakery } from "@/lib/demos/whatsapp-bakery";
 import { whatsappReceipts } from "@/lib/demos/whatsapp-receipts";
 
 /** A beat lasts at least this long after its narration ends. */
@@ -38,9 +42,16 @@ function withVoice(demo: Demo): Demo {
 
 /** Builds with a "Watch it run" demo, by slug. Add one file per build. */
 export const demos: Record<string, Demo> = Object.fromEntries(
-  [orderAlerts, orderExtraction, voiceReceptionist, whatsappReceipts].map(
-    (demo) => [demo.slug, withVoice(demo)],
-  ),
+  [
+    orderAlerts,
+    orderExtraction,
+    voiceReceptionist,
+    whatsappReceipts,
+    whatsappBakery,
+    dentalChatbot,
+    appointmentReminders,
+    crmFollowUps,
+  ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 
 /** Total running time of a demo, in milliseconds. */

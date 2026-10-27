@@ -52,14 +52,16 @@ function Ticks({ read }: { read: boolean }) {
 function Bubble({
   message,
   demo,
-  sms,
+  variant,
   t,
 }: {
   message: ChatMessage;
   demo: Demo;
-  sms: boolean;
+  variant: "whatsapp" | "sms" | "web";
   t: number;
 }) {
+  const sms = variant === "sms";
+  const web = variant === "web";
   const start = message.at ?? -1;
   const opacity =
     message.at === undefined ? 1 : easeOut(span(t, start, start + 0.08));
@@ -92,13 +94,15 @@ function Bubble({
     >
       <div
         className={
-          sms
-            ? `max-w-[80%] rounded-[4cqw] px-[3.6cqw] py-[2.4cqw] ${mine ? "bg-[#0b57d0] text-white" : "bg-[#e9eef6]"}`
-            : `max-w-[80%] rounded-[2.2cqw] px-[2.4cqw] pt-[1.6cqw] pb-[1.2cqw] shadow-sm ${
-                mine
-                  ? "rounded-tr-none bg-[#d9fdd3]"
-                  : "rounded-tl-none bg-white"
-              }`
+          web
+            ? `max-w-[82%] rounded-[2.6cqw] px-[3.4cqw] py-[2.4cqw] shadow-sm ${mine ? "bg-[#10b39a] text-white" : "bg-white"}`
+            : sms
+              ? `max-w-[80%] rounded-[4cqw] px-[3.6cqw] py-[2.4cqw] ${mine ? "bg-[#0b57d0] text-white" : "bg-[#e9eef6]"}`
+              : `max-w-[80%] rounded-[2.2cqw] px-[2.4cqw] pt-[1.6cqw] pb-[1.2cqw] shadow-sm ${
+                  mine
+                    ? "rounded-tr-none bg-[#d9fdd3]"
+                    : "rounded-tl-none bg-white"
+                }`
         }
       >
         {message.image ? (
@@ -108,14 +112,36 @@ function Bubble({
             </div>
           </div>
         ) : null}
+        {message.voice ? (
+          <div className="flex items-center gap-[2cqw] py-[1cqw] pr-[1cqw]">
+            <span className="flex h-[8cqw] w-[8cqw] shrink-0 items-center justify-center rounded-full bg-[#00a884] text-[3.4cqw] text-white">
+              ▶
+            </span>
+            <span
+              className="flex h-[7cqw] items-center gap-[0.7cqw]"
+              aria-hidden="true"
+            >
+              {Array.from({ length: 22 }, (_, i) => (
+                <span
+                  key={i}
+                  className="w-[0.8cqw] rounded-full bg-[#8696a0]"
+                  style={{
+                    height: `${30 + 70 * Math.abs(Math.sin(i * 1.7 + 0.6))}%`,
+                  }}
+                />
+              ))}
+            </span>
+            <span className="text-[3cqw] text-[#667781]">{message.voice}</span>
+          </div>
+        ) : null}
         {message.text ? (
           <p
-            className={`${sms ? "text-[5cqw]" : "text-[4.3cqw]"} leading-snug whitespace-pre-line ${sms && mine ? "text-white" : "text-[#111b21]"}`}
+            className={`${sms ? "text-[5cqw]" : "text-[4.3cqw]"} leading-snug whitespace-pre-line ${(sms || web) && mine ? "text-white" : "text-[#111b21]"}`}
           >
             {message.text}
           </p>
         ) : null}
-        {sms ? null : (
+        {sms || web ? null : (
           <p className="mt-[0.6cqw] flex items-center justify-end gap-[1cqw] text-[3cqw] text-[#667781]">
             {message.time}
             {mine ? <Ticks read={read} /> : null}
@@ -137,6 +163,34 @@ function Chat({
   messages: ChatMessage[];
   t: number;
 }) {
+  if (thread.app === "web") {
+    return (
+      <div className="flex h-full flex-col bg-[#f2f3f7]">
+        <div className="bg-[#12122e] px-[5cqw] pt-[13cqw] pb-[4cqw] text-white">
+          <p className="text-[6cqw] leading-tight font-bold">
+            {thread.contact}
+          </p>
+          {thread.status ? (
+            <p className="mt-[1cqw] text-[3.6cqw] opacity-85">
+              {thread.status}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-1 flex-col justify-end gap-[2.2cqw] overflow-hidden px-[3cqw] py-[3cqw]">
+          {messages.map((message, i) => (
+            <Bubble key={i} message={message} demo={demo} variant="web" t={t} />
+          ))}
+        </div>
+        <div className="flex items-center gap-[2cqw] border-t border-[#e3e6ee] bg-white px-[3cqw] py-[2.6cqw] pb-[6cqw]">
+          <span className="flex-1 text-[3.8cqw] text-[#8a8fa3]">
+            Type your message…
+          </span>
+          <span className="text-[4.4cqw] text-[#10b39a]">➤</span>
+        </div>
+      </div>
+    );
+  }
+
   if (thread.app === "sms") {
     const last = messages[messages.length - 1];
     return (
@@ -154,10 +208,10 @@ function Chat({
         </div>
         <div className="flex flex-1 flex-col justify-end gap-[2.2cqw] overflow-hidden px-[3cqw] py-[3cqw]">
           <p className="mx-auto text-[3cqw] text-[#5f6368]">
-            Text message · Today {last?.time}
+            Text message · {last?.time}
           </p>
           {messages.map((message, i) => (
-            <Bubble key={i} message={message} demo={demo} sms t={t} />
+            <Bubble key={i} message={message} demo={demo} variant="sms" t={t} />
           ))}
         </div>
         <div className="flex items-center gap-[2cqw] px-[3cqw] pb-[6cqw]">
@@ -189,12 +243,18 @@ function Chat({
           ) : null}
         </span>
       </div>
-      <div className="flex flex-1 flex-col gap-[2.2cqw] overflow-hidden px-[3cqw] py-[3cqw]">
+      <div className="flex flex-1 flex-col justify-end gap-[2.2cqw] overflow-hidden px-[3cqw] py-[3cqw]">
         <p className="mx-auto rounded-[1.6cqw] bg-white/80 px-[2.4cqw] py-[0.8cqw] text-[3cqw] text-[#54656f]">
           Today
         </p>
         {messages.map((message, i) => (
-          <Bubble key={i} message={message} demo={demo} sms={false} t={t} />
+          <Bubble
+            key={i}
+            message={message}
+            demo={demo}
+            variant="whatsapp"
+            t={t}
+          />
         ))}
       </div>
       <div className="flex items-center gap-[2cqw] px-[3cqw] pb-[6cqw]">

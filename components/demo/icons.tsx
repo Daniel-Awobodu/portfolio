@@ -19,6 +19,7 @@ export const NODE_COLORS: Record<NodeKind, string> = {
   sheets: "#34d399",
   whatsapp: "#25d366",
   trigger: "#ff6d5a",
+  schedule: "#ff6d5a",
   model: "#f97316",
   gmail: "#ea4335",
   loop: "#5eead4",
@@ -108,6 +109,13 @@ export function NodeGlyph({ kind }: { kind: NodeKind }) {
       return (
         <g {...stroke}>
           <path d="M9 4v7M9 4a2 2 0 0 1 4 0v5l4 1a2 2 0 0 1 1.5 2.2L18 17a4 4 0 0 1-4 3h-2a4 4 0 0 1-3.2-1.6L5.5 14a1.6 1.6 0 0 1 2.4-2.1L9 13" />
+        </g>
+      );
+    case "schedule":
+      return (
+        <g {...stroke}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
         </g>
       );
     case "model":

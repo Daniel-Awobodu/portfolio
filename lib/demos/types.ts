@@ -8,6 +8,7 @@
 export type NodeKind =
   | "webhook"
   | "trigger"
+  | "schedule"
   | "filter"
   | "http"
   | "switch"
@@ -67,13 +68,16 @@ export type ChatMessage = {
   until?: number;
   /** A photo of the demo's receipt. */
   image?: boolean;
+  /** A voice note, with its length ("0:07"). */
+  voice?: string;
   text?: string;
   time: string;
 };
 
 export type ChatThread = {
-  /** WhatsApp by default; "sms" draws a plain text-message app. */
-  app?: "whatsapp" | "sms";
+  /** WhatsApp by default; "sms" draws a text-message app, "web" a
+   *  website chat widget. */
+  app?: "whatsapp" | "sms" | "web";
   contact: string;
   status?: string;
   initials: string;
@@ -154,7 +158,12 @@ export type Beat = BeatBase &
     | { scene: "sheet"; mode?: "type" | "stream" | "invalid" | "filter" }
     | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
-    | { scene: "inbox"; mode: "arrive" | "match" | "pile" | "open" }
+    | {
+        scene: "inbox";
+        mode: "arrive" | "match" | "pile" | "open" | "thread";
+        /** "thread" mode: how many of the thread's messages are shown. */
+        show?: number;
+      }
     | { scene: "zap"; step: number; output?: Output }
     | {
         scene: "call";
@@ -163,7 +172,15 @@ export type Beat = BeatBase &
         /** Seconds on the call timer when the beat starts. */
         clock?: number;
       }
-    | { scene: "calendar"; mode: "taken" | "booked" }
+    | { scene: "calendar"; mode: "view" | "taken" | "booked" | "moved" }
+    | {
+        scene: "steps";
+        /** A key of `steps`; "main" when omitted. */
+        flow?: string;
+        step: number;
+        output?: Output;
+      }
+    | { scene: "crm"; mode: "lead" | "responded" }
     | { scene: "end" }
   );
 
@@ -206,6 +223,11 @@ export type Demo = {
       wideColumns: number[];
       narrowColumns: number[];
     };
+    /** Drawn as Google Sheets unless set; "airtable" for an Airtable base. */
+    app?: "sheets" | "airtable" | "n8n";
+    /** "type" mode: several finished rows landing one after another,
+     *  instead of one row typed in. */
+    newRows?: string[][];
     /** "filter" mode: the sheet narrowed to one product, as a search. */
     filter?: { label: string; rows: string[][]; rowNumbers: number[] };
   };
@@ -243,6 +265,11 @@ export type Demo = {
     /** "pile" mode: order emails, repeated to fill a long inbox. */
     pile?: InboxEmail[];
     open?: { from: string; subject: string; time: string; body: Output };
+    /** "thread" mode: one email conversation, oldest first. */
+    thread?: {
+      subject: string;
+      messages: { from: string; time: string; body: string; note?: string }[];
+    };
   };
   zap?: {
     title: string;
@@ -263,8 +290,27 @@ export type Demo = {
     hours: [number, number];
     calendars: { name: string; color: string; on: boolean }[];
     events: CalendarEvent[];
-    taken: CalendarEvent;
-    booked: CalendarEvent & { when: string; details: string[] };
+    taken?: CalendarEvent;
+    booked?: CalendarEvent & { when: string; details: string[] };
+    /** "moved" mode: an appointment dragged to a new time. */
+    move?: { from: CalendarEvent; to: CalendarEvent; note: string };
+  };
+  /** Workflows drawn as plain step lists ("steps" scenes), by key. */
+  steps?: Record<
+    string,
+    { title: string; items: { title: string; kind: NodeKind }[] }
+  >;
+  /** A CRM contact record ("crm" scenes). */
+  crm?: {
+    app: string;
+    name: string;
+    initials: string;
+    fields: Output;
+    /** The field that changes when the lead replies, before and after. */
+    status: { label: string; from: string; to: string };
+    activity: { text: string; time: string }[];
+    reply: { text: string; time: string };
+    task: string;
   };
   end: { headline: string; points: { value: string; label: string }[] };
   beats: Beat[];

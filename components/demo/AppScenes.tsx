@@ -195,6 +195,25 @@ const cell = "truncate border border-[#e3e6e8] px-1.5 py-[clamp(4px,1cqh,8px)]";
 const rowHead =
   "border border-[#e3e6e8] bg-[#f8f9fa] text-center text-[#5f6368] tabular-nums";
 
+function BaseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[1.2em] w-[1.2em]" aria-hidden="true">
+      <path d="M12 3 21 7l-9 4-9-4 9-4Z" fill="#fcb400" />
+      <path d="M13 13l8-3.5V18l-8 3.5V13Z" fill="#18bfff" />
+      <path d="M11 13 3 9.5V18l8 3.5V13Z" fill="#f82b60" />
+    </svg>
+  );
+}
+
+function TableIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[1.2em] w-[1.2em]" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="16" rx="2" fill="#ea4b71" />
+      <path d="M3 9.5h18M3 15h18M9 4v16" stroke="#fff" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
 function SheetIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-[1.2em] w-[1.2em]" aria-hidden="true">
@@ -259,7 +278,18 @@ export function SheetScene({
 }) {
   const sheet = demo.sheet!;
   const frame = (children: ReactNode, fx: string, tab: number) => (
-    <Window title={`${sheet.title} · Google Sheets`} icon={<SheetIcon />}>
+    <Window
+      title={`${sheet.title} · ${sheet.app === "airtable" ? "Airtable" : sheet.app === "n8n" ? "n8n Data Table" : "Google Sheets"}`}
+      icon={
+        sheet.app === "airtable" ? (
+          <BaseIcon />
+        ) : sheet.app === "n8n" ? (
+          <TableIcon />
+        ) : (
+          <SheetIcon />
+        )
+      }
+    >
       <div className="flex h-full flex-col">
         <div className="flex items-center gap-2 border-b border-[#e3e6e8] px-3 py-1.5 text-[12px] text-[#5f6368]">
           <span className="font-medium italic">fx</span>
@@ -429,6 +459,66 @@ export function SheetScene({
       </table>,
       "",
       1,
+    );
+  }
+
+  if (sheet.newRows) {
+    const cols = narrow ? sheet.narrowColumns : sheet.wideColumns;
+    const landed = sheet.newRows.map((_, i) =>
+      easeOut(span(t, 0.15 + i * 0.18, 0.27 + i * 0.18)),
+    );
+    return frame(
+      <table className="w-full table-fixed border-collapse text-[clamp(10px,1.35cqw,13px)]">
+        <thead>
+          <HeaderRow count={cols.length} />
+        </thead>
+        <tbody>
+          {[sheet.columns, ...sheet.rows].map((row, r) => (
+            <tr key={r}>
+              <td className={rowHead}>{r + 1}</td>
+              {cols.map((c) => (
+                <td
+                  key={c}
+                  className={`${cell} ${r === 0 ? "font-semibold" : ""}`}
+                >
+                  {row[c]}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {sheet.newRows.map((row, i) => (
+            <tr
+              key={`new-${i}`}
+              className="bg-[#e6f4ea]"
+              style={{
+                opacity: landed[i],
+                transform: `translateY(${(1 - landed[i]) * -8}px)`,
+              }}
+            >
+              <td className={rowHead}>{sheet.rows.length + 2 + i}</td>
+              {cols.map((c) => (
+                <td key={c} className={`${cell} font-medium`}>
+                  {row[c]}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {[0, 1].map((r) => (
+            <tr key={`empty-${r}`}>
+              <td className={rowHead}>
+                {sheet.rows.length + sheet.newRows!.length + 2 + r}
+              </td>
+              {cols.map((c) => (
+                <td key={c} className={cell}>
+                  &nbsp;
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>,
+      "",
+      0,
     );
   }
 
