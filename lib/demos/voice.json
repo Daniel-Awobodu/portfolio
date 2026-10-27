@@ -33,6 +33,90 @@
       "ms": 3527
     }
   ],
+  "crm-follow-ups": [
+    {
+      "text": "A new lead lands in HubSpot, with her area, budget and what she asked about.",
+      "ms": 4624
+    },
+    {
+      "text": "AI writes a first email around those details. If one is missing, it simply leaves it out.",
+      "ms": 4467
+    },
+    {
+      "text": "It lands in her inbox, reading like the agent wrote it.",
+      "ms": 3683
+    },
+    {
+      "text": "No reply after three days? A follow-up goes out in the same thread, not as a new email.",
+      "ms": 4676
+    },
+    {
+      "text": "On day seven she replies at eight fifty-eight, two minutes before the next follow-up was due.",
+      "ms": 5904
+    },
+    {
+      "text": "Seconds before sending, her status is checked again. The follow-up is held back, so she's never chased after replying.",
+      "ms": 6400
+    },
+    {
+      "text": "HubSpot moves her to Responded, and the agent gets a task to call her back.",
+      "ms": 4180
+    },
+    {
+      "text": "A personal first email, timed follow-ups, and a clean handoff the moment she replies.",
+      "ms": 5904
+    }
+  ],
+  "dental-chatbot": [
+    {
+      "text": "A visitor opens the website chat. The assistant answers naturally, then asks the next question.",
+      "ms": 6191
+    },
+    {
+      "text": "It qualifies them in conversation, not with a form: new or existing, which service, and when.",
+      "ms": 5956
+    },
+    {
+      "text": "Behind the chat, emergencies are checked first. Then the AI picks the route: book, nurture or emergency.",
+      "ms": 7105
+    },
+    {
+      "text": "The times it offers come from the live calendar, never from the AI.",
+      "ms": 4467
+    },
+    {
+      "text": "It offers the real open times. The visitor picks 10am.",
+      "ms": 4023
+    },
+    {
+      "text": "In that same moment, a staff member books 10am for someone else.",
+      "ms": 3344
+    },
+    {
+      "text": "Right before booking, the slot is checked again. The clash is caught, so nobody is double-booked.",
+      "ms": 4989
+    },
+    {
+      "text": "The visitor is offered the times still free, and 11am is booked.",
+      "ms": 4389
+    },
+    {
+      "text": "It goes straight into the practice calendar, with the patient's details and what they came for.",
+      "ms": 4833
+    },
+    {
+      "text": "Urgent symptoms skip booking entirely. The visitor gets a safety message straight away.",
+      "ms": 4754
+    },
+    {
+      "text": "Emergencies and leads not ready to book are logged, so the team can follow up.",
+      "ms": 3997
+    },
+    {
+      "text": "Triage, live booking and follow-up, with no staff needed from the first hello.",
+      "ms": 4415
+    }
+  ],
   "order-alerts": [
     {
       "text": "Chioma sees one of our ads and orders a sofa cover on the landing page.",
@@ -177,6 +261,56 @@
     {
       "text": "Every call answered, every booking in the right branch\u2019s diary.",
       "ms": 3370
+    }
+  ],
+  "whatsapp-bakery": [
+    {
+      "text": "A customer orders the way they'd text a friend: three items, three different days, one message.",
+      "ms": 5094
+    },
+    {
+      "text": "The AI reads it against the real menu and the bakery's calendar, and finds three orders.",
+      "ms": 4754
+    },
+    {
+      "text": "Then code checks every detail. Prices come from the menu, never from the AI.",
+      "ms": 4807
+    },
+    {
+      "text": "One message becomes three orders, each with its own day and price.",
+      "ms": 4389
+    },
+    {
+      "text": "Nothing is final until the customer replies YES. Then each order gets its own number.",
+      "ms": 5303
+    },
+    {
+      "text": "All three land in the bakery's order book, clean and priced.",
+      "ms": 3553
+    },
+    {
+      "text": "Voice notes work too. Ask for bread it doesn't sell, on a day it's closed, and it says so instead of guessing.",
+      "ms": 5538
+    },
+    {
+      "text": "No number given? It asks, instead of guessing a quantity.",
+      "ms": 3291
+    },
+    {
+      "text": "At 6pm every evening, orders nobody confirmed within 48 hours are marked Expired.",
+      "ms": 5956
+    },
+    {
+      "text": "Then tomorrow's bake list is built from the confirmed orders and emailed.",
+      "ms": 4336
+    },
+    {
+      "text": "Staff start the day with item totals and every pickup, with nothing retyped.",
+      "ms": 5068
+    },
+    {
+      "text": "Messy messages in, clean and confirmed orders out.",
+      "ms": 3840
     }
   ],
   "whatsapp-receipts": [
