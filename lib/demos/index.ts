@@ -9,6 +9,7 @@ import { opportunityFeed } from "@/lib/demos/opportunity-feed";
 import { orderAlerts } from "@/lib/demos/order-alerts";
 import { orderExtraction } from "@/lib/demos/order-extraction";
 import { quoteRequests } from "@/lib/demos/quote-requests";
+import { solarLeads } from "@/lib/demos/solar-leads";
 import type { Demo } from "@/lib/demos/types";
 import clips from "@/lib/demos/voice.json";
 import { voiceReceptionist } from "@/lib/demos/voice-receptionist";
@@ -61,6 +62,7 @@ export const demos: Record<string, Demo> = Object.fromEntries(
     multichannelIntake,
     clientLifecycle,
     opportunityFeed,
+    solarLeads,
   ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 

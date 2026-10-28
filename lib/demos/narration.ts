@@ -8,12 +8,16 @@
 type Narrated = { caption: string; say?: string };
 
 export function narration(beat: Narrated): string {
-  return (beat.say ?? beat.caption)
-    .replace(/₦([\d,.]+)/g, "$1 naira")
-    .replace(/\s*→\s*/g, " to ")
-    .replace(/…/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return (
+    (beat.say ?? beat.caption)
+      .replace(/₦([\d,.]+)/g, "$1 naira")
+      .replace(/\s*→\s*/g, " to ")
+      .replace(/…/g, "")
+      // "Lead" here is always a prospect; spelt so the voice says "leed".
+      .replace(/\b([Ll])ead(s?)\b/g, "$1eed$2")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
 }
 
 /** Where a beat's clip is published. */
