@@ -135,6 +135,27 @@ export default function SlackScene({
                     ))}
                   </div>
                 ) : null}
+                {msg.sections?.map((sec, i) => (
+                  <div
+                    key={sec.heading}
+                    className="mt-1.5"
+                    style={{
+                      opacity: easeOut(
+                        span(t, 0.18 + i * 0.12, 0.3 + i * 0.12),
+                      ),
+                    }}
+                  >
+                    <p className="font-bold text-white">{sec.heading}</p>
+                    {sec.lines.map((line) => (
+                      <p
+                        key={line}
+                        className={`${line.startsWith("Proof:") ? "text-[#c5c6c8] italic" : ""} ${narrow ? "truncate" : ""}`}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                ))}
                 {msg.quote ? (
                   <p className="mt-1.5 border-l-4 border-white/30 pl-2.5 text-[#d1d2d3]">
                     {msg.quote}
@@ -146,7 +167,7 @@ export default function SlackScene({
                     {msg.link[1]}
                   </p>
                 ) : null}
-                {msg.footer ? (
+                {msg.footer && !(narrow && msg.sections) ? (
                   <p className="text-[0.92em] text-[#9a9b9e] italic">
                     {msg.footer}
                   </p>

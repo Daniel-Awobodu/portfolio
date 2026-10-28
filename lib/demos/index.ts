@@ -5,6 +5,7 @@ import { dentalChatbot } from "@/lib/demos/dental-chatbot";
 import { multichannelIntake } from "@/lib/demos/multichannel-intake";
 import { narration } from "@/lib/demos/narration";
 import { officeAssistant } from "@/lib/demos/office-assistant";
+import { opportunityFeed } from "@/lib/demos/opportunity-feed";
 import { orderAlerts } from "@/lib/demos/order-alerts";
 import { orderExtraction } from "@/lib/demos/order-extraction";
 import { quoteRequests } from "@/lib/demos/quote-requests";
@@ -59,6 +60,7 @@ export const demos: Record<string, Demo> = Object.fromEntries(
     officeAssistant,
     multichannelIntake,
     clientLifecycle,
+    opportunityFeed,
   ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 

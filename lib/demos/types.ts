@@ -49,6 +49,8 @@ export type SlackMessage = {
   items: { asked: string; matched: string }[];
   /** A quoted block, like the suggested next step. */
   quote?: string;
+  /** Headed groups of lines, like a daily digest. */
+  sections?: { heading: string; lines: string[] }[];
   /** A link line, like "Open the record · SHQ-…". */
   link?: [string, string];
   footer?: string;
