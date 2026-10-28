@@ -458,6 +458,7 @@ export const clientLifecycle: Demo = {
       duration: 5600,
       caption:
         "Every Monday at 8:30am, the payment log becomes a weekly report, sent by email and Slack.",
+      say: "Every Monday at eight thirty in the morning, the payment log becomes a weekly report, sent by email and Slack.",
       output: [
         ["period", "last 7 days"],
         ["revenue", "$1,240.00 from 18 payments"],

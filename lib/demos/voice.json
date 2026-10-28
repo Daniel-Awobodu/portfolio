@@ -33,6 +33,56 @@
       "ms": 3527
     }
   ],
+  "client-lifecycle": [
+    {
+      "text": "A lead books a demo on the website, typing her phone number with a dash and a space.",
+      "ms": 4728
+    },
+    {
+      "text": "Her name, email and phone are checked, and the number is cleaned into international format before any text goes out.",
+      "ms": 5538
+    },
+    {
+      "text": "She's added to HubSpot, and a welcome text goes out through Termii. Whether it sent is read from Termii's reply, not assumed.",
+      "ms": 7367
+    },
+    {
+      "text": "Less than 3 seconds after she pressed the button, the text is on her phone.",
+      "ms": 4258
+    },
+    {
+      "text": "The sales team sees her in Slack, with the SMS confirmed and her HubSpot contact already made.",
+      "ms": 5799
+    },
+    {
+      "text": "In HubSpot, she's a new contact with lead status New. Nobody typed a thing.",
+      "ms": 5564
+    },
+    {
+      "text": "A form that arrives without a phone number goes to a Failed Leads sheet, so nothing breaks and nothing is lost.",
+      "ms": 6687
+    },
+    {
+      "text": "When she pays through Stripe, her HubSpot contact is looked up. If HubSpot is briefly down, it tries again, up to 3 times.",
+      "ms": 6478
+    },
+    {
+      "text": "Her plan and last payment date are updated, and the payment is logged. A payer missing from HubSpot would email the team instead.",
+      "ms": 7027
+    },
+    {
+      "text": "Every Monday at eight thirty in the morning, the payment log becomes a weekly report, sent by email and Slack.",
+      "ms": 4754
+    },
+    {
+      "text": "The ops manager's 45-minute Monday job now arrives on its own.",
+      "ms": 4258
+    },
+    {
+      "text": "Three workflows that feed each other: leads, payments and the Monday report.",
+      "ms": 5198
+    }
+  ],
   "crm-follow-ups": [
     {
       "text": "A new lead lands in HubSpot. That alone starts her sequence.",
@@ -129,6 +179,78 @@
       "ms": 4415
     }
   ],
+  "multichannel-intake": [
+    {
+      "text": "A clinic sends a request through the website form, and gets a reference number on screen straight away.",
+      "ms": 5460
+    },
+    {
+      "text": "Bots are quietly ignored, and broken forms are sent back to be fixed. This one is valid, so it gets its reference.",
+      "ms": 7079
+    },
+    {
+      "text": "Emails and staff notes join the same path. The request is saved before the AI runs, so nothing is lost if the AI fails.",
+      "ms": 7314
+    },
+    {
+      "text": "AI picks a category and urgency from approved options only, suggests the next step and drafts a reply. Code checks every answer.",
+      "ms": 7236
+    },
+    {
+      "text": "Only Critical and High requests ping the team, with the next step and a link to the record.",
+      "ms": 4963
+    },
+    {
+      "text": "Website, email and staff notes all land in one table. A reply to an earlier email is marked as a follow-up.",
+      "ms": 7210
+    },
+    {
+      "text": "The same request sent twice? The second copy is caught at the duplicate check, even if the spacing changes.",
+      "ms": 6139
+    },
+    {
+      "text": "Logged the moment it arrives, sorted by AI, and the team only hears about what can't wait.",
+      "ms": 4833
+    }
+  ],
+  "office-assistant": [
+    {
+      "text": "One email, three asks: an invoice to pay, a revised deck by 2pm, and a meeting to move.",
+      "ms": 6165
+    },
+    {
+      "text": "One AI step reads it, attachment included. The invoice decides the lane, and the deadline and the meeting become flags.",
+      "ms": 7262
+    },
+    {
+      "text": "Code checks the answer first. A lane it doesn't know would stop the run, instead of filing the email in the wrong place.",
+      "ms": 5878
+    },
+    {
+      "text": "Acme already has a folder, so the invoice is filed there. The email is starred, and a reminder is set.",
+      "ms": 5695
+    },
+    {
+      "text": "The follow-up goes in the calendar at the next 9am or 2pm slot: 9am, well before the 2pm deadline.",
+      "ms": 5773
+    },
+    {
+      "text": "The real emergency is starred. The coffee catch-up, the signed contract and the report go to General: a PDF isn't automatically an invoice.",
+      "ms": 8072
+    },
+    {
+      "text": "An invoice that arrives as a photo is read by AI, so it still counts.",
+      "ms": 4336
+    },
+    {
+      "text": "Luminary Print Co is a new vendor, so its folder is created on this first invoice, and the photo is filed inside.",
+      "ms": 5851
+    },
+    {
+      "text": "Sorted, filed, starred and reminded, and it never sends anything in the agency's name.",
+      "ms": 4963
+    }
+  ],
   "order-alerts": [
     {
       "text": "Chioma sees one of our ads and orders a sofa cover on the landing page.",
@@ -211,6 +333,48 @@
     {
       "text": "From a buried inbox to a customer list we can sell to.",
       "ms": 3605
+    }
+  ],
+  "quote-requests": [
+    {
+      "text": "A hospital asks for a quote. The email lists no items: all 12 are spread across five attachments, one of them a photo.",
+      "ms": 7445
+    },
+    {
+      "text": "Every two minutes, n8n checks the inbox, skips anything it has already handled, and finds the attachments.",
+      "ms": 5851
+    },
+    {
+      "text": "Each file is read according to its type. PDFs, text and spreadsheets directly, and the photo by AI.",
+      "ms": 5721
+    },
+    {
+      "text": "AI pulls out every item as the customer wrote it. The balance mentioned in two files is counted once.",
+      "ms": 6034
+    },
+    {
+      "text": "Each item is matched to the catalog, model number first. The price always comes from the catalog, never from the AI.",
+      "ms": 5982
+    },
+    {
+      "text": "Every line is saved in Airtable: the customer's words, the file it came from, the match and the price.",
+      "ms": 6713
+    },
+    {
+      "text": "Nothing goes out unapproved. Staff see every match and the subtotal in Slack, and press Approve.",
+      "ms": 6087
+    },
+    {
+      "text": "The quote lands in the customer's own thread. Delivery and VAT aren't in the catalog, so they're promised, not invented.",
+      "ms": 7680
+    },
+    {
+      "text": "An item the supplier doesn't stock is marked to be confirmed, left out of the subtotal, and the request is flagged.",
+      "ms": 6269
+    },
+    {
+      "text": "Every attachment read, every price from the catalog, and a person approves every reply.",
+      "ms": 5825
     }
   ],
   "voice-receptionist": [
