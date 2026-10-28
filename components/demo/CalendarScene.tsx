@@ -1,4 +1,4 @@
-import { easeOut, span } from "@/components/demo/anim";
+import { easeInOut, easeOut, span } from "@/components/demo/anim";
 import { Window } from "@/components/demo/AppScenes";
 import type { CalendarEvent, Demo } from "@/lib/demos/types";
 
@@ -17,6 +17,7 @@ const hourLabel = (h: number) =>
 /**
  * Google Calendar, one branch's week. "taken": someone at the clinic books a
  * slot. "booked": the agent's booking appears, then opens to show its details.
+ * "moved": staff drag an appointment to a new time.
  */
 export default function CalendarScene({
   demo,
@@ -27,13 +28,14 @@ export default function CalendarScene({
   demo: Demo;
   t: number;
   narrow: boolean;
-  mode: "taken" | "booked";
+  mode: "view" | "taken" | "booked" | "moved";
 }) {
   const cal = demo.calendar!;
   const [h0, h1] = cal.hours;
   const hours = Array.from({ length: h1 - h0 }, (_, i) => h0 + i);
   // On narrow screens, three days around the booking.
-  const firstDay = narrow ? Math.max(0, cal.booked.day - 1) : 0;
+  const focus = cal.booked?.day ?? cal.move?.to.day ?? 1;
+  const firstDay = narrow ? Math.max(0, focus - 1) : 0;
   const dayCount = narrow ? 3 : cal.days.length;
   const days = cal.days.slice(firstDay, firstDay + dayCount);
 
@@ -41,15 +43,33 @@ export default function CalendarScene({
   const bookedIn = easeOut(span(t, 0.18, 0.32));
   const detail = mode === "booked" && t >= 0.42;
 
+  const moveP = easeInOut(span(t, 0.25, 0.55));
+  const moved = cal.move
+    ? {
+        ...cal.move.from,
+        start:
+          cal.move.from.start +
+          (cal.move.to.start - cal.move.from.start) * moveP,
+        end: cal.move.from.end + (cal.move.to.end - cal.move.from.end) * moveP,
+      }
+    : undefined;
+
   const events: { event: CalendarEvent; appear: number; isNew: boolean }[] = [
     ...cal.events.map((event) => ({ event, appear: 1, isNew: false })),
-    {
-      event: cal.taken,
-      appear: mode === "taken" ? takenIn : 1,
-      isNew: mode === "taken",
-    },
-    ...(mode === "booked"
+    ...(cal.taken
+      ? [
+          {
+            event: cal.taken,
+            appear: mode === "taken" ? takenIn : 1,
+            isNew: mode === "taken",
+          },
+        ]
+      : []),
+    ...(mode === "booked" && cal.booked
       ? [{ event: cal.booked, appear: bookedIn, isNew: true }]
+      : []),
+    ...(mode === "moved" && moved
+      ? [{ event: moved, appear: 1, isNew: moveP > 0 && moveP < 1 }]
       : []),
   ];
 
@@ -94,7 +114,7 @@ export default function CalendarScene({
             {/* Day headers */}
             <div className="flex border-b border-[#e3e6e8] pl-12">
               {days.map(([dow, date], i) => {
-                const today = firstDay + i === cal.booked.day;
+                const today = firstDay + i === focus;
                 return (
                   <div key={dow} className="flex-1 py-1.5 text-center">
                     <p className="text-[clamp(9px,1.1cqw,11px)] font-medium tracking-wide">
@@ -150,11 +170,11 @@ export default function CalendarScene({
                             {event.title}
                           </p>
                           <p className="truncate opacity-90">
-                            {hourLabel(event.start)
+                            {hourLabel(Math.round(event.start))
                               .toLowerCase()
                               .replace(" ", "")}
                             {"-"}
-                            {hourLabel(event.end)
+                            {hourLabel(Math.round(event.end))
                               .toLowerCase()
                               .replace(" ", "")}
                           </p>
@@ -165,8 +185,15 @@ export default function CalendarScene({
               </div>
             </div>
 
+            {/* The move, called out */}
+            {mode === "moved" && cal.move && t >= 0.58 ? (
+              <p className="demo-fade absolute top-2 left-2 z-20 rounded-lg bg-[#202124] px-3 py-1.5 text-[clamp(11px,1.4cqw,13px)] font-medium text-white shadow-lg">
+                {cal.move.note}
+              </p>
+            ) : null}
+
             {/* The booking, opened */}
-            {detail ? (
+            {detail && cal.booked ? (
               <div
                 className={`demo-fade absolute z-20 rounded-2xl bg-[#f0f4f9] p-[clamp(12px,2cqw,20px)] text-[clamp(11px,1.5cqw,14px)] shadow-[0_12px_32px_rgba(0,0,0,0.25)] ${
                   narrow ? "inset-x-2 bottom-2" : "top-[12%] right-[4%] w-[52%]"

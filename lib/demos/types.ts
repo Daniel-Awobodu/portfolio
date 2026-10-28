@@ -8,6 +8,7 @@
 export type NodeKind =
   | "webhook"
   | "trigger"
+  | "schedule"
   | "filter"
   | "http"
   | "switch"
@@ -28,7 +29,17 @@ export type NodeKind =
   | "merge"
   | "calendar"
   | "respond"
-  | "sms";
+  | "sms"
+  | "hubspot"
+  | "chat";
+
+export type FieldKind =
+  | "text"
+  | "select"
+  | "number"
+  | "date"
+  | "currency"
+  | "long";
 
 /** One node on the workflow canvas, in canvas units (a node is 60 wide). */
 export type DemoNode = {
@@ -67,13 +78,16 @@ export type ChatMessage = {
   until?: number;
   /** A photo of the demo's receipt. */
   image?: boolean;
+  /** A voice note, with its length ("0:07"). */
+  voice?: string;
   text?: string;
   time: string;
 };
 
 export type ChatThread = {
-  /** WhatsApp by default; "sms" draws a plain text-message app. */
-  app?: "whatsapp" | "sms";
+  /** WhatsApp by default; "sms" draws a text-message app, "web" a
+   *  website chat widget. */
+  app?: "whatsapp" | "sms" | "web";
   contact: string;
   status?: string;
   initials: string;
@@ -154,7 +168,12 @@ export type Beat = BeatBase &
     | { scene: "sheet"; mode?: "type" | "stream" | "invalid" | "filter" }
     | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
-    | { scene: "inbox"; mode: "arrive" | "match" | "pile" | "open" }
+    | {
+        scene: "inbox";
+        mode: "arrive" | "match" | "pile" | "open" | "thread";
+        /** "thread" mode: how many of the thread's messages are shown. */
+        show?: number;
+      }
     | { scene: "zap"; step: number; output?: Output }
     | {
         scene: "call";
@@ -163,7 +182,8 @@ export type Beat = BeatBase &
         /** Seconds on the call timer when the beat starts. */
         clock?: number;
       }
-    | { scene: "calendar"; mode: "taken" | "booked" }
+    | { scene: "calendar"; mode: "view" | "taken" | "booked" | "moved" }
+    | { scene: "crm"; mode: "lead" | "responded" }
     | { scene: "end" }
   );
 
@@ -181,6 +201,8 @@ export type Demo = {
   receipt?: Receipt;
   workflow?: Workflow;
   workflows?: Record<string, Workflow>;
+  /** Canvas output shows in a card under the node, not in a side panel. */
+  outputUnder?: boolean;
   drive?: {
     path: string[];
     folders: string[];
@@ -206,8 +228,19 @@ export type Demo = {
       wideColumns: number[];
       narrowColumns: number[];
     };
+    /** Drawn as Google Sheets unless set; "airtable" for an Airtable base. */
+    app?: "sheets" | "airtable" | "n8n";
+    /** "type" mode: several finished rows landing one after another,
+     *  instead of one row typed in. */
+    newRows?: string[][];
     /** "filter" mode: the sheet narrowed to one product, as a search. */
     filter?: { label: string; rows: string[][]; rowNumbers: number[] };
+    /** Airtable and n8n: each column's field type, for its header icon. */
+    fieldKinds?: FieldKind[];
+    /** Airtable: the base's tables, shown as tabs. */
+    tables?: string[];
+    /** n8n: each row's createdAt. */
+    createdAt?: string[];
   };
   /** The AI reading an email into a clean record ("extract" scenes). The
    *  email is `inbox.open`; each row lines up with one of its body lines. */
@@ -243,6 +276,11 @@ export type Demo = {
     /** "pile" mode: order emails, repeated to fill a long inbox. */
     pile?: InboxEmail[];
     open?: { from: string; subject: string; time: string; body: Output };
+    /** "thread" mode: one email conversation, oldest first. */
+    thread?: {
+      subject: string;
+      messages: { from: string; time: string; body: string; note?: string }[];
+    };
   };
   zap?: {
     title: string;
@@ -263,8 +301,21 @@ export type Demo = {
     hours: [number, number];
     calendars: { name: string; color: string; on: boolean }[];
     events: CalendarEvent[];
-    taken: CalendarEvent;
-    booked: CalendarEvent & { when: string; details: string[] };
+    taken?: CalendarEvent;
+    booked?: CalendarEvent & { when: string; details: string[] };
+    /** "moved" mode: an appointment dragged to a new time. */
+    move?: { from: CalendarEvent; to: CalendarEvent; note: string };
+  };
+  /** A CRM contact record ("crm" scenes). */
+  /** HubSpot's Contacts and Tasks tables ("crm" scenes). */
+  crm?: {
+    /** Contacts already in the table, under the new lead. */
+    contacts: { name: string; initials: string; stage: string }[];
+    lead: { name: string; initials: string; email: string; phone: string };
+    /** The lead's lifecycle stage: on arrival, during the sequence, after
+     *  the reply. */
+    stages: { lead: string; sequence: string; responded: string };
+    task: { title: string; stage: string };
   };
   end: { headline: string; points: { value: string; label: string }[] };
   beats: Beat[];
