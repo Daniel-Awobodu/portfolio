@@ -395,7 +395,9 @@ export default function CanvasScene({
             const panelW = Math.min(narrow ? width - 24 : 380, width - 24);
             const centreX = width / 2 + (node.x + NODE / 2 - cx) * scale;
             const left = Math.min(
-              Math.max(centreX - panelW / 2, 12),
+              // From the node's left edge rightwards, clear of the label of
+              // a neighbour sitting lower on the left.
+              Math.max(centreX - (NODE / 2 + 8) * scale, 12),
               width - panelW - 12,
             );
             const arrow = Math.min(Math.max(centreX - left, 18), panelW - 18);

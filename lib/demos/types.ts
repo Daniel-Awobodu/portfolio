@@ -183,13 +183,6 @@ export type Beat = BeatBase &
         clock?: number;
       }
     | { scene: "calendar"; mode: "view" | "taken" | "booked" | "moved" }
-    | {
-        scene: "steps";
-        /** A key of `steps`; "main" when omitted. */
-        flow?: string;
-        step: number;
-        output?: Output;
-      }
     | { scene: "crm"; mode: "lead" | "responded" }
     | { scene: "end" }
   );
@@ -313,11 +306,6 @@ export type Demo = {
     /** "moved" mode: an appointment dragged to a new time. */
     move?: { from: CalendarEvent; to: CalendarEvent; note: string };
   };
-  /** Workflows drawn as plain step lists ("steps" scenes), by key. */
-  steps?: Record<
-    string,
-    { title: string; items: { title: string; kind: NodeKind }[] }
-  >;
   /** A CRM contact record ("crm" scenes). */
   /** HubSpot's Contacts and Tasks tables ("crm" scenes). */
   crm?: {

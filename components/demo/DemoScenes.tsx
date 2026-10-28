@@ -6,7 +6,6 @@ import ExtractScene from "@/components/demo/ExtractScene";
 import FormScene from "@/components/demo/FormScene";
 import InboxScene from "@/components/demo/InboxScene";
 import PhoneScene from "@/components/demo/PhoneScene";
-import StepsScene from "@/components/demo/StepsScene";
 import CrmScene from "@/components/demo/CrmScene";
 import ZapScene from "@/components/demo/ZapScene";
 import type { Beat, Demo } from "@/lib/demos/types";
@@ -126,9 +125,6 @@ export default function DemoScenes({
           duration={beat.duration}
           narrow={narrow}
         />
-      ) : null}
-      {beat.scene === "steps" ? (
-        <StepsScene demo={demo} beatIndex={beatIndex} t={t} narrow={narrow} />
       ) : null}
       {beat.scene === "crm" ? (
         <CrmScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />

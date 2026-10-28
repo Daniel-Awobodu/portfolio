@@ -128,6 +128,14 @@ export const dentalChatbot: Demo = {
         y: 420,
       },
       {
+        id: "warmClose",
+        label: "Warm Close",
+        sub: "manual",
+        kind: "edit",
+        x: 850,
+        y: 420,
+      },
+      {
         id: "reply",
         label: "Reply",
         sub: "manual",
@@ -222,6 +230,7 @@ export const dentalChatbot: Demo = {
       { from: "sheet1", to: "emergency" },
       { from: "switch", to: "picked" },
       { from: "switch", to: "sheet2" },
+      { from: "sheet2", to: "warmClose" },
       { from: "switch", to: "reply" },
       { from: "picked", to: "avail" },
       { from: "avail", to: "engine" },
