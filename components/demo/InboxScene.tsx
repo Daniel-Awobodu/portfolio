@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { easeOut, reveal, span } from "@/components/demo/anim";
 import { Window } from "@/components/demo/AppScenes";
-import type { Demo, InboxEmail } from "@/lib/demos/types";
+import type { Attachment, Demo, InboxEmail } from "@/lib/demos/types";
 
 function MailIcon() {
   return (
@@ -19,6 +19,7 @@ function Row({
   className = "",
   style,
   chip,
+  sorted = 0,
 }: {
   email: InboxEmail;
   unread?: boolean;
@@ -26,15 +27,21 @@ function Row({
   className?: string;
   style?: CSSProperties;
   chip?: boolean;
+  /** How far the assistant's labels and star have appeared (0 to 1). */
+  sorted?: number;
 }) {
+  const star = email.starred && sorted > 0.5;
   return (
     <div
       className={`flex h-[clamp(30px,6.4cqh,44px)] items-center gap-3 border-b border-[#f1f3f4] px-3 text-[clamp(11px,1.5cqw,14px)] ${className}`}
       style={style}
     >
       {!narrow ? (
-        <span aria-hidden="true" className="text-[#c4c7c5]">
-          ☆
+        <span
+          aria-hidden="true"
+          className={star ? "text-[#1a73e8]" : "text-[#c4c7c5]"}
+        >
+          {star ? "★" : "☆"}
         </span>
       ) : null}
       <span
@@ -48,11 +55,27 @@ function Row({
             order
           </span>
         ) : null}
+        {email.labels && sorted > 0
+          ? email.labels.map((label) => (
+              <span
+                key={label}
+                className="mr-1 rounded-[3px] border border-[#c4c7c5] bg-[#f1f3f4] px-1 text-[0.8em] text-[#444746]"
+                style={{ opacity: sorted }}
+              >
+                {label}
+              </span>
+            ))
+          : null}
         <span
           className={unread ? "font-bold text-[#202124]" : "text-[#202124]"}
         >
           {email.subject}
         </span>
+        {email.attachment && !narrow ? (
+          <span className="ml-1.5 rounded-full border border-[#dadce0] px-1.5 text-[0.8em] text-[#3c4043]">
+            📎 {email.attachment.name}
+          </span>
+        ) : null}
         {!narrow ? <span> · {email.snippet}</span> : null}
       </span>
       <span
@@ -60,6 +83,57 @@ function Row({
       >
         {email.time}
       </span>
+    </div>
+  );
+}
+
+const FILE_COLORS: Record<Attachment["kind"], string> = {
+  pdf: "#ea4335",
+  txt: "#4285f4",
+  csv: "#0f9d58",
+  xlsx: "#0f9d58",
+  image: "#f4b400",
+};
+
+/** A Gmail attachment card: a page preview over the file's name. */
+function AttachmentCard({
+  file,
+  shown,
+  compact,
+}: {
+  file: Attachment;
+  shown: number;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className="overflow-hidden rounded border border-[#dadce0] bg-white"
+      style={{ opacity: shown, transform: `translateY(${(1 - shown) * 6}px)` }}
+    >
+      <div
+        className={`flex flex-col gap-[3px] bg-[#f8f9fa] px-2 pt-2 ${compact ? "hidden" : "h-[clamp(26px,7cqh,52px)]"}`}
+      >
+        {file.kind === "image" ? (
+          <span className="h-full rounded-sm bg-[linear-gradient(135deg,#d7ccc8,#a1887f)] opacity-70" />
+        ) : (
+          [80, 60, 70, 45].map((w) => (
+            <span
+              key={w}
+              className="h-[2px] rounded bg-[#c4c7c5]"
+              style={{ width: `${w}%` }}
+            />
+          ))
+        )}
+      </div>
+      <p className="flex items-center gap-1 border-t border-[#dadce0] px-1.5 py-1 text-[clamp(9px,1.15cqw,11px)]">
+        <span
+          className="shrink-0 rounded-[2px] px-0.5 text-[0.75em] font-bold text-white uppercase"
+          style={{ background: FILE_COLORS[file.kind] }}
+        >
+          {file.kind === "image" ? "img" : file.kind}
+        </span>
+        <span className="truncate">{file.name}</span>
+      </p>
     </div>
   );
 }
@@ -79,7 +153,7 @@ export default function InboxScene({
   demo: Demo;
   t: number;
   narrow: boolean;
-  mode: "arrive" | "match" | "pile" | "open" | "thread";
+  mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
   show?: number;
 }) {
   const inbox = demo.inbox!;
@@ -128,7 +202,27 @@ export default function InboxScene({
                     {m.time}
                   </span>
                 </p>
-                <p className="mt-0.5 line-clamp-2 text-[#3c4043]">{m.body}</p>
+                {isNew && m.lines ? (
+                  <div className="mt-1 text-[#3c4043]">
+                    {m.lines.map((line, l) => (
+                      <p
+                        key={l}
+                        className={`transition-opacity duration-300 ${line ? "" : "h-[0.6em]"} ${t >= 0.2 + (l * 0.45) / m.lines!.length ? "opacity-100" : "opacity-0"}`}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-0.5 line-clamp-2 text-[#3c4043]">
+                    {m.body}
+                    {m.attachments ? (
+                      <span className="ml-2 rounded bg-[#e8eaed] px-1.5 text-[0.85em] text-[#5f6368]">
+                        📎 {m.attachments} attachments
+                      </span>
+                    ) : null}
+                  </p>
+                )}
               </div>
             );
           })}
@@ -151,6 +245,39 @@ export default function InboxScene({
           </span>
           <span className="text-[#5f6368]">{open.time}</span>
         </div>
+        {open.text ? (
+          <div className="mt-[clamp(8px,2cqh,16px)] text-[clamp(11px,1.45cqw,14px)] leading-snug">
+            {(narrow ? (open.brief ?? open.text) : open.text).map((line, i) => (
+              <p key={i} className={line ? "" : "h-[0.7em]"}>
+                {line}
+              </p>
+            ))}
+          </div>
+        ) : null}
+        {open.attachments ? (
+          <div className="mt-[clamp(8px,2cqh,16px)] border-t border-dashed border-[#dadce0] pt-2">
+            <p className="text-[clamp(11px,1.4cqw,13px)] font-semibold">
+              {open.attachments.length}{" "}
+              {open.attachments.length === 1 ? "Attachment" : "Attachments"}
+              <span className="font-normal text-[#5f6368]">
+                {" "}
+                · Scanned by Gmail
+              </span>
+            </p>
+            <div
+              className={`mt-1.5 grid gap-[clamp(4px,0.8cqw,8px)] ${narrow ? "grid-cols-2" : "grid-cols-5"}`}
+            >
+              {open.attachments.map((a, i) => (
+                <AttachmentCard
+                  key={a.name}
+                  file={a}
+                  compact={narrow}
+                  shown={easeOut(span(t, 0.12 + i * 0.08, 0.22 + i * 0.08))}
+                />
+              ))}
+            </div>
+          </div>
+        ) : null}
         <div className="mt-[clamp(10px,2.4cqh,20px)] grid grid-cols-[auto_1fr] gap-x-6 gap-y-[clamp(2px,0.8cqh,6px)] text-[clamp(11px,1.5cqw,14px)]">
           {open.body.map(([label, value], i) => {
             const style = { opacity: t >= 0.1 + i * 0.05 ? 1 : 0 };
@@ -172,6 +299,20 @@ export default function InboxScene({
             );
           })}
         </div>
+      </div>
+    );
+  } else if (mode === "sort") {
+    body = (
+      <div className="h-full overflow-hidden">
+        {inbox.emails.map((email, i) => (
+          <Row
+            key={email.subject}
+            email={email}
+            narrow={narrow}
+            unread
+            sorted={easeOut(span(t, 0.12 + i * 0.1, 0.24 + i * 0.1))}
+          />
+        ))}
       </div>
     );
   } else if (mode === "pile" && inbox.pile) {
@@ -254,10 +395,22 @@ export default function InboxScene({
             <p className="px-3 py-1.5">Starred</p>
             <p className="px-3 py-1.5">Sent</p>
             <p className="px-3 py-1.5">Drafts</p>
+            {inbox.labels ? (
+              <>
+                <p className="mt-3 px-3 py-1 font-medium">Labels</p>
+                {inbox.labels.map((label) => (
+                  <p key={label} className="truncate px-3 py-1 pl-5">
+                    ▸ {label}
+                  </p>
+                ))}
+              </>
+            ) : null}
           </div>
         ) : null}
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex items-center gap-3 px-3 py-2">
+          <div
+            className={`items-center gap-3 px-3 py-2 ${narrow && mode === "open" ? "hidden" : "flex"}`}
+          >
             <p
               className={`flex min-w-0 flex-1 items-center gap-2 rounded-full px-4 py-[clamp(5px,1.2cqh,9px)] text-[clamp(11px,1.5cqw,14px)] ${
                 searching ? "bg-white ring-1 ring-[#dadce0]" : "bg-[#eaf1fb]"

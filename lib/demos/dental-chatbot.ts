@@ -464,6 +464,7 @@ export const dentalChatbot: Demo = {
       duration: 4800,
       caption:
         "Emergencies and leads not ready to book are logged, so the team can follow up.",
+      say: "Emergencies and leeds not ready to book are logged, so the team can follow up.",
     },
     {
       scene: "end",

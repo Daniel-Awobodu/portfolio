@@ -1,9 +1,13 @@
 import { appointmentReminders } from "@/lib/demos/appointment-reminders";
+import { clientLifecycle } from "@/lib/demos/client-lifecycle";
 import { crmFollowUps } from "@/lib/demos/crm-follow-ups";
 import { dentalChatbot } from "@/lib/demos/dental-chatbot";
+import { multichannelIntake } from "@/lib/demos/multichannel-intake";
 import { narration } from "@/lib/demos/narration";
+import { officeAssistant } from "@/lib/demos/office-assistant";
 import { orderAlerts } from "@/lib/demos/order-alerts";
 import { orderExtraction } from "@/lib/demos/order-extraction";
+import { quoteRequests } from "@/lib/demos/quote-requests";
 import type { Demo } from "@/lib/demos/types";
 import clips from "@/lib/demos/voice.json";
 import { voiceReceptionist } from "@/lib/demos/voice-receptionist";
@@ -51,6 +55,10 @@ export const demos: Record<string, Demo> = Object.fromEntries(
     dentalChatbot,
     appointmentReminders,
     crmFollowUps,
+    quoteRequests,
+    officeAssistant,
+    multichannelIntake,
+    clientLifecycle,
   ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 

@@ -8,9 +8,11 @@ type Sheet = NonNullable<Demo["sheet"]>;
 /** New records arriving one after another, each easing in. */
 function arrivals(sheet: Sheet, t: number) {
   const fresh = sheet.newRows ?? (sheet.newRow ? [sheet.newRow] : []);
+  // Spread over the first three quarters of the beat, however many arrive.
+  const step = Math.min(0.18, 0.6 / Math.max(1, fresh.length));
   return fresh.map((row, i) => ({
     row,
-    p: easeOut(span(t, 0.15 + i * 0.18, 0.27 + i * 0.18)),
+    p: easeOut(span(t, 0.15 + i * step, 0.27 + i * step)),
   }));
 }
 
@@ -63,6 +65,19 @@ const PILLS: Record<string, string> = {
   Expired: "bg-[#e5e9f0] text-[#4c5667]",
   Sent: "bg-[#d1f7c4] text-[#0b4f1a]",
   Skipped: "bg-[#ffdce5] text-[#7a1230]",
+  High: "bg-[#d1f7c4] text-[#0b4f1a]",
+  Medium: "bg-[#ffeab6] text-[#5c4300]",
+  "Email Body": "bg-[#ffdce5] text-[#7a1230]",
+  "TXT Attachment": "bg-[#c4ecff] text-[#0b4a6f]",
+  "PDF Attachment": "bg-[#ffe0cc] text-[#6b2f00]",
+  "CSV Attachment": "bg-[#ede2fe] text-[#3b1a73]",
+  "Image Attachment": "bg-[#d1f7c4] text-[#0b4f1a]",
+  "Website Form": "bg-[#cfdfff] text-[#102046]",
+  "Internal Note": "bg-[#ede2fe] text-[#3b1a73]",
+  Email: "bg-[#c2f5e9] text-[#0b4a3f]",
+  Critical: "bg-[#ffdce5] text-[#7a1230]",
+  Normal: "bg-[#cfdfff] text-[#102046]",
+  Low: "bg-[#eeeeee] text-[#41454d]",
 };
 
 /**
@@ -100,8 +115,29 @@ export function AirtableScene({
   return (
     <Window title={`${sheet.title}: Grid view · Airtable`} icon={<BaseLogo />}>
       <div className="flex h-full flex-col text-[clamp(10px,1.3cqw,13px)] text-[#1d1f25]">
+        {/* The base's own header, when it has a name */}
+        {sheet.base ? (
+          <div className="flex items-center gap-2 border-b border-[#f3c9b8] bg-white px-3 py-1.5 whitespace-nowrap">
+            <span className="flex h-[1.7em] w-[1.7em] items-center justify-center rounded-md bg-[#e8603c]">
+              <BaseLogo />
+            </span>
+            <span className="text-[1.15em] font-bold">{sheet.base} ▾</span>
+            {!narrow ? (
+              <span className="ml-auto flex gap-4 text-[#41454d]">
+                <span className="font-semibold text-[#1d1f25] underline decoration-[#e8603c] decoration-2 underline-offset-[6px]">
+                  Data
+                </span>
+                <span>Automations</span>
+                <span>Interfaces</span>
+                <span>Forms</span>
+              </span>
+            ) : null}
+          </div>
+        ) : null}
         {/* Table tabs, on the base colour */}
-        <div className="flex items-end gap-0.5 bg-[#fce4ee] px-2 pt-1.5 text-[#4c1d32]">
+        <div
+          className={`flex items-end gap-0.5 px-2 pt-1.5 ${sheet.base ? "bg-[#fde7dc] text-[#5a2310]" : "bg-[#fce4ee] text-[#4c1d32]"}`}
+        >
           {tables.map((name) => (
             <span
               key={name}
@@ -205,10 +241,10 @@ export function AirtableScene({
               </tr>
             </tbody>
           </table>
-          <p className="absolute bottom-2 left-3 text-[0.9em] text-[#8a8f98]">
-            {count} records
-          </p>
         </div>
+        <p className="border-t border-[#e1e1e1] bg-white px-3 py-1 text-[0.9em] text-[#8a8f98]">
+          {count} records
+        </p>
       </div>
     </Window>
   );
@@ -387,10 +423,10 @@ export function N8nTableScene({
                 ))}
               </tbody>
             </table>
-            <p className="absolute bottom-2 left-3 text-[0.9em] text-[#8b919c]">
-              Total {sheet.rows.length + fresh.filter((f) => f.p > 0.5).length}
-            </p>
           </div>
+          <p className="border-t border-[#e6e6ea] bg-white px-3 py-1 text-[0.9em] text-[#8b919c]">
+            Total {sheet.rows.length + fresh.filter((f) => f.p > 0.5).length}
+          </p>
         </div>
       </div>
     </Window>

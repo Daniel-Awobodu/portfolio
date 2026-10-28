@@ -32,6 +32,8 @@ export const NODE_COLORS: Record<NodeKind, string> = {
   sms: "#38bdf8",
   hubspot: "#ff7a59",
   chat: "#cbd5e1",
+  file: "#94a3b8",
+  slack: "#e01e5a",
 };
 
 export function NodeGlyph({ kind }: { kind: NodeKind }) {
@@ -189,6 +191,20 @@ export function NodeGlyph({ kind }: { kind: NodeKind }) {
           <path d="M14 10V5M14 5h0M17 17l3.5 3.5M10.5 11.5 5 7" />
           <circle cx="14" cy="4" r="1.6" fill={c} />
           <circle cx="4.5" cy="6.5" r="1.6" fill={c} />
+        </g>
+      );
+    case "file":
+      return (
+        <g {...stroke}>
+          <path d="M6 2h8l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" />
+          <path d="M14 2v5h5M8 13h8M8 17h5" />
+        </g>
+      );
+    case "slack":
+      return (
+        <g {...stroke}>
+          <path d="M9 3v8M15 13v8M3 15h8M13 9h8" />
+          <path d="M9 3a2 2 0 0 0-2 2M15 21a2 2 0 0 0 2-2M3 15a2 2 0 0 0 2 2M21 9a2 2 0 0 0-2-2" />
         </g>
       );
     case "chat":

@@ -31,7 +31,38 @@ export type NodeKind =
   | "respond"
   | "sms"
   | "hubspot"
-  | "chat";
+  | "chat"
+  | "file"
+  | "slack";
+
+export type SlackMessage = {
+  time: string;
+  title: string;
+  /** Bold lines under the title, before the details. */
+  lead?: string[];
+  /** Label and value lines under the title. */
+  meta: [string, string][];
+  /** "Items: 12 | Subtotal: ₦1,784,500" and the like. */
+  summary?: string;
+  status?: { icon: string; text: string };
+  /** Each item as written, then what it matched. */
+  items: { asked: string; matched: string }[];
+  /** A quoted block, like the suggested next step. */
+  quote?: string;
+  /** A link line, like "Open the record · SHQ-…". */
+  link?: [string, string];
+  footer?: string;
+  /** Items not listed. */
+  more?: number;
+  preview?: string[];
+  /** Ask for a decision, with the buttons. */
+  buttons?: boolean;
+};
+
+export type Attachment = {
+  name: string;
+  kind: "pdf" | "txt" | "csv" | "xlsx" | "image";
+};
 
 export type FieldKind =
   | "text"
@@ -110,6 +141,10 @@ export type InboxEmail = {
   time: string;
   /** Matches the order search (highlighted in "match" mode). */
   order?: boolean;
+  /** "sort" mode: the labels the assistant adds, and whether it stars it. */
+  labels?: string[];
+  starred?: boolean;
+  attachment?: Attachment;
 };
 
 export type CallLine = {
@@ -168,9 +203,10 @@ export type Beat = BeatBase &
     | { scene: "sheet"; mode?: "type" | "stream" | "invalid" | "filter" }
     | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
+    | { scene: "webform" }
     | {
         scene: "inbox";
-        mode: "arrive" | "match" | "pile" | "open" | "thread";
+        mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
         /** "thread" mode: how many of the thread's messages are shown. */
         show?: number;
       }
@@ -184,6 +220,13 @@ export type Beat = BeatBase &
       }
     | { scene: "calendar"; mode: "view" | "taken" | "booked" | "moved" }
     | { scene: "crm"; mode: "lead" | "responded" }
+    | {
+        scene: "slack";
+        /** Which of `slack.messages` arrives. */
+        message: number;
+        /** Someone presses Approve. */
+        approve?: boolean;
+      }
     | { scene: "end" }
   );
 
@@ -209,6 +252,8 @@ export type Demo = {
     open: string;
     files: DriveFile[];
     newFile: DriveFile;
+    /** A folder created for the file, before it opens. */
+    newFolder?: string;
   };
   sheet?: {
     title: string;
@@ -237,6 +282,8 @@ export type Demo = {
     filter?: { label: string; rows: string[][]; rowNumbers: number[] };
     /** Airtable and n8n: each column's field type, for its header icon. */
     fieldKinds?: FieldKind[];
+    /** Airtable: the base's name, shown in its header. */
+    base?: string;
     /** Airtable: the base's tables, shown as tabs. */
     tables?: string[];
     /** n8n: each row's createdAt. */
@@ -257,6 +304,21 @@ export type Demo = {
       reason: string;
     };
   };
+  /** A request form on a website, in a browser ("webform" scenes). */
+  webform?: {
+    site: string;
+    brand: [string, string];
+    kicker: string;
+    heading: string;
+    intro: string;
+    fields: [string, string][];
+    /** The long answer, typed last. */
+    request: [string, string];
+    button: string;
+    /** The button in the site's header. */
+    cta: string;
+    thanks: { title: string; body: string; reference?: string };
+  };
   form?: {
     site: string;
     product: string;
@@ -269,17 +331,37 @@ export type Demo = {
   inbox?: {
     count: string;
     emails: InboxEmail[];
+    /** "sort" mode: the label tree in the side bar. */
+    labels?: string[];
     /** The email that arrives in "arrive" mode. */
     newEmail?: InboxEmail;
     /** What the search box shows in "match" mode. */
     search?: string;
     /** "pile" mode: order emails, repeated to fill a long inbox. */
     pile?: InboxEmail[];
-    open?: { from: string; subject: string; time: string; body: Output };
+    open?: {
+      from: string;
+      subject: string;
+      time: string;
+      body: Output;
+      /** Written as a letter instead of label and value rows. */
+      text?: string[];
+      /** A shorter letter for narrow screens. */
+      brief?: string[];
+      attachments?: Attachment[];
+    };
     /** "thread" mode: one email conversation, oldest first. */
     thread?: {
       subject: string;
-      messages: { from: string; time: string; body: string; note?: string }[];
+      messages: {
+        from: string;
+        time: string;
+        body: string;
+        note?: string;
+        /** The newest message, opened: shown in full, line by line. */
+        lines?: string[];
+        attachments?: number;
+      }[];
     };
   };
   zap?: {
@@ -307,6 +389,15 @@ export type Demo = {
     move?: { from: CalendarEvent; to: CalendarEvent; note: string };
   };
   /** A CRM contact record ("crm" scenes). */
+  /** A Slack channel where approval requests arrive ("slack" scenes). */
+  slack?: {
+    workspace: string;
+    channel: string;
+    channels: string[];
+    bot: string;
+    approvedBy: string;
+    messages: SlackMessage[];
+  };
   /** HubSpot's Contacts and Tasks tables ("crm" scenes). */
   crm?: {
     /** Contacts already in the table, under the new lead. */
@@ -316,6 +407,8 @@ export type Demo = {
      *  the reply. */
     stages: { lead: string; sequence: string; responded: string };
     task: { title: string; stage: string };
+    /** The status column's heading; "Lifecycle stage" when omitted. */
+    stageLabel?: string;
   };
   end: { headline: string; points: { value: string; label: string }[] };
   beats: Beat[];

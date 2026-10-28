@@ -80,6 +80,12 @@ export function DriveScene({
   const hover = t >= 0.16 && !opened;
   const landed = easeOut(span(t, 0.52, 0.66));
   const path = opened ? [...drive.path, drive.open] : drive.path;
+  // A new vendor's folder is created first, then opened.
+  const made = drive.newFolder ? easeOut(span(t, 0.06, 0.16)) : 0;
+  const folders = [
+    ...drive.folders,
+    ...(drive.newFolder && made > 0 ? [drive.newFolder] : []),
+  ];
 
   return (
     <Window
@@ -125,14 +131,27 @@ export function DriveScene({
             </div>
 
             {!opened
-              ? drive.folders.map((folder) => {
+              ? folders.map((folder) => {
                   const target = folder === drive.open;
+                  const isNew = folder === drive.newFolder;
                   return (
                     <div
                       key={folder}
                       className={`flex items-center gap-3 border-b border-[#f1f3f4] py-[clamp(7px,1.6cqh,12px)] ${
-                        target && hover ? "rounded bg-[#c2e7ff]" : ""
+                        target && hover
+                          ? "rounded bg-[#c2e7ff]"
+                          : isNew
+                            ? "rounded bg-[#e6f4ea]"
+                            : ""
                       }`}
+                      style={
+                        isNew
+                          ? {
+                              opacity: made,
+                              transform: `translateY(${(1 - made) * -8}px)`,
+                            }
+                          : undefined
+                      }
                     >
                       <span className="flex min-w-0 flex-1 items-center gap-3">
                         <FolderIcon />

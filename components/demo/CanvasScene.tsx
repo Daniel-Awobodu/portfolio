@@ -30,6 +30,39 @@ function bezier(p: readonly Point[], s: number): Point {
   };
 }
 
+/** The route a connection back to an earlier step takes, under the row. */
+function loopPoints(from: DemoNode, to: DemoNode): Point[] {
+  const low = Math.max(from.y, to.y) + NODE + 58;
+  const ax = from.x + NODE;
+  return [
+    { x: ax, y: from.y + NODE / 2 },
+    { x: ax + 18, y: from.y + NODE / 2 },
+    { x: ax + 18, y: low },
+    { x: to.x - 18, y: low },
+    { x: to.x - 18, y: to.y + NODE / 2 },
+    { x: to.x, y: to.y + NODE / 2 },
+  ];
+}
+
+/** A point `s` (0 to 1) of the way along a polyline. */
+function along(points: Point[], s: number): Point {
+  const lengths = points
+    .slice(1)
+    .map((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y));
+  let left = s * lengths.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < lengths.length; i += 1) {
+    if (left <= lengths[i] || i === lengths.length - 1) {
+      const k = lengths[i] ? Math.min(1, left / lengths[i]) : 1;
+      return {
+        x: points[i].x + (points[i + 1].x - points[i].x) * k,
+        y: points[i].y + (points[i + 1].y - points[i].y) * k,
+      };
+    }
+    left -= lengths[i];
+  }
+  return points[points.length - 1];
+}
+
 /** Splits a label into lines of roughly `max` characters, on spaces. */
 function wrap(text: string, max: number) {
   const lines: string[] = [];
@@ -151,7 +184,9 @@ export default function CanvasScene({
 
   const dot =
     !arrived && segments > 0
-      ? bezier(edgePoints(path[seg], path[seg + 1]), local)
+      ? path[seg + 1].x <= path[seg].x
+        ? along(loopPoints(path[seg], path[seg + 1]), local)
+        : bezier(edgePoints(path[seg], path[seg + 1]), local)
       : null;
 
   const outputRows = beat.output ?? [];
@@ -206,14 +241,11 @@ export default function CanvasScene({
           }
           // A loop back to an earlier step runs underneath the row.
           if (b.x <= a.x) {
-            const low = Math.max(a.y, b.y) + NODE + 58;
-            const ax = a.x + NODE;
-            const ay = a.y + NODE / 2;
-            const by = b.y + NODE / 2;
+            const pts = loopPoints(a, b);
             return (
               <path
                 key={`${edge.from}-${edge.to}`}
-                d={`M${ax},${ay} h18 V${low} H${b.x - 18} V${by} h18`}
+                d={`M${pts.map((q) => `${q.x},${q.y}`).join(" L")}`}
                 fill="none"
                 stroke="#5b605e"
                 strokeWidth="1.5"

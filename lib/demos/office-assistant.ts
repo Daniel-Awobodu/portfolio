@@ -1,0 +1,446 @@
+import type { Demo } from "@/lib/demos/types";
+
+/*
+ * The office assistant, as it really runs (see content/automation/
+ * office-assistant.mdx and its screenshots). The canvas is drawn from the
+ * workflow's export: real node names, connections and layout. The emails
+ * follow the real test set: one email that is an invoice, a deadline and a
+ * meeting change at once, a coffee catch-up, a signed contract, a report, and
+ * an invoice that arrives as a photo. Every name here is sample data.
+ */
+
+const acme = "URGENT: invoice + can we move Thursday?";
+
+export const officeAssistant: Demo = {
+  slug: "office-assistant",
+  journey:
+    "from a busy inbox to emails sorted, invoices filed and reminders set",
+  sceneLabels: {
+    inbox: "Agency inbox · Gmail",
+    canvas: "The office assistant · n8n",
+    calendar: "Agency calendar",
+    drive: "Invoices · Google Drive",
+    end: "Done",
+  },
+  outputUnder: true,
+  workflow: {
+    nodes: [
+      {
+        id: "addLabelToMessage",
+        label: "Add label to message",
+        sub: "addLabels: message",
+        kind: "gmail",
+        x: 1457,
+        y: 583,
+      },
+      {
+        id: "setInfoForClassifier2",
+        label: "Set info for classifier2",
+        kind: "edit",
+        x: 680,
+        y: 364,
+      },
+      {
+        id: "gmailTrigger",
+        label: "Gmail Trigger",
+        kind: "gmail",
+        x: 0,
+        y: 291,
+      },
+      {
+        id: "extractFromFile",
+        label: "Extract from File",
+        sub: "extract: pdf",
+        kind: "file",
+        x: 510,
+        y: 73,
+      },
+      {
+        id: "analyzeImage",
+        label: "Analyze image",
+        sub: "analyze: image",
+        kind: "ai",
+        x: 510,
+        y: 219,
+      },
+      { id: "setBinary", label: "Set Binary", kind: "edit", x: 170, y: 291 },
+      {
+        id: "basicLLMChain1",
+        label: "Basic LLM Chain1",
+        kind: "ai",
+        x: 850,
+        y: 291,
+      },
+      {
+        id: "openaiChatModel3",
+        label: "OpenAI Chat Model3",
+        kind: "model",
+        x: 911,
+        y: 461,
+        round: true,
+      },
+      {
+        id: "setClassifyingText",
+        label: "Set Classifying Text",
+        kind: "edit",
+        x: 680,
+        y: 73,
+      },
+      {
+        id: "setClassifyingText1",
+        label: "Set Classifying Text1",
+        kind: "edit",
+        x: 680,
+        y: 219,
+      },
+      {
+        id: "setClassifyingText2",
+        label: "Set Classifying Text2",
+        kind: "edit",
+        x: 680,
+        y: 510,
+      },
+      {
+        id: "attachmentType",
+        label: "Attachment Type",
+        kind: "switch",
+        x: 340,
+        y: 267,
+      },
+      {
+        id: "createAnEvent1",
+        label: "Create an event1",
+        kind: "calendar",
+        x: 1457,
+        y: 437,
+      },
+      {
+        id: "createFolder1",
+        label: "Create folder1",
+        kind: "drive",
+        x: 1797,
+        y: 61,
+      },
+      { id: "merge1", label: "Merge1", kind: "merge", x: 1967, y: 0 },
+      {
+        id: "addLabelToMessage4",
+        label: "Add label to message4",
+        sub: "addLabels: message",
+        kind: "gmail",
+        x: 1627,
+        y: 437,
+      },
+      {
+        id: "ifFolderExist",
+        label: "If folder exist",
+        kind: "if",
+        x: 1627,
+        y: 0,
+      },
+      {
+        id: "searchFolders",
+        label: "Search folders",
+        kind: "drive",
+        x: 1457,
+        y: 0,
+      },
+      {
+        id: "uploadFile1",
+        label: "Upload file1",
+        kind: "drive",
+        x: 2137,
+        y: 0,
+      },
+      {
+        id: "addLabelToMessage5",
+        label: "Add label to message5",
+        sub: "addLabels: message",
+        kind: "gmail",
+        x: 1457,
+        y: 146,
+      },
+      {
+        id: "addLabelToMessage6",
+        label: "Add label to message6",
+        sub: "addLabels: message",
+        kind: "gmail",
+        x: 1457,
+        y: 291,
+      },
+      {
+        id: "extractAIOutput",
+        label: "Extract AI output",
+        kind: "code",
+        x: 1117,
+        y: 291,
+      },
+      {
+        id: "matchCategories",
+        label: "Match Categories",
+        kind: "switch",
+        x: 1287,
+        y: 255,
+      },
+    ],
+    edges: [
+      { from: "setInfoForClassifier2", to: "basicLLMChain1" },
+      { from: "gmailTrigger", to: "setBinary" },
+      { from: "extractFromFile", to: "setClassifyingText" },
+      { from: "analyzeImage", to: "setClassifyingText1" },
+      { from: "setBinary", to: "attachmentType" },
+      { from: "setBinary", to: "merge1" },
+      { from: "basicLLMChain1", to: "extractAIOutput" },
+      { from: "basicLLMChain1", to: "openaiChatModel3", model: true },
+      { from: "setClassifyingText", to: "basicLLMChain1" },
+      { from: "setClassifyingText1", to: "basicLLMChain1" },
+      { from: "setClassifyingText2", to: "basicLLMChain1" },
+      { from: "attachmentType", to: "extractFromFile" },
+      { from: "attachmentType", to: "analyzeImage" },
+      { from: "attachmentType", to: "setInfoForClassifier2" },
+      { from: "attachmentType", to: "setClassifyingText2" },
+      { from: "createFolder1", to: "merge1" },
+      { from: "createAnEvent1", to: "addLabelToMessage4" },
+      { from: "ifFolderExist", to: "merge1" },
+      { from: "ifFolderExist", to: "createFolder1" },
+      { from: "searchFolders", to: "ifFolderExist" },
+      { from: "merge1", to: "uploadFile1" },
+      { from: "extractAIOutput", to: "matchCategories" },
+      { from: "matchCategories", to: "searchFolders" },
+      { from: "matchCategories", to: "addLabelToMessage5" },
+      { from: "matchCategories", to: "addLabelToMessage6" },
+      { from: "matchCategories", to: "createAnEvent1" },
+      { from: "matchCategories", to: "addLabelToMessage" },
+    ],
+  },
+  inbox: {
+    count: "6",
+    labels: ["AI/Follow-up", "AI/General", "AI/Scheduling", "AI/Urgent"],
+    open: {
+      from: "Jordan · Acme Co.",
+      subject: acme,
+      time: "Mon 6 Jul, 8:40 AM",
+      body: [],
+      text: [
+        "Hi,",
+        "",
+        "Two things before I forget. First, our invoice for May is attached. Please process it this week.",
+        "Second, could you send the revised deck by 2pm today? And can we move Thursday's meeting to Friday?",
+        "",
+        "Thanks, Jordan",
+      ],
+      brief: [
+        "Our invoice for May is attached. Could you send the revised deck by 2pm today? And can we move Thursday's meeting?",
+      ],
+      attachments: [{ name: "Acme_Invoice_May.pdf", kind: "pdf" }],
+    },
+    emails: [
+      {
+        from: "Jordan · Acme Co.",
+        subject: acme,
+        snippet: "Our invoice for May is attached…",
+        time: "8:40 AM",
+        labels: ["AI/Urgent"],
+        starred: true,
+        attachment: { name: "Acme_Invoice_May.pdf", kind: "pdf" },
+      },
+      {
+        from: "Priya Shah",
+        subject: "Emergency: need to reschedule tomorrow's call",
+        snippet: "Something urgent came up on our end…",
+        time: "8:52 AM",
+        labels: ["AI/Scheduling", "AI/Urgent"],
+        starred: true,
+      },
+      {
+        from: "Sam Okoro",
+        subject: "Great catching up!",
+        snippet: "We should grab coffee sometime…",
+        time: "9:05 AM",
+        labels: ["AI/General"],
+      },
+      {
+        from: "Skyline Legal",
+        subject: "Fwd: Signed contract, ready to kick off",
+        snippet: "Attached is the signed service agreement…",
+        time: "9:20 AM",
+        labels: ["AI/General"],
+        attachment: { name: "Skyline_Agreement.pdf", kind: "pdf" },
+      },
+      {
+        from: "Meridian Foods",
+        subject: "Q2 campaign performance report",
+        snippet: "Sharing the Q2 report as promised…",
+        time: "9:41 AM",
+        labels: ["AI/General"],
+        attachment: { name: "Meridian_Q2.xlsx", kind: "xlsx" },
+      },
+      {
+        from: "Luminary Print Co",
+        subject: "Invoice LPC-2214: event print materials",
+        snippet: "Attaching the invoice for the event materials…",
+        time: "10:03 AM",
+        attachment: { name: "luminary_invoice_LPC2214.png", kind: "image" },
+      },
+    ],
+  },
+  calendar: {
+    title: "Agency · Google Calendar",
+    month: "July 2026",
+    days: [
+      ["SUN", 5],
+      ["MON", 6],
+      ["TUE", 7],
+      ["WED", 8],
+      ["THU", 9],
+      ["FRI", 10],
+      ["SAT", 11],
+    ],
+    hours: [8, 14],
+    calendars: [{ name: "Agency", color: "#33b679", on: true }],
+    events: [
+      { day: 1, start: 11, end: 12, title: "Team stand-up", color: "#33b679" },
+      { day: 2, start: 10, end: 11, title: "Client review", color: "#33b679" },
+      { day: 4, start: 9, end: 10, title: "Acme meeting", color: "#33b679" },
+      {
+        day: 5,
+        start: 12,
+        end: 13,
+        title: "Lunch with Meridian",
+        color: "#33b679",
+      },
+    ],
+    booked: {
+      day: 1,
+      start: 9,
+      end: 9.5,
+      title: "Follow up: Acme",
+      color: "#d50000",
+      when: "Monday, July 6 · 9:00 - 9:30am",
+      details: [
+        "Added by the office assistant",
+        acme,
+        "Revised deck by 2pm · move Thursday's meeting",
+      ],
+    },
+  },
+  drive: {
+    path: ["My Drive", "Invoices"],
+    folders: ["Acme", "Webflow"],
+    newFolder: "Luminary Print Co",
+    open: "Luminary Print Co",
+    files: [],
+    newFile: {
+      name: "luminary_invoice_LPC2214.png",
+      size: "83 KB",
+      modified: "Jul 6",
+    },
+  },
+  end: {
+    headline: "Every email sorted before anyone opens it.",
+    points: [
+      {
+        value: "0",
+        label: "contracts or reports mistaken for invoices in testing",
+      },
+      {
+        value: "1 per vendor",
+        label: "Drive folders, created on a vendor's first invoice",
+      },
+    ],
+  },
+  beats: [
+    {
+      scene: "inbox",
+      mode: "open",
+      duration: 5600,
+      caption:
+        "One email, three asks: an invoice to pay, a revised deck by 2pm, and a meeting to move.",
+    },
+    {
+      scene: "canvas",
+      node: "basicLLMChain1",
+      via: [
+        "gmailTrigger",
+        "setBinary",
+        "attachmentType",
+        "extractFromFile",
+        "setClassifyingText",
+      ],
+      duration: 6000,
+      caption:
+        "One AI step reads it, attachment included. The invoice decides the lane, and the deadline and the meeting become flags.",
+      output: [
+        ["lane", "invoice"],
+        ["urgent", "yes: deck by 2pm"],
+        ["follow-up", "yes: move Thursday"],
+        ["vendor", "Acme Co."],
+        ["invoice total", "$132.22, tax included"],
+      ],
+    },
+    {
+      scene: "canvas",
+      node: "matchCategories",
+      via: ["extractAIOutput"],
+      duration: 5000,
+      caption:
+        "Code checks the answer first. A lane it doesn't know would stop the run, instead of filing the email in the wrong place.",
+      output: [
+        ["lane", "one of the three"],
+        ["flags", "clear yes or no"],
+        ["vendor", "Acme Co. → Acme"],
+      ],
+    },
+    {
+      scene: "canvas",
+      node: "uploadFile1",
+      via: ["searchFolders", "ifFolderExist", "merge1"],
+      duration: 5200,
+      caption:
+        "Acme already has a folder, so the invoice is filed there. The email is starred, and a reminder is set.",
+      output: [
+        ["folder", "Invoices / Acme: found"],
+        ["filed", "Acme_Invoice_May.pdf"],
+      ],
+    },
+    {
+      scene: "calendar",
+      mode: "booked",
+      duration: 5000,
+      caption:
+        "The follow-up goes in the calendar at the next 9am or 2pm slot: 9am, well before the 2pm deadline.",
+    },
+    {
+      scene: "inbox",
+      mode: "sort",
+      duration: 6800,
+      caption:
+        "The real emergency is starred. The coffee catch-up, the signed contract and the report go to General: a PDF isn't automatically an invoice.",
+    },
+    {
+      scene: "canvas",
+      run: 1,
+      node: "analyzeImage",
+      via: ["gmailTrigger", "setBinary", "attachmentType"],
+      duration: 5200,
+      caption:
+        "An invoice that arrives as a photo is read by AI, so it still counts.",
+      output: [
+        ["attachment", "image: read by AI"],
+        ["vendor", "Luminary Print Co"],
+        ["invoice", "LPC-2214"],
+      ],
+    },
+    {
+      scene: "drive",
+      duration: 5400,
+      caption:
+        "Luminary Print Co is a new vendor, so its folder is created on this first invoice, and the photo is filed inside.",
+    },
+    {
+      scene: "end",
+      duration: 3200,
+      caption:
+        "Sorted, filed, starred and reminded, and it never sends anything in the agency's name.",
+    },
+  ],
+};
