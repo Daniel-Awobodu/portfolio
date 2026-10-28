@@ -615,7 +615,7 @@ export const quoteRequests: Demo = {
       via: ["loopOverItems", "aggregateAllOutputs"],
       duration: 5600,
       caption:
-        "AI pulls out every item as the customer wrote it. The balance mentioned in two files is counted once.",
+        "AI pulls out every item as the customer wrote it. The same product and quantity, listed in two attachments, is counted once.",
       output: [
         ["items", "12, as written"],
         ["DE-BAL-01", "in 2 files: counted once"],

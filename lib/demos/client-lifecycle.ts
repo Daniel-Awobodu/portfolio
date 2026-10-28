@@ -344,6 +344,7 @@ export const clientLifecycle: Demo = {
       duration: 6000,
       caption:
         "A lead books a demo on the website, typing her phone number with a dash and a space.",
+      say: "A leed books a demo on the website, typing her phone number with a dash and a space.",
     },
     {
       scene: "canvas",
@@ -401,6 +402,7 @@ export const clientLifecycle: Demo = {
       duration: 4400,
       caption:
         "In HubSpot, she's a new contact with lead status New. Nobody typed a thing.",
+      say: "In HubSpot, she's a new contact with leed status New. Nobody typed a thing.",
     },
     {
       scene: "canvas",
@@ -411,6 +413,7 @@ export const clientLifecycle: Demo = {
       duration: 5200,
       caption:
         "A form that arrives without a phone number goes to a Failed Leads sheet, so nothing breaks and nothing is lost.",
+      say: "A form that arrives without a phone number goes to a Failed Leeds sheet, so nothing breaks and nothing is lost.",
       output: [
         ["phone", "missing"],
         ["saved to", "Failed Leads sheet"],
@@ -476,6 +479,7 @@ export const clientLifecycle: Demo = {
       duration: 3200,
       caption:
         "Three workflows that feed each other: leads, payments and the Monday report.",
+      say: "Three workflows that feed each other: leeds, payments and the Monday report.",
     },
   ],
 };

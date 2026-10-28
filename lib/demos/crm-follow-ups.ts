@@ -349,6 +349,7 @@ export const crmFollowUps: Demo = {
       mode: "lead",
       duration: 4400,
       caption: "A new lead lands in HubSpot. That alone starts her sequence.",
+      say: "A new leed lands in HubSpot. That alone starts her sequence.",
     },
     {
       scene: "canvas",
