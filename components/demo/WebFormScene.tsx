@@ -30,7 +30,6 @@ export default function WebFormScene({
   narrow: boolean;
 }) {
   const form = demo.webform!;
-  const all = [...form.fields, form.request];
   const typingEnd = 0.62;
   // The long request takes as long as all the short fields together.
   const short = (typingEnd - 0.06) / 2 / form.fields.length;
