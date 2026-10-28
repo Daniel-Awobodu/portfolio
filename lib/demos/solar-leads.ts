@@ -360,6 +360,7 @@ export const solarLeads: Demo = {
       duration: 6000,
       caption:
         "It's saved in HubSpot, and a HOT lead gets a first email. It may only use facts the system is sure of.",
+      say: "It's saved in HubSpot, and a hot lead gets a first email. It may only use facts the system is sure of.",
       output: [
         ["may use", "bill, timeline, roof, sunlight"],
         ["never uses", "savings, system size: estimates"],
