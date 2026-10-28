@@ -31,7 +31,31 @@ export type NodeKind =
   | "respond"
   | "sms"
   | "hubspot"
-  | "chat";
+  | "chat"
+  | "file"
+  | "slack";
+
+export type SlackMessage = {
+  time: string;
+  title: string;
+  /** Label and value lines under the title. */
+  meta: [string, string][];
+  /** "Items: 12 | Subtotal: ₦1,784,500" and the like. */
+  summary: string;
+  status: { icon: string; text: string };
+  /** Each item as written, then what it matched. */
+  items: { asked: string; matched: string }[];
+  /** Items not listed. */
+  more?: number;
+  preview?: string[];
+  /** Ask for a decision, with the buttons. */
+  buttons?: boolean;
+};
+
+export type Attachment = {
+  name: string;
+  kind: "pdf" | "txt" | "csv" | "xlsx" | "image";
+};
 
 export type FieldKind =
   | "text"
@@ -184,6 +208,13 @@ export type Beat = BeatBase &
       }
     | { scene: "calendar"; mode: "view" | "taken" | "booked" | "moved" }
     | { scene: "crm"; mode: "lead" | "responded" }
+    | {
+        scene: "slack";
+        /** Which of `slack.messages` arrives. */
+        message: number;
+        /** Someone presses Approve. */
+        approve?: boolean;
+      }
     | { scene: "end" }
   );
 
@@ -237,6 +268,8 @@ export type Demo = {
     filter?: { label: string; rows: string[][]; rowNumbers: number[] };
     /** Airtable and n8n: each column's field type, for its header icon. */
     fieldKinds?: FieldKind[];
+    /** Airtable: the base's name, shown in its header. */
+    base?: string;
     /** Airtable: the base's tables, shown as tabs. */
     tables?: string[];
     /** n8n: each row's createdAt. */
@@ -275,11 +308,29 @@ export type Demo = {
     search?: string;
     /** "pile" mode: order emails, repeated to fill a long inbox. */
     pile?: InboxEmail[];
-    open?: { from: string; subject: string; time: string; body: Output };
+    open?: {
+      from: string;
+      subject: string;
+      time: string;
+      body: Output;
+      /** Written as a letter instead of label and value rows. */
+      text?: string[];
+      /** A shorter letter for narrow screens. */
+      brief?: string[];
+      attachments?: Attachment[];
+    };
     /** "thread" mode: one email conversation, oldest first. */
     thread?: {
       subject: string;
-      messages: { from: string; time: string; body: string; note?: string }[];
+      messages: {
+        from: string;
+        time: string;
+        body: string;
+        note?: string;
+        /** The newest message, opened: shown in full, line by line. */
+        lines?: string[];
+        attachments?: number;
+      }[];
     };
   };
   zap?: {
@@ -307,6 +358,15 @@ export type Demo = {
     move?: { from: CalendarEvent; to: CalendarEvent; note: string };
   };
   /** A CRM contact record ("crm" scenes). */
+  /** A Slack channel where approval requests arrive ("slack" scenes). */
+  slack?: {
+    workspace: string;
+    channel: string;
+    channels: string[];
+    bot: string;
+    approvedBy: string;
+    messages: SlackMessage[];
+  };
   /** HubSpot's Contacts and Tasks tables ("crm" scenes). */
   crm?: {
     /** Contacts already in the table, under the new lead. */

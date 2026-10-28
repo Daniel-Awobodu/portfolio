@@ -7,6 +7,7 @@ import FormScene from "@/components/demo/FormScene";
 import InboxScene from "@/components/demo/InboxScene";
 import PhoneScene from "@/components/demo/PhoneScene";
 import CrmScene from "@/components/demo/CrmScene";
+import SlackScene from "@/components/demo/SlackScene";
 import ZapScene from "@/components/demo/ZapScene";
 import type { Beat, Demo } from "@/lib/demos/types";
 
@@ -128,6 +129,9 @@ export default function DemoScenes({
       ) : null}
       {beat.scene === "crm" ? (
         <CrmScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
+      ) : null}
+      {beat.scene === "slack" ? (
+        <SlackScene demo={demo} beatIndex={beatIndex} t={t} narrow={narrow} />
       ) : null}
       {beat.scene === "calendar" ? (
         <CalendarScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
