@@ -38,13 +38,20 @@ export type NodeKind =
 export type SlackMessage = {
   time: string;
   title: string;
+  /** Bold lines under the title, before the details. */
+  lead?: string[];
   /** Label and value lines under the title. */
   meta: [string, string][];
   /** "Items: 12 | Subtotal: ₦1,784,500" and the like. */
-  summary: string;
-  status: { icon: string; text: string };
+  summary?: string;
+  status?: { icon: string; text: string };
   /** Each item as written, then what it matched. */
   items: { asked: string; matched: string }[];
+  /** A quoted block, like the suggested next step. */
+  quote?: string;
+  /** A link line, like "Open the record · SHQ-…". */
+  link?: [string, string];
+  footer?: string;
   /** Items not listed. */
   more?: number;
   preview?: string[];
@@ -196,6 +203,7 @@ export type Beat = BeatBase &
     | { scene: "sheet"; mode?: "type" | "stream" | "invalid" | "filter" }
     | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
+    | { scene: "webform" }
     | {
         scene: "inbox";
         mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
@@ -295,6 +303,19 @@ export type Demo = {
       failed: number;
       reason: string;
     };
+  };
+  /** A request form on a website, in a browser ("webform" scenes). */
+  webform?: {
+    site: string;
+    brand: [string, string];
+    kicker: string;
+    heading: string;
+    intro: string;
+    fields: [string, string][];
+    /** The long answer, typed last. */
+    request: [string, string];
+    button: string;
+    thanks: { title: string; body: string; reference: string };
   };
   form?: {
     site: string;

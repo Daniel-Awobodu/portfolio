@@ -87,16 +87,28 @@ export default function SlackScene({
                   </span>
                 </p>
                 <p className="mt-0.5 font-bold text-white">{msg.title}</p>
-                {msg.meta.slice(0, narrow ? 1 : undefined).map(([k, v]) => (
-                  <p key={k} className="truncate">
-                    {k}: {v}
+                {msg.lead?.map((line) => (
+                  <p key={line} className="font-semibold text-white">
+                    {line}
                   </p>
                 ))}
-                <p className="mt-1 font-semibold text-white">{msg.summary}</p>
-                <p>
-                  {msg.status.icon} {msg.status.text}
-                </p>
-                <p className="mt-1 font-semibold text-white">Item Summary:</p>
+                {msg.meta.slice(0, narrow ? 1 : undefined).map(([k, v]) => (
+                  <p key={k} className="truncate">
+                    {k ? `${k}: ` : ""}
+                    {v}
+                  </p>
+                ))}
+                {msg.summary ? (
+                  <p className="mt-1 font-semibold text-white">{msg.summary}</p>
+                ) : null}
+                {msg.status ? (
+                  <p>
+                    {msg.status.icon} {msg.status.text}
+                  </p>
+                ) : null}
+                {msg.items.length ? (
+                  <p className="mt-1 font-semibold text-white">Item Summary:</p>
+                ) : null}
                 {items.map((item, i) => (
                   <div key={item.asked} className="truncate">
                     <p className="truncate">
@@ -120,6 +132,22 @@ export default function SlackScene({
                       </p>
                     ))}
                   </div>
+                ) : null}
+                {msg.quote ? (
+                  <p className="mt-1.5 border-l-4 border-white/30 pl-2.5 text-[#d1d2d3]">
+                    {msg.quote}
+                  </p>
+                ) : null}
+                {msg.link ? (
+                  <p className="mt-1.5">
+                    <span className="text-[#1d9bd1]">{msg.link[0]}</span> ·{" "}
+                    {msg.link[1]}
+                  </p>
+                ) : null}
+                {msg.footer ? (
+                  <p className="text-[0.92em] text-[#9a9b9e] italic">
+                    {msg.footer}
+                  </p>
                 ) : null}
                 {msg.buttons ? (
                   <>

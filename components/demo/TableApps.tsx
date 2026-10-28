@@ -72,6 +72,12 @@ const PILLS: Record<string, string> = {
   "PDF Attachment": "bg-[#ffe0cc] text-[#6b2f00]",
   "CSV Attachment": "bg-[#ede2fe] text-[#3b1a73]",
   "Image Attachment": "bg-[#d1f7c4] text-[#0b4f1a]",
+  "Website Form": "bg-[#cfdfff] text-[#102046]",
+  "Internal Note": "bg-[#ede2fe] text-[#3b1a73]",
+  Email: "bg-[#c2f5e9] text-[#0b4a3f]",
+  Critical: "bg-[#ffdce5] text-[#7a1230]",
+  Normal: "bg-[#cfdfff] text-[#102046]",
+  Low: "bg-[#eeeeee] text-[#41454d]",
 };
 
 /**
