@@ -532,6 +532,10 @@ export const quoteRequests: Demo = {
         ],
         more: 8,
         buttons: true,
+        notes: [
+          "🔗 Open Gmail Draft to Edit",
+          "No reply in 2 days? The draft is not sent.",
+        ],
       },
       {
         time: "3:10 PM",
@@ -557,6 +561,10 @@ export const quoteRequests: Demo = {
           },
         ],
         buttons: true,
+        notes: [
+          "🔗 Open Gmail Draft to Edit",
+          "No reply in 2 days? The draft is not sent.",
+        ],
       },
     ],
   },

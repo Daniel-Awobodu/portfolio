@@ -1,3 +1,4 @@
+import { aiOutreach } from "@/lib/demos/ai-outreach";
 import { appointmentReminders } from "@/lib/demos/appointment-reminders";
 import { clientLifecycle } from "@/lib/demos/client-lifecycle";
 import { crmFollowUps } from "@/lib/demos/crm-follow-ups";
@@ -63,6 +64,7 @@ export const demos: Record<string, Demo> = Object.fromEntries(
     clientLifecycle,
     opportunityFeed,
     solarLeads,
+    aiOutreach,
   ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 

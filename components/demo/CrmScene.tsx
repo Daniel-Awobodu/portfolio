@@ -20,6 +20,8 @@ const STAGE_PILL: Record<string, string> = {
   Lead: "bg-[#eaf0f6] text-[#33475b]",
   "In Sequence": "bg-[#7fd1de] text-[#213343]",
   Responded: "bg-[#00bda5] text-white",
+  Enriched: "bg-[#00bda5] text-white",
+  "Needs Manual Review": "bg-[#f2545b] text-white",
 };
 
 /** Blurred placeholder, the way the real screenshots hide contact details. */
@@ -61,14 +63,24 @@ export default function CrmScene({
       ? crm.stages.responded
       : crm.stages.sequence;
 
-  const object = showTasks ? "Tasks" : "Contacts";
+  const base = crm.object ?? "Contacts";
+  const object = showTasks ? "Tasks" : base;
   const tabs = showTasks
     ? ["All tasks", "Due today", "Overdue", "Upcoming"]
-    : ["All contacts", "My contacts", "Unassigned contacts"];
+    : [
+        `All ${base.toLowerCase()}`,
+        `My ${base.toLowerCase()}`,
+        `Unassigned ${base.toLowerCase()}`,
+      ];
   const count = showTasks ? 1 : crm.contacts.length + (arrive > 0.5 ? 1 : 0);
   const filters = showTasks
     ? ["Assigned to", "Task type", "Task stage", "Due date"]
-    : ["Contact owner", "Create date", "Last activity date", "Lead status"];
+    : [
+        `${base === "Companies" ? "Company" : "Contact"} owner`,
+        "Create date",
+        "Last activity date",
+        "Lead status",
+      ];
 
   const th =
     "border-b border-[#cbd6e2] px-2 py-[clamp(5px,1.2cqh,9px)] text-left text-[0.85em] font-semibold tracking-wide whitespace-nowrap uppercase";
@@ -86,12 +98,12 @@ export default function CrmScene({
     <span
       className={`rounded-[3px] px-2 py-0.5 font-semibold whitespace-nowrap ${cls}`}
     >
-      {text}
+      {narrow && text === "Needs Manual Review" ? "Needs Review" : text}
     </span>
   );
 
   const contactRow = (
-    c: { name: string; initials: string },
+    c: { name: string; initials: string; cells?: [string, string] },
     stageText: string,
     extra?: ReactNode,
     style?: React.CSSProperties,
@@ -114,10 +126,10 @@ export default function CrmScene({
       {!narrow ? (
         <>
           <td className={td}>
-            <Hidden width="80%" />
+            {c.cells ? c.cells[0] : <Hidden width="80%" />}
           </td>
           <td className={td}>
-            <Hidden width="65%" />
+            {c.cells ? c.cells[1] : <Hidden width="65%" />}
           </td>
         </>
       ) : null}
@@ -255,8 +267,10 @@ export default function CrmScene({
                       <th className={th}>Name</th>
                       {!narrow ? (
                         <>
-                          <th className={th}>Email</th>
-                          <th className={th}>Phone number</th>
+                          <th className={th}>{crm.middle?.[0] ?? "Email"}</th>
+                          <th className={th}>
+                            {crm.middle?.[1] ?? "Phone number"}
+                          </th>
                         </>
                       ) : null}
                       <th className={th}>

@@ -59,6 +59,8 @@ export type SlackMessage = {
   preview?: string[];
   /** Ask for a decision, with the buttons. */
   buttons?: boolean;
+  /** Lines above the buttons: a link first, then a small note. */
+  notes?: string[];
 };
 
 export type Attachment = {
@@ -228,6 +230,8 @@ export type Beat = BeatBase &
         message: number;
         /** Someone presses Approve. */
         approve?: boolean;
+        /** Someone presses Reject, giving this reason. */
+        reject?: string;
       }
     | { scene: "end" }
   );
@@ -398,13 +402,31 @@ export type Demo = {
     channels: string[];
     bot: string;
     approvedBy: string;
+    /** After "Approved by …"; defaults to the reply being sent. */
+    approvedNote?: string;
     messages: SlackMessage[];
   };
   /** HubSpot's Contacts and Tasks tables ("crm" scenes). */
   crm?: {
     /** Contacts already in the table, under the new lead. */
-    contacts: { name: string; initials: string; stage: string }[];
-    lead: { name: string; initials: string; email: string; phone: string };
+    contacts: {
+      name: string;
+      initials: string;
+      stage: string;
+      /** Shown in the two middle columns instead of blurred details. */
+      cells?: [string, string];
+    }[];
+    lead: {
+      name: string;
+      initials: string;
+      email: string;
+      phone: string;
+      cells?: [string, string];
+    };
+    /** The HubSpot object shown: "Contacts" unless set. */
+    object?: string;
+    /** Headings of the two middle columns: Email and Phone number unless set. */
+    middle?: [string, string];
     /** The lead's lifecycle stage: on arrival, during the sequence, after
      *  the reply. */
     stages: { lead: string; sequence: string; responded: string };
