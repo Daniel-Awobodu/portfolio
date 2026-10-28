@@ -1,6 +1,7 @@
 import { aiOutreach } from "@/lib/demos/ai-outreach";
 import { appointmentReminders } from "@/lib/demos/appointment-reminders";
 import { clientLifecycle } from "@/lib/demos/client-lifecycle";
+import { contentPipeline } from "@/lib/demos/content-pipeline";
 import { crmFollowUps } from "@/lib/demos/crm-follow-ups";
 import { dentalChatbot } from "@/lib/demos/dental-chatbot";
 import { multichannelIntake } from "@/lib/demos/multichannel-intake";
@@ -65,6 +66,7 @@ export const demos: Record<string, Demo> = Object.fromEntries(
     opportunityFeed,
     solarLeads,
     aiOutreach,
+    contentPipeline,
   ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 

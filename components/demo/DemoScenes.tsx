@@ -7,6 +7,7 @@ import FormScene from "@/components/demo/FormScene";
 import InboxScene from "@/components/demo/InboxScene";
 import PhoneScene from "@/components/demo/PhoneScene";
 import CrmScene from "@/components/demo/CrmScene";
+import PostScene from "@/components/demo/PostScene";
 import SlackScene from "@/components/demo/SlackScene";
 import WebFormScene from "@/components/demo/WebFormScene";
 import ZapScene from "@/components/demo/ZapScene";
@@ -130,6 +131,9 @@ export default function DemoScenes({
       ) : null}
       {beat.scene === "crm" ? (
         <CrmScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
+      ) : null}
+      {beat.scene === "post" ? (
+        <PostScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
       ) : null}
       {beat.scene === "webform" ? (
         <WebFormScene demo={demo} t={t} narrow={narrow} />

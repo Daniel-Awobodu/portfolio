@@ -59,6 +59,8 @@ export type SlackMessage = {
   preview?: string[];
   /** Ask for a decision, with the buttons. */
   buttons?: boolean;
+  /** The two buttons: Reject and Approve unless set. */
+  buttonLabels?: [string, string];
   /** Lines above the buttons: a link first, then a small note. */
   notes?: string[];
 };
@@ -208,6 +210,7 @@ export type Beat = BeatBase &
     | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
     | { scene: "webform" }
+    | { scene: "post"; mode: "article" | "social" }
     | {
         scene: "inbox";
         mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
@@ -309,6 +312,17 @@ export type Demo = {
       failed: number;
       reason: string;
     };
+  };
+  /** A published article and its social posts ("post" scenes). */
+  post?: {
+    site: string;
+    title: string;
+    image: string;
+    byline: string;
+    /** Body text; a "## " start marks a heading. */
+    paragraphs: string[];
+    x: { name: string; handle: string; time: string; text: string };
+    linkedin: { name: string; headline: string; time: string; text: string };
   };
   /** A request form on a website, in a browser ("webform" scenes). */
   webform?: {

@@ -194,12 +194,12 @@ export default function SlackScene({
                       <span
                         className={`rounded border px-2.5 py-0.5 font-semibold transition-transform duration-150 ${rejected ? "scale-95 border-[#e01e5a] bg-[#e01e5a]/20 text-white ring-2 ring-[#e01e5a]" : "border-white/30"}`}
                       >
-                        Reject
+                        {msg.buttonLabels?.[0] ?? "Reject"}
                       </span>
                       <span
                         className={`rounded px-2.5 py-0.5 font-semibold text-white transition-transform duration-150 ${pressed ? "scale-95 bg-[#005e46] ring-2 ring-[#2bac76]" : "bg-[#007a5a]"}`}
                       >
-                        Approve
+                        {msg.buttonLabels?.[1] ?? "Approve"}
                       </span>
                     </div>
                   </>
