@@ -134,6 +134,10 @@ export type InboxEmail = {
   time: string;
   /** Matches the order search (highlighted in "match" mode). */
   order?: boolean;
+  /** "sort" mode: the labels the assistant adds, and whether it stars it. */
+  labels?: string[];
+  starred?: boolean;
+  attachment?: Attachment;
 };
 
 export type CallLine = {
@@ -194,7 +198,7 @@ export type Beat = BeatBase &
     | { scene: "form"; mode: "fill" | "thanks" }
     | {
         scene: "inbox";
-        mode: "arrive" | "match" | "pile" | "open" | "thread";
+        mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
         /** "thread" mode: how many of the thread's messages are shown. */
         show?: number;
       }
@@ -240,6 +244,8 @@ export type Demo = {
     open: string;
     files: DriveFile[];
     newFile: DriveFile;
+    /** A folder created for the file, before it opens. */
+    newFolder?: string;
   };
   sheet?: {
     title: string;
@@ -302,6 +308,8 @@ export type Demo = {
   inbox?: {
     count: string;
     emails: InboxEmail[];
+    /** "sort" mode: the label tree in the side bar. */
+    labels?: string[];
     /** The email that arrives in "arrive" mode. */
     newEmail?: InboxEmail;
     /** What the search box shows in "match" mode. */

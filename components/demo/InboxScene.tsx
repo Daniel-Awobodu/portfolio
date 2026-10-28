@@ -19,6 +19,7 @@ function Row({
   className = "",
   style,
   chip,
+  sorted = 0,
 }: {
   email: InboxEmail;
   unread?: boolean;
@@ -26,15 +27,21 @@ function Row({
   className?: string;
   style?: CSSProperties;
   chip?: boolean;
+  /** How far the assistant's labels and star have appeared (0 to 1). */
+  sorted?: number;
 }) {
+  const star = email.starred && sorted > 0.5;
   return (
     <div
       className={`flex h-[clamp(30px,6.4cqh,44px)] items-center gap-3 border-b border-[#f1f3f4] px-3 text-[clamp(11px,1.5cqw,14px)] ${className}`}
       style={style}
     >
       {!narrow ? (
-        <span aria-hidden="true" className="text-[#c4c7c5]">
-          ☆
+        <span
+          aria-hidden="true"
+          className={star ? "text-[#1a73e8]" : "text-[#c4c7c5]"}
+        >
+          {star ? "★" : "☆"}
         </span>
       ) : null}
       <span
@@ -48,11 +55,27 @@ function Row({
             order
           </span>
         ) : null}
+        {email.labels && sorted > 0
+          ? email.labels.map((label) => (
+              <span
+                key={label}
+                className="mr-1 rounded-[3px] border border-[#c4c7c5] bg-[#f1f3f4] px-1 text-[0.8em] text-[#444746]"
+                style={{ opacity: sorted }}
+              >
+                {label}
+              </span>
+            ))
+          : null}
         <span
           className={unread ? "font-bold text-[#202124]" : "text-[#202124]"}
         >
           {email.subject}
         </span>
+        {email.attachment && !narrow ? (
+          <span className="ml-1.5 rounded-full border border-[#dadce0] px-1.5 text-[0.8em] text-[#3c4043]">
+            📎 {email.attachment.name}
+          </span>
+        ) : null}
         {!narrow ? <span> · {email.snippet}</span> : null}
       </span>
       <span
@@ -130,7 +153,7 @@ export default function InboxScene({
   demo: Demo;
   t: number;
   narrow: boolean;
-  mode: "arrive" | "match" | "pile" | "open" | "thread";
+  mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
   show?: number;
 }) {
   const inbox = demo.inbox!;
@@ -234,7 +257,8 @@ export default function InboxScene({
         {open.attachments ? (
           <div className="mt-[clamp(8px,2cqh,16px)] border-t border-dashed border-[#dadce0] pt-2">
             <p className="text-[clamp(11px,1.4cqw,13px)] font-semibold">
-              {open.attachments.length} Attachments
+              {open.attachments.length}{" "}
+              {open.attachments.length === 1 ? "Attachment" : "Attachments"}
               <span className="font-normal text-[#5f6368]">
                 {" "}
                 · Scanned by Gmail
@@ -275,6 +299,20 @@ export default function InboxScene({
             );
           })}
         </div>
+      </div>
+    );
+  } else if (mode === "sort") {
+    body = (
+      <div className="h-full overflow-hidden">
+        {inbox.emails.map((email, i) => (
+          <Row
+            key={email.subject}
+            email={email}
+            narrow={narrow}
+            unread
+            sorted={easeOut(span(t, 0.12 + i * 0.1, 0.24 + i * 0.1))}
+          />
+        ))}
       </div>
     );
   } else if (mode === "pile" && inbox.pile) {
@@ -357,6 +395,16 @@ export default function InboxScene({
             <p className="px-3 py-1.5">Starred</p>
             <p className="px-3 py-1.5">Sent</p>
             <p className="px-3 py-1.5">Drafts</p>
+            {inbox.labels ? (
+              <>
+                <p className="mt-3 px-3 py-1 font-medium">Labels</p>
+                {inbox.labels.map((label) => (
+                  <p key={label} className="truncate px-3 py-1 pl-5">
+                    ▸ {label}
+                  </p>
+                ))}
+              </>
+            ) : null}
           </div>
         ) : null}
         <div className="flex min-w-0 flex-1 flex-col">
