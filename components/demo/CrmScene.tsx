@@ -259,7 +259,9 @@ export default function CrmScene({
                           <th className={th}>Phone number</th>
                         </>
                       ) : null}
-                      <th className={th}>Lifecycle stage</th>
+                      <th className={th}>
+                        {crm.stageLabel ?? "Lifecycle stage"}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>

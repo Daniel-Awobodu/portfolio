@@ -92,12 +92,14 @@ export default function SlackScene({
                     {line}
                   </p>
                 ))}
-                {msg.meta.slice(0, narrow ? 1 : undefined).map(([k, v]) => (
-                  <p key={k} className="truncate">
-                    {k ? `${k}: ` : ""}
-                    {v}
-                  </p>
-                ))}
+                {msg.meta
+                  .slice(0, narrow && msg.items.length ? 1 : undefined)
+                  .map(([k, v]) => (
+                    <p key={k} className="truncate">
+                      {k ? `${k}: ` : ""}
+                      {v}
+                    </p>
+                  ))}
                 {msg.summary ? (
                   <p className="mt-1 font-semibold text-white">{msg.summary}</p>
                 ) : null}

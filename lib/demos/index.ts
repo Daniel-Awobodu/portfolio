@@ -1,4 +1,5 @@
 import { appointmentReminders } from "@/lib/demos/appointment-reminders";
+import { clientLifecycle } from "@/lib/demos/client-lifecycle";
 import { crmFollowUps } from "@/lib/demos/crm-follow-ups";
 import { dentalChatbot } from "@/lib/demos/dental-chatbot";
 import { multichannelIntake } from "@/lib/demos/multichannel-intake";
@@ -57,6 +58,7 @@ export const demos: Record<string, Demo> = Object.fromEntries(
     quoteRequests,
     officeAssistant,
     multichannelIntake,
+    clientLifecycle,
   ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 

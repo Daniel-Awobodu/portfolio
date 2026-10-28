@@ -315,7 +315,9 @@ export type Demo = {
     /** The long answer, typed last. */
     request: [string, string];
     button: string;
-    thanks: { title: string; body: string; reference: string };
+    /** The button in the site's header. */
+    cta: string;
+    thanks: { title: string; body: string; reference?: string };
   };
   form?: {
     site: string;
@@ -405,6 +407,8 @@ export type Demo = {
      *  the reply. */
     stages: { lead: string; sequence: string; responded: string };
     task: { title: string; stage: string };
+    /** The status column's heading; "Lifecycle stage" when omitted. */
+    stageLabel?: string;
   };
   end: { headline: string; points: { value: string; label: string }[] };
   beats: Beat[];

@@ -210,6 +210,7 @@ export const multichannelIntake: Demo = {
       "The state regulator found that patient records on our shared drive were open to all staff. We must respond within 14 days. Can you help us prepare?",
     ],
     button: "Send request",
+    cta: "Book a consultation",
     thanks: {
       title: "Request received",
       body: "An advisor will reach out within one business day. Quote this reference in any follow-up:",
