@@ -40,67 +40,47 @@
   "order-extraction": [
     {
       "text": "Over a thousand past orders sat in our Gmail inbox, one email each, with no customer list.",
-      "ms": 5094
+      "ms": 5773
     },
     {
       "text": "Each product had its own order form, so no two emails looked quite the same.",
-      "ms": 4284
+      "ms": 4467
     },
     {
-      "text": "One run of the backfill workflow in n8n starts the job.",
-      "ms": 4232
+      "text": "One run of the workflow pulls in every old order email, skips any already saved, and works through the rest.",
+      "ms": 6322
     },
     {
-      "text": "It pulls every past order email from Gmail.",
-      "ms": 2873
+      "text": "For each email, AI reads it the way a person would, and pulls out the customer, product and price.",
+      "ms": 5982
     },
     {
-      "text": "It reads the orders already in the sheet",
-      "ms": 2325
+      "text": "An order is only saved if it has a usable phone number. This one does.",
+      "ms": 4728
     },
     {
-      "text": "and skips them, so no order can ever be logged twice.",
-      "ms": 3370
-    },
-    {
-      "text": "Then it works through the orders in paced batches.",
-      "ms": 3657
-    },
-    {
-      "text": "Each email goes to the order reader, a separate workflow.",
-      "ms": 3500
-    },
-    {
-      "text": "The AI, Llama 3.1 running on Groq, reads the email for meaning, wherever each detail sits.",
-      "ms": 6034
-    },
-    {
-      "text": "An order is only kept if it has a usable phone number. This one does.",
-      "ms": 4258
-    },
-    {
-      "text": "For bundles, the real quantity comes from the price table, not a guess.",
-      "ms": 3892
-    },
-    {
-      "text": "The pieces come together as one clean order.",
-      "ms": 2560
-    },
-    {
-      "text": "Back in the backfill, it paces itself, then writes the order, keyed to its Gmail ID.",
-      "ms": 5538
+      "text": "Behind it, a second workflow reads and checks each order, and takes bundle quantities from the price table.",
+      "ms": 5930
     },
     {
       "text": "Order after order, the sheet fills up: all one thousand, one hundred and forty-five, in a single day.",
-      "ms": 5042
+      "ms": 5407
     },
     {
-      "text": "Orders that fail the checks, and duplicates, go to the Invalid tab with the reason. Nothing is lost.",
-      "ms": 5799
+      "text": "An email with no usable phone number isn't guessed at. It goes to review, with the reason.",
+      "ms": 4963
+    },
+    {
+      "text": "Failed checks and duplicates wait in the Invalid tab, so nothing is lost.",
+      "ms": 4101
+    },
+    {
+      "text": "Now every past buyer is one search away, so a new launch can start with people who already bought.",
+      "ms": 5303
     },
     {
       "text": "From a buried inbox to a customer list we can sell to.",
-      "ms": 3318
+      "ms": 3605
     }
   ],
   "voice-receptionist": [

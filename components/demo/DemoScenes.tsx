@@ -2,6 +2,7 @@ import { DriveScene, EndScene, SheetScene } from "@/components/demo/AppScenes";
 import CalendarScene from "@/components/demo/CalendarScene";
 import CallScene from "@/components/demo/CallScene";
 import CanvasScene, { flowOf } from "@/components/demo/CanvasScene";
+import ExtractScene from "@/components/demo/ExtractScene";
 import FormScene from "@/components/demo/FormScene";
 import InboxScene from "@/components/demo/InboxScene";
 import PhoneScene from "@/components/demo/PhoneScene";
@@ -88,6 +89,9 @@ export default function DemoScenes({
       ) : null}
       {beat.scene === "sheet" ? (
         <SheetScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
+      ) : null}
+      {beat.scene === "extract" ? (
+        <ExtractScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
       ) : null}
       {beat.scene === "form" ? (
         <FormScene demo={demo} t={t} mode={beat.mode} />

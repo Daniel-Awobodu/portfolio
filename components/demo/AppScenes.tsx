@@ -255,7 +255,7 @@ export function SheetScene({
   demo: Demo;
   t: number;
   narrow: boolean;
-  mode?: "type" | "stream" | "invalid";
+  mode?: "type" | "stream" | "invalid" | "filter";
 }) {
   const sheet = demo.sheet!;
   const frame = (children: ReactNode, fx: string, tab: number) => (
@@ -323,6 +323,56 @@ export function SheetScene({
         ) : null}
       </>,
       written === total ? "" : sample[(written - 1) % sample.length][cols[0]],
+      0,
+    );
+  }
+
+  if (mode === "filter" && sheet.filter) {
+    const cols = narrow ? sheet.narrowColumns : sheet.wideColumns;
+    const typed = reveal(sheet.filter.label, span(t, 0.08, 0.3));
+    const narrowed = t >= 0.34;
+    return frame(
+      <>
+        <div className="flex items-center gap-2 border-b border-[#e3e6e8] bg-[#f8f9fa] px-3 py-1.5 text-[clamp(10px,1.3cqw,12px)] text-[#3c4043]">
+          <span aria-hidden="true">⏷</span>
+          <span className="rounded-full bg-[#e6f4ea] px-2.5 py-0.5 font-medium text-[#188038]">
+            {typed || " "}
+          </span>
+        </div>
+        <table className="w-full table-fixed border-collapse text-[clamp(10px,1.35cqw,13px)]">
+          <thead>
+            <HeaderRow count={cols.length} wide />
+          </thead>
+          <tbody>
+            <tr>
+              <td className={rowHead}>1</td>
+              {cols.map((c) => (
+                <td key={c} className={`${cell} font-semibold`}>
+                  {sheet.columns[c]}
+                </td>
+              ))}
+            </tr>
+            {(narrowed ? sheet.filter.rows : sheet.stream!.sample).map(
+              (row, r) => (
+                <tr
+                  key={`${narrowed}-${r}`}
+                  className={narrowed ? "demo-fade bg-[#e6f4ea]/40" : ""}
+                >
+                  <td className={rowHead}>
+                    {narrowed ? sheet.filter!.rowNumbers[r] : r + 2}
+                  </td>
+                  {cols.map((c) => (
+                    <td key={c} className={cell}>
+                      {row[c]}
+                    </td>
+                  ))}
+                </tr>
+              ),
+            )}
+          </tbody>
+        </table>
+      </>,
+      "",
       0,
     );
   }

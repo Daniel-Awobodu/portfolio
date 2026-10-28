@@ -151,7 +151,8 @@ export type Beat = BeatBase &
         output?: Output;
       }
     | { scene: "drive" }
-    | { scene: "sheet"; mode?: "type" | "stream" | "invalid" }
+    | { scene: "sheet"; mode?: "type" | "stream" | "invalid" | "filter" }
+    | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
     | { scene: "inbox"; mode: "arrive" | "match" | "pile" | "open" }
     | { scene: "zap"; step: number; output?: Output }
@@ -204,6 +205,23 @@ export type Demo = {
       rows: string[][];
       wideColumns: number[];
       narrowColumns: number[];
+    };
+    /** "filter" mode: the sheet narrowed to one product, as a search. */
+    filter?: { label: string; rows: string[][]; rowNumbers: number[] };
+  };
+  /** The AI reading an email into a clean record ("extract" scenes). The
+   *  email is `inbox.open`; each row lines up with one of its body lines. */
+  extract?: {
+    title: string;
+    rows: Output;
+    check: string;
+    saved: string;
+    invalid: {
+      email: { from: string; subject: string; time: string; body: Output };
+      rows: Output;
+      /** Index of the row that fails, shown in red. */
+      failed: number;
+      reason: string;
     };
   };
   form?: {
