@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { easeOut, span } from "@/components/demo/anim";
 import { Window } from "@/components/demo/AppScenes";
 import type { Demo, FieldKind } from "@/lib/demos/types";
@@ -115,9 +115,27 @@ export function AirtableScene({
   const cell =
     "truncate border-r border-b border-[#e1e1e1] px-2 py-[clamp(5px,1.1cqh,9px)]";
 
+  // Each asked-for item finds its row in turn.
+  const asked = sheet.matches?.items ?? [];
+  const gap = Math.min(0.15, 0.5 / Math.max(1, asked.length));
+  const shown = asked.map((item, i) => ({
+    ...item,
+    p: easeOut(span(t, 0.22 + i * gap, 0.3 + i * gap)),
+  }));
+  const matchFor = (r: number) => shown.find((m) => m.row === r && m.p > 0);
+  const misses = shown.filter((m) => m.row === undefined);
+  const matchCell = (text: string, p: number) => (
+    <td
+      className="border-b border-[#e1e1e1] px-2 py-[clamp(5px,1.1cqh,9px)] leading-tight font-semibold text-[#7a4b00]"
+      style={{ opacity: p }}
+    >
+      ✓ “{text}”
+    </td>
+  );
+
   return (
     <Window title={`${sheet.title}: Grid view · Airtable`} icon={<BaseLogo />}>
-      <div className="flex h-full flex-col text-[clamp(10px,1.3cqw,13px)] text-[#1d1f25]">
+      <div className="relative flex h-full flex-col text-[clamp(10px,1.3cqw,13px)] text-[#1d1f25]">
         {/* The base's own header, when it has a name */}
         {sheet.base ? (
           <div className="flex items-center gap-2 border-b border-[#f3c9b8] bg-white px-3 py-1.5 whitespace-nowrap">
@@ -181,6 +199,17 @@ export function AirtableScene({
           ) : null}
         </div>
 
+        {/* What matched nothing, above the grid so it's always in view */}
+        {misses.map((m) => (
+          <p
+            key={m.text}
+            className="border-b border-[#f5c2bd] bg-[#ffe9e7] px-3 py-1.5 font-semibold text-[#b42318]"
+            style={{ opacity: m.p }}
+          >
+            ✗ “{m.text}”: {sheet.matches?.none ?? "no match"}
+          </p>
+        ))}
+
         {/* The grid */}
         <div className="relative min-h-0 flex-1 overflow-hidden">
           <table className="w-full table-fixed border-collapse">
@@ -198,29 +227,45 @@ export function AirtableScene({
                     </span>
                   </th>
                 ))}
+                {sheet.matches ? (
+                  <th className="truncate border-b border-[#e1e1e1] bg-[#fff1c2] px-2 py-1.5 font-semibold text-[#7a4b00]">
+                    {sheet.matches.label}
+                  </th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
-              {sheet.rows.map((row, r) => (
-                <tr
-                  key={r}
-                  className="transition-colors duration-300"
-                  style={
-                    sheet.highlight?.includes(r) && t >= 0.4
-                      ? { background: "#fff1c2" }
-                      : undefined
-                  }
-                >
-                  <td className="border-b border-[#e1e1e1] text-center text-[#8a8f98] tabular-nums">
-                    {r + 1}
-                  </td>
-                  {cols.map((c) => (
-                    <td key={c} className={cell}>
-                      {value(row, c)}
+              {sheet.rows.map((row, r) => {
+                const match = matchFor(r);
+                return (
+                  <tr
+                    key={r}
+                    className="transition-colors duration-300"
+                    style={
+                      (sheet.highlight?.includes(r) && t >= 0.4) ||
+                      (match && match.p > 0.4)
+                        ? { background: "#fff1c2" }
+                        : undefined
+                    }
+                  >
+                    <td className="border-b border-[#e1e1e1] text-center text-[#8a8f98] tabular-nums">
+                      {r + 1}
                     </td>
-                  ))}
-                </tr>
-              ))}
+                    {cols.map((c) => (
+                      <td key={c} className={cell}>
+                        {value(row, c)}
+                      </td>
+                    ))}
+                    {sheet.matches ? (
+                      match ? (
+                        matchCell(match.text, match.p)
+                      ) : (
+                        <td className={cell} />
+                      )
+                    ) : null}
+                  </tr>
+                );
+              })}
               {fresh.map(({ row, p }, i) => (
                 <tr
                   key={`new-${i}`}
@@ -249,6 +294,7 @@ export function AirtableScene({
                     &nbsp;
                   </td>
                 ))}
+                {sheet.matches ? <td className={cell} /> : null}
               </tr>
             </tbody>
           </table>
@@ -256,8 +302,98 @@ export function AirtableScene({
         <p className="border-t border-[#e1e1e1] bg-white px-3 py-1 text-[0.9em] text-[#8a8f98]">
           {count} records
         </p>
+        {sheet.record ? (
+          <ExpandedRecord
+            record={sheet.record}
+            table={sheet.title}
+            t={t}
+            narrow={narrow}
+            value={(kind, text) =>
+              kind === "select" ? value([text], 0) : text
+            }
+          />
+        ) : null}
       </div>
     </Window>
+  );
+}
+
+/**
+ * Airtable's expanded record: the record opened over the grid, every field
+ * stacked under its name, long text in full.
+ */
+function ExpandedRecord({
+  record,
+  table,
+  t,
+  narrow,
+  value,
+}: {
+  record: NonNullable<Sheet["record"]>;
+  table: string;
+  t: number;
+  narrow: boolean;
+  value: (kind: FieldKind, text: string) => ReactNode;
+}) {
+  const open = easeOut(span(t, 0.04, 0.16));
+  // Late in the beat, the fields scroll up just far enough to show the last.
+  const box = useRef<HTMLDivElement>(null);
+  const fields = useRef<HTMLDivElement>(null);
+  const [overflow, setOverflow] = useState(0);
+  useLayoutEffect(() => {
+    if (!box.current || !fields.current) return;
+    const extra = Math.max(
+      0,
+      fields.current.scrollHeight - box.current.clientHeight,
+    );
+    setOverflow((was) => (Math.abs(was - extra) > 1 ? extra : was));
+  });
+  const scroll = easeOut(span(t, 0.5, 0.75)) * overflow;
+  return (
+    <div
+      className="absolute inset-0 z-10 flex items-center justify-center bg-black/35"
+      style={{ opacity: open }}
+    >
+      <div
+        className={`flex h-[92%] flex-col overflow-hidden rounded-lg bg-white shadow-2xl ${narrow ? "w-[94%]" : "w-[72%]"}`}
+        style={{ transform: `translateY(${(1 - open) * 14}px)` }}
+      >
+        <div className="border-b border-[#e1e1e1] px-[clamp(10px,2cqw,18px)] py-2">
+          <p className="text-[0.85em] text-[#8a8f98]">{table}</p>
+          <p className="truncate text-[1.25em] font-semibold">{record.title}</p>
+        </div>
+        <div
+          ref={box}
+          className="min-h-0 flex-1 overflow-hidden px-[clamp(10px,2cqw,18px)] py-2.5"
+        >
+          <div
+            ref={fields}
+            className={`grid gap-x-4 gap-y-[clamp(6px,1.4cqh,12px)] ${narrow ? "grid-cols-1" : "grid-cols-2"}`}
+            style={{ transform: `translateY(-${scroll}px)` }}
+          >
+            {record.fields.map((field, i) => (
+              <div
+                key={field.label}
+                className={field.kind === "long" ? "col-span-full" : ""}
+                style={{
+                  opacity: easeOut(span(t, 0.14 + i * 0.05, 0.22 + i * 0.05)),
+                }}
+              >
+                <p className="flex items-center gap-1.5 text-[0.92em] text-[#41454d]">
+                  <FieldIcon kind={field.kind} />
+                  {field.label}
+                </p>
+                <div
+                  className={`mt-1 rounded-md border border-[#e1e1e1] px-2.5 py-1.5 ${field.kind === "long" ? "leading-snug" : "truncate"}`}
+                >
+                  {value(field.kind, field.value)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

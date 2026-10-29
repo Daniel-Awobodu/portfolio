@@ -69,6 +69,109 @@ export const clientLifecycle: Demo = {
       },
     ],
   },
+  sites: {
+    termii: {
+      name: "Termii",
+      logo: "T",
+      color: "#1f8f5f",
+      dark: true,
+      nav: ["Overview", "Messaging", "Sender IDs"],
+      title: "Message log",
+      blocks: [
+        {
+          kind: "list",
+          rows: [
+            {
+              title: "Outgoing message from OpsPilot",
+              sub: "Today 11:01 · Hello Chika, your request has been received. A member of the OpsPilot team…",
+              mark: "ok",
+              note: "Delivered",
+            },
+            {
+              title: "Outgoing message from OpsPilot",
+              sub: "Yesterday 16:12 · Hello Grace, your request has been received. A member of the OpsPilot team…",
+              mark: "ok",
+              note: "Delivered",
+            },
+            {
+              title: "Outgoing message from OpsPilot",
+              sub: "Yesterday 09:47 · Hello Tunde, your request has been received. A member of the OpsPilot team…",
+              mark: "ok",
+              note: "Delivered",
+            },
+          ],
+        },
+      ],
+    },
+    stripe: {
+      name: "Stripe",
+      logo: "S",
+      color: "#635bff",
+      nav: ["Home", "Balances", "Transactions", "Customers"],
+      search: "Search",
+      title: "Transactions",
+      blocks: [
+        {
+          kind: "table",
+          columns: ["Amount", "Status", "Customer", "Date"],
+          rows: [
+            ["$30.00", "Succeeded", "Chika Obi", "Today, 2:14 PM"],
+            ["$90.00", "Succeeded", "Bayo Adeyemi", "Yesterday, 4:31 PM"],
+            ["$30.00", "Succeeded", "Halima Musa", "Yesterday, 9:52 AM"],
+          ],
+          highlight: [0],
+          pill: 1,
+        },
+      ],
+    },
+  },
+  sheets: {
+    failed: {
+      title: "Failed Leads",
+      tabs: ["Failed Leads"],
+      columns: ["Date", "Name", "Email", "Phone", "Source"],
+      rows: [],
+      newRow: [
+        "12/10/2026 11:20",
+        "Emeka Nwosu",
+        "emeka@•••••.com",
+        "",
+        "instagram",
+      ],
+      wideColumns: [0, 1, 2, 3, 4],
+      narrowColumns: [1, 3, 4],
+    },
+    payments: {
+      title: "Payment Log",
+      tabs: ["Payment Log"],
+      columns: ["Date", "Customer", "Email", "Plan", "Amount"],
+      rows: [
+        [
+          "11/10/2026 16:31",
+          "Bayo Adeyemi",
+          "bayo@•••••.com",
+          "Growth",
+          "$90.00",
+        ],
+        [
+          "11/10/2026 09:52",
+          "Halima Musa",
+          "halima@•••••.com",
+          "Starter",
+          "$30.00",
+        ],
+      ],
+      newRow: [
+        "12/10/2026 14:14",
+        "Chika Obi",
+        "chika@•••••.com",
+        "Starter",
+        "$30.00",
+      ],
+      wideColumns: [0, 1, 2, 3, 4],
+      narrowColumns: [1, 3, 4],
+    },
+  },
   crm: {
     contacts: [
       { name: "Tunde Bello", initials: "TB", stage: "New" },
@@ -348,29 +451,17 @@ export const clientLifecycle: Demo = {
     {
       scene: "canvas",
       flow: "leads",
-      node: "setPhoneNo",
-      via: ["webhook", "if1"],
-      duration: 5600,
+      node: "sendSms",
+      via: ["webhook", "if1", "setPhoneNo", "createOrUpdateAContact1"],
+      duration: 7400,
       caption:
-        "Her name, email and phone are checked, and the number is cleaned into international format before any text goes out.",
+        "In n8n, her details are checked and her number is cleaned into international format. Then she's added to HubSpot, and a welcome text goes out through Termii.",
+      say: "In n eight n, her details are checked and her number is cleaned into international format. Then she's added to HubSpot, and a welcome text goes out through Termii.",
       output: [
         ["required", "name, email, phone: all there"],
-        ["typed", "0803-123 4567"],
-        ["cleaned", "+2348031234567"],
-      ],
-    },
-    {
-      scene: "canvas",
-      flow: "leads",
-      node: "sendSms",
-      via: ["createOrUpdateAContact1"],
-      duration: 5600,
-      caption:
-        "She's added to HubSpot, and a welcome text goes out through Termii. Whether it sent is read from Termii's reply, not assumed.",
-      output: [
+        ["cleaned", "0803-123 4567 → +2348031234567"],
         ["HubSpot", "contact created, status New"],
-        ["Termii reply", "message accepted"],
-        ["SMS sent?", "Yes"],
+        ["SMS sent?", "Yes, from Termii's reply"],
       ],
     },
     {
@@ -389,6 +480,14 @@ export const clientLifecycle: Demo = {
       ],
     },
     {
+      scene: "site",
+      site: "termii",
+      label: "Termii · SMS log",
+      duration: 5200,
+      caption:
+        "In Termii, the text shows as delivered. Whether it sent is read from Termii's reply, never assumed.",
+    },
+    {
       scene: "slack",
       message: 0,
       duration: 5000,
@@ -403,45 +502,49 @@ export const clientLifecycle: Demo = {
         "In HubSpot, she's a new contact with lead status New. Nobody typed a thing.",
     },
     {
-      scene: "canvas",
-      flow: "leads",
-      run: 1,
-      node: "failedLogs",
-      via: ["webhook", "if1"],
+      scene: "sheet",
+      table: "failed",
+      label: "Failed Leads · Google Sheets",
       duration: 5200,
       caption:
         "A form that arrives without a phone number goes to a Failed Leads sheet, so nothing breaks and nothing is lost.",
-      output: [
-        ["phone", "missing"],
-        ["saved to", "Failed Leads sheet"],
-      ],
     },
     {
-      scene: "canvas",
-      flow: "payments",
-      node: "searchContacts",
-      via: ["stripeTrigger"],
-      duration: 5600,
+      scene: "site",
+      site: "stripe",
+      label: "Stripe · Payments",
+      duration: 4800,
       caption:
-        "When she pays through Stripe, her HubSpot contact is looked up. If HubSpot is briefly down, it tries again, up to 3 times.",
-      output: [
-        ["Stripe", "checkout completed, $30.00"],
-        ["try 1", "HubSpot busy: wait 5 s"],
-        ["try 2", "found Chika Obi"],
-      ],
+        "When she pays through Stripe, the payment workflow starts on its own.",
     },
     {
       scene: "canvas",
       flow: "payments",
       node: "paymentLog",
-      via: ["ifContactExists", "createOrUpdateAContact"],
-      duration: 5400,
-      caption:
-        "Her plan and last payment date are updated, and the payment is logged. A payer missing from HubSpot would email the team instead.",
-      output: [
-        ["HubSpot", "plan and last payment updated"],
-        ["Payment Log", "row added"],
+      via: [
+        "stripeTrigger",
+        "searchContacts",
+        "ifContactExists",
+        "createOrUpdateAContact",
       ],
+      duration: 7600,
+      caption:
+        "n8n finds her in HubSpot, trying again up to 3 times if HubSpot is busy. Her plan and last payment date are updated, and the payment is logged.",
+      say: "n eight n finds her in HubSpot, trying again up to three times if HubSpot is busy. Her plan and last payment date are updated, and the payment is logged.",
+      output: [
+        ["Stripe", "checkout completed, $30.00"],
+        ["try 1", "HubSpot busy: wait 5 s"],
+        ["try 2", "found Chika Obi"],
+        ["HubSpot", "plan and last payment updated"],
+      ],
+    },
+    {
+      scene: "sheet",
+      table: "payments",
+      label: "Payment Log · Google Sheets",
+      duration: 5200,
+      caption:
+        "Every payment gets a clean row in the payment log. That's what the Monday report is built from.",
     },
     {
       scene: "canvas",

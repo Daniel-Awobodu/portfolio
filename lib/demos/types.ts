@@ -273,7 +273,11 @@ export type Beat = BeatBase &
         via?: string[];
         output?: Output;
       }
-    | { scene: "drive" }
+    | {
+        scene: "drive";
+        /** A key of `drives`; the demo's `drive` when omitted. */
+        drive?: string;
+      }
     | {
         scene: "sheet";
         mode?: "type" | "stream" | "invalid" | "filter";
@@ -377,6 +381,19 @@ export type Demo = {
     createdAt?: string[];
     /** Airtable: rows the workflow finds, highlighted after a moment. */
     highlight?: number[];
+    /** Airtable: what a message asked for, matched to rows one by one in an
+     *  extra column headed `label`. An item without a `row` matched nothing,
+     *  and is shown above the grid, followed by `none`. */
+    matches?: {
+      label: string;
+      none?: string;
+      items: { text: string; row?: number }[];
+    };
+    /** Airtable: one record opened in full over the grid. */
+    record?: {
+      title: string;
+      fields: { label: string; kind: FieldKind; value: string }[];
+    };
   };
   /** The AI reading an email into a clean record ("extract" scenes). The
    *  email is `inbox.open`; each row lines up with one of its body lines. */
@@ -393,6 +410,9 @@ export type Demo = {
       reason: string;
     };
   };
+  /** More Drive views, for demos that show more than one ("drive" beats
+   *  name them with `drive`). */
+  drives?: Record<string, NonNullable<Demo["drive"]>>;
   /** More tables, for demos that show more than one ("sheet" beats name
    *  them with `table`). */
   sheets?: Record<string, NonNullable<Demo["sheet"]>>;

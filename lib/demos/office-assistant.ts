@@ -323,6 +323,21 @@ export const officeAssistant: Demo = {
       ],
     },
   },
+  drives: {
+    acme: {
+      path: ["My Drive", "Invoices"],
+      folders: ["Acme", "Webflow"],
+      open: "Acme",
+      files: [
+        { name: "Acme_Invoice_April.pdf", size: "94 KB", modified: "Jun 3" },
+      ],
+      newFile: {
+        name: "Acme_Invoice_May.pdf",
+        size: "97 KB",
+        modified: "Jul 6",
+      },
+    },
+  },
   drive: {
     path: ["My Drive", "Invoices"],
     folders: ["Acme", "Webflow"],
@@ -358,49 +373,34 @@ export const officeAssistant: Demo = {
     },
     {
       scene: "canvas",
-      node: "basicLLMChain1",
+      node: "matchCategories",
       via: [
         "gmailTrigger",
         "setBinary",
         "attachmentType",
         "extractFromFile",
         "setClassifyingText",
+        "basicLLMChain1",
+        "extractAIOutput",
       ],
-      duration: 6000,
+      duration: 7000,
       caption:
-        "One AI step reads it, attachment included. The invoice decides the lane, and the deadline and the meeting become flags.",
+        "In n8n, one AI step reads it, attachment included. The invoice decides the lane, the deadline and the meeting become flags, and code checks the answer.",
+      say: "In n eight n, one AI step reads it, attachment included. The invoice decides the lane, the deadline and the meeting become flags, and code checks the answer.",
       output: [
         ["lane", "invoice"],
         ["urgent", "yes: deck by 2pm"],
         ["follow-up", "yes: move Thursday"],
-        ["vendor", "Acme Co."],
-        ["invoice total", "$132.22, tax included"],
-      ],
-    },
-    {
-      scene: "canvas",
-      node: "matchCategories",
-      via: ["extractAIOutput"],
-      duration: 5000,
-      caption:
-        "Code checks the answer first. A lane it doesn't know would stop the run, instead of filing the email in the wrong place.",
-      output: [
-        ["lane", "one of the three"],
-        ["flags", "clear yes or no"],
         ["vendor", "Acme Co. → Acme"],
+        ["check", "passed"],
       ],
     },
     {
-      scene: "canvas",
-      node: "uploadFile1",
-      via: ["searchFolders", "ifFolderExist", "merge1"],
+      scene: "drive",
+      drive: "acme",
       duration: 5200,
       caption:
-        "Acme already has a folder, so the invoice is filed there. The email is starred, and a reminder is set.",
-      output: [
-        ["folder", "Invoices / Acme: found"],
-        ["filed", "Acme_Invoice_May.pdf"],
-      ],
+        "Acme already has a folder in Google Drive, so the invoice is filed there. One vendor, one folder.",
     },
     {
       scene: "calendar",

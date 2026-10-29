@@ -92,7 +92,13 @@ export default function DemoScenes({
         />
       ) : null}
       {beat.scene === "drive" ? (
-        <DriveScene demo={demo} t={t} narrow={narrow} />
+        <DriveScene
+          demo={
+            beat.drive ? { ...demo, drive: demo.drives![beat.drive] } : demo
+          }
+          t={t}
+          narrow={narrow}
+        />
       ) : null}
       {beat.scene === "sheet" ? (
         <SheetScene

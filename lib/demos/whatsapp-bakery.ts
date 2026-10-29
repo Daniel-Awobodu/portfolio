@@ -35,6 +35,32 @@ const summary: ChatMessage = {
   ].join("\n"),
 };
 
+/** The bakery's menu table: what every order is checked against. */
+const menu: NonNullable<Demo["sheet"]> = {
+  title: "Menu",
+  app: "airtable",
+  tables: ["Menu", "Orders", "Conversations", "Message Log", "Bakery Info"],
+  columns: ["Item", "Also called", "Price", "Days' notice"],
+  fieldKinds: ["text", "long", "currency", "number"],
+  rows: [
+    ["White Bloomer", "white loaf, bloomer", "£3.80", "1"],
+    ["Sourdough Loaf", "sourdough", "£5.20", "1"],
+    ["Bread Roll", "bap, barm, cob", "£0.60", "1"],
+    ["Sausage Roll", "sausage rolls", "£3.20", "1"],
+    ["Chelsea Bun", "chelsea buns", "£2.80", "1"],
+    ["Victoria Sponge", "sponge cake", "£18.00", "2"],
+  ],
+  wideColumns: [0, 1, 2, 3],
+  narrowColumns: [0, 2],
+};
+
+const voiceNote: ChatMessage = {
+  from: "me",
+  time: "11:40",
+  voice: "0:06",
+  text: "“A sardine loaf and two sourdough for Sunday, please.”",
+};
+
 export const whatsappBakery: Demo = {
   slug: "whatsapp-bakery",
   journey: "from a customer’s WhatsApp message to the bakery’s order book",
@@ -98,6 +124,27 @@ export const whatsappBakery: Demo = {
     narrowColumns: [1, 2, 3],
     fieldKinds: ["text", "text", "date", "long", "currency", "select"],
     tables: ["Menu", "Orders", "Conversations", "Message Log", "Bakery Info"],
+  },
+  sheets: {
+    menu: {
+      ...menu,
+      matches: {
+        label: "In the message",
+        items: [
+          { text: "3 sourdough", row: 1 },
+          { text: "10 sausage rolls", row: 3 },
+          { text: "5 chelsea buns", row: 4 },
+        ],
+      },
+    },
+    menuVoice: {
+      ...menu,
+      matches: {
+        label: "In the voice note",
+        none: "not on the menu",
+        items: [{ text: "a sardine loaf" }, { text: "two sourdough", row: 1 }],
+      },
+    },
   },
   outputUnder: true,
   workflows: {
@@ -668,7 +715,8 @@ export const whatsappBakery: Demo = {
       ],
       duration: 5600,
       caption:
-        "Plain rules answer greetings, menus and YES for free. This message is a real order, so it goes on to the AI.",
+        "In n8n, plain rules answer greetings, menus and YES for free. This message is a real order, so it goes on to the AI.",
+      say: "In n eight n, plain rules answer greetings, menus and YES for free. This message is a real order, so it goes on to the AI.",
       output: [
         ["message", "3 items, 3 days"],
         ["simple reply?", "no: an order"],
@@ -696,17 +744,12 @@ export const whatsappBakery: Demo = {
       ],
     },
     {
-      scene: "canvas",
-      flow: "order",
-      node: "safetyChecks",
-      duration: 4800,
+      scene: "sheet",
+      table: "menu",
+      label: "Menu · Airtable",
+      duration: 6400,
       caption:
-        "Then code checks every detail. Prices come from the menu, never from the AI.",
-      output: [
-        ["items", "all on the menu"],
-        ["prices", "from the menu"],
-        ["days", "open, enough notice"],
-      ],
+        "Then code checks each item against the bakery's menu in Airtable. All three match, and every price comes from the menu, never from the AI.",
     },
     {
       scene: "chat",
@@ -743,21 +786,33 @@ export const whatsappBakery: Demo = {
     },
     {
       scene: "chat",
-      duration: 7200,
+      duration: 4800,
       caption:
-        "Voice notes work too. Ask for bread it doesn't sell, on a day it's closed, and it says so instead of guessing.",
+        "Voice notes work too. This one asks for a sardine loaf and two sourdough, for Sunday.",
       messages: [
-        {
-          from: "me",
-          at: 0.06,
-          time: "11:40",
-          voice: "0:06",
-          text: "“A sardine loaf and two sourdough for Sunday, please.”",
-        },
-        { from: "them", typing: true, at: 0.18, until: 0.4, time: "11:40" },
+        { ...voiceNote, at: 0.08 },
+        { from: "them", typing: true, at: 0.5, time: "11:40" },
+      ],
+    },
+    {
+      scene: "sheet",
+      table: "menuVoice",
+      label: "Menu · Airtable",
+      duration: 5600,
+      caption:
+        "Sourdough is on the menu. A sardine loaf isn't, so it's left off, not swapped for something else.",
+    },
+    {
+      scene: "chat",
+      duration: 5600,
+      caption:
+        "The bakery is closed on Sundays, so it offers Monday instead, and waits for a YES.",
+      messages: [
+        voiceNote,
+        { from: "them", typing: true, at: 0.04, until: 0.18, time: "11:40" },
         {
           from: "them",
-          at: 0.4,
+          at: 0.18,
           time: "11:41",
           text: "Sorry, we don't sell sardine bread, so I've left that off. We're closed on Sundays, so the earliest is Monday 19 October.\n\n2 × Sourdough Loaf · £10.40\nReply YES to confirm.",
         },

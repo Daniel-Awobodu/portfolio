@@ -11,6 +11,73 @@ import type { Demo } from "@/lib/demos/types";
 
 const reference = "SHQ-261005-XLL6Q6";
 
+/** The intake table: every request, whichever channel it came from. */
+const requests: NonNullable<Demo["sheet"]> = {
+  title: "Requests",
+  app: "airtable",
+  columns: [
+    "Source",
+    "Requester Name",
+    "Requester Org",
+    "Category",
+    "Urgency",
+    "AI Confidence",
+    "Classification Notes",
+  ],
+  fieldKinds: ["select", "text", "text", "select", "select", "number", "long"],
+  rows: [
+    [
+      "Internal Note",
+      "Dr Femi Adebayo",
+      "Riverside Specialist Hospital",
+      "Billing & Reimbursement",
+      "Normal",
+      "0.98",
+      "Logged by Anne after a call",
+    ],
+    [
+      "Website Form",
+      "Kemi Adeyemi",
+      "Brightpath Clinics",
+      "Staffing & Training",
+      "Low",
+      "0.98",
+      "",
+    ],
+    [
+      "Email",
+      "Tolu Martins",
+      "",
+      "Regulatory & Compliance",
+      "Normal",
+      "0.96",
+      "",
+    ],
+  ],
+  newRows: [
+    [
+      "Website Form",
+      "Adaeze Nnaji",
+      "Lakeside Medical Group",
+      "Regulatory & Compliance",
+      "Critical",
+      "0.99",
+      "Patient details: handle with care",
+    ],
+    [
+      "Email",
+      "Tolu Martins",
+      "",
+      "Regulatory & Compliance",
+      "Normal",
+      "0.98",
+      "Follow-up on an earlier email",
+    ],
+  ],
+  wideColumns: [0, 1, 3, 4, 5, 6],
+  narrowColumns: [0, 1, 4],
+};
+
 export const multichannelIntake: Demo = {
   slug: "multichannel-intake",
   journey: "from a request on any channel to one sorted table",
@@ -19,6 +86,7 @@ export const multichannelIntake: Demo = {
     canvas: "The intake workflow · n8n",
     slack: "Team alerts · Slack",
     sheet: "Intake table · Airtable",
+    inbox: "Requests inbox · Gmail",
     end: "Done",
   },
   outputUnder: true,
@@ -242,78 +310,76 @@ export const multichannelIntake: Demo = {
       },
     ],
   },
-  sheet: {
-    title: "Requests",
-    app: "airtable",
-    columns: [
-      "Source",
-      "Requester Name",
-      "Requester Org",
-      "Category",
-      "Urgency",
-      "AI Confidence",
-      "Classification Notes",
+  sheet: requests,
+  sheets: {
+    record: {
+      ...requests,
+      rows: [...requests.rows, requests.newRows![0]],
+      newRows: undefined,
+      record: {
+        title: "Regulator Response on Shared-Drive Records",
+        fields: [
+          { label: "Reference", kind: "text", value: reference },
+          { label: "Source", kind: "select", value: "Website Form" },
+          { label: "Requester Name", kind: "text", value: "Adaeze Nnaji" },
+          {
+            label: "Requester Org",
+            kind: "text",
+            value: "Lakeside Medical Group",
+          },
+          {
+            label: "Category",
+            kind: "select",
+            value: "Regulatory & Compliance",
+          },
+          { label: "Urgency", kind: "select", value: "Critical" },
+          {
+            label: "Suggested Next Step",
+            kind: "long",
+            value:
+              "Route to a regulatory compliance advisor promptly, noting the regulator's 14-day response deadline and the patient records staff could open.",
+          },
+          {
+            label: "Draft Reply",
+            kind: "long",
+            value: `Dear Adaeze, thank you for reaching out. We understand the state regulator found patient records on your shared drive open to all staff, and that you must respond within 14 days. A regulatory compliance advisor will contact you shortly to discuss next steps. Your reference is ${reference}.`,
+          },
+        ],
+      },
+    },
+  },
+  inbox: {
+    count: "3",
+    newEmail: {
+      from: "Tolu Martins",
+      subject: "Re: Licence renewal: which documents do we need?",
+      snippet:
+        "Thanks for getting back to me. The renewal portal now also asks for a fire safety certificate. Is that new?",
+      time: "4:31 PM",
+    },
+    emails: [
+      {
+        from: "Tolu Martins",
+        subject: "Licence renewal: which documents do we need?",
+        snippet:
+          "Hello, our clinic's operating licence is due for renewal next month. Which documents should we prepare?",
+        time: "Oct 1",
+      },
+      {
+        from: "Ngozi Eke",
+        subject: "Patient complaints process",
+        snippet:
+          "We'd like help setting up a clear process for handling patient complaints across our two sites.",
+        time: "Sep 24",
+      },
+      {
+        from: "Ibrahim Sule",
+        subject: "Claims coding training",
+        snippet:
+          "Could your team run a short session on claims coding for our billing staff?",
+        time: "Sep 18",
+      },
     ],
-    fieldKinds: [
-      "select",
-      "text",
-      "text",
-      "select",
-      "select",
-      "number",
-      "long",
-    ],
-    rows: [
-      [
-        "Internal Note",
-        "Dr Femi Adebayo",
-        "Riverside Specialist Hospital",
-        "Billing & Reimbursement",
-        "Normal",
-        "0.98",
-        "Logged by Anne after a call",
-      ],
-      [
-        "Website Form",
-        "Kemi Adeyemi",
-        "Brightpath Clinics",
-        "Staffing & Training",
-        "Low",
-        "0.98",
-        "",
-      ],
-      [
-        "Email",
-        "Tolu Martins",
-        "",
-        "Regulatory & Compliance",
-        "Normal",
-        "0.96",
-        "",
-      ],
-    ],
-    newRows: [
-      [
-        "Website Form",
-        "Adaeze Nnaji",
-        "Lakeside Medical Group",
-        "Regulatory & Compliance",
-        "Critical",
-        "0.99",
-        "Patient details: handle with care",
-      ],
-      [
-        "Email",
-        "Tolu Martins",
-        "",
-        "Regulatory & Compliance",
-        "Normal",
-        "0.98",
-        "Follow-up on an earlier email",
-      ],
-    ],
-    wideColumns: [0, 1, 3, 4, 5, 6],
-    narrowColumns: [0, 1, 4],
   },
   end: {
     headline: "Three channels in, one sorted table out.",
@@ -341,7 +407,8 @@ export const multichannelIntake: Demo = {
       via: ["webhook", "routeWebFormSubmission", "respond200ToValidRequest"],
       duration: 5600,
       caption:
-        "Bots are quietly ignored, and broken forms are sent back to be fixed. This one is valid, so it gets its reference.",
+        "In n8n, bots are quietly ignored, and broken forms are sent back to be fixed. This one is valid, so it gets its reference.",
+      say: "In n eight n, bots are quietly ignored, and broken forms are sent back to be fixed. This one is valid, so it gets its reference.",
       output: [
         ["route", "valid: not a bot"],
         ["source", "Website Form"],
@@ -350,32 +417,22 @@ export const multichannelIntake: Demo = {
     },
     {
       scene: "canvas",
-      node: "createIntakeRecord",
+      node: "validateAIClassification",
       via: [
         "mergeIntakeRoutes",
         "checkForDuplicateRequest",
         "routeNewVsDuplicate",
+        "createIntakeRecord",
+        "classifyAndDraftResponse",
       ],
-      duration: 5800,
+      duration: 7600,
       caption:
-        "Emails and staff notes join the same path. The request is saved before the AI runs, so nothing is lost if the AI fails.",
+        "The request is saved before the AI runs, so nothing is lost. AI then picks a category and urgency from approved options only, and drafts a reply. Code checks every answer.",
       output: [
-        ["duplicate?", "no: new request"],
-        ["saved", "wording kept as sent"],
-      ],
-    },
-    {
-      scene: "canvas",
-      node: "validateAIClassification",
-      via: ["classifyAndDraftResponse"],
-      duration: 6000,
-      caption:
-        "AI picks a category and urgency from approved options only, suggests the next step and drafts a reply. Code checks every answer.",
-      output: [
+        ["saved first", "wording kept as sent"],
         ["category", "Regulatory & Compliance"],
         ["urgency", "Critical"],
         ["confidence", "0.99"],
-        ["patient info", "flagged"],
         ["draft reply", "drafted, no advice"],
       ],
     },
@@ -385,6 +442,21 @@ export const multichannelIntake: Demo = {
       duration: 5600,
       caption:
         "Only Critical and High requests ping the team, with the next step and a link to the record.",
+    },
+    {
+      scene: "sheet",
+      table: "record",
+      label: "Her record · Airtable",
+      duration: 6800,
+      caption:
+        "The link opens her record in Airtable, with the next step for the advisor and a drafted reply that gives no advice.",
+    },
+    {
+      scene: "inbox",
+      mode: "arrive",
+      duration: 5200,
+      caption:
+        "Requests come by email too. Quoted earlier messages and signatures are removed, so only the new request is kept.",
     },
     {
       scene: "sheet",

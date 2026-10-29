@@ -496,6 +496,47 @@ export const quoteRequests: Demo = {
     wideColumns: [0, 1, 2, 3, 5],
     narrowColumns: [0, 3, 5],
   },
+  sheets: {
+    catalog: {
+      title: "Product Catalog",
+      app: "airtable",
+      base: "Supplier",
+      tables: ["Product Catalog", "Requests", "Line Items"],
+      columns: ["Model Number", "Product Name", "Category", "Unit Price"],
+      fieldKinds: ["text", "text", "select", "currency"],
+      rows: [
+        ["SI-MS-14", "Mayo Scissors 14cm", "Surgical", "₦18,000"],
+        ["SI-KF-14", "Kelly Hemostatic Forceps 14cm", "Surgical", "₦22,000"],
+        [
+          "DE-BAL-01",
+          "Digital Laboratory Balance 0.01g",
+          "Laboratory",
+          "₦185,000",
+        ],
+        ["DE-PH-01", "Digital pH Meter", "Laboratory", "₦95,000"],
+        [
+          "LC-EDTA-04",
+          "EDTA Blood Collection Tubes 4ml",
+          "Laboratory",
+          "₦6,500",
+        ],
+        ["ST-AC-18", "Autoclave 18L", "Sterilization", "₦850,000"],
+        ["DG-BP-01", "Digital Blood Pressure Monitor", "Diagnostic", "₦45,000"],
+      ],
+      wideColumns: [0, 1, 2, 3],
+      narrowColumns: [1, 3],
+      matches: {
+        label: "In the request",
+        none: "not in the catalog",
+        items: [
+          { text: "DE-BAL-01", row: 2 },
+          { text: "Artery Forceps", row: 1 },
+          { text: "pH meter, digital", row: 3 },
+          { text: "Autoclave 18 litre", row: 5 },
+        ],
+      },
+    },
+  },
   slack: {
     workspace: "StackedHQ",
     channel: "quote-approvals",
@@ -632,25 +673,12 @@ export const quoteRequests: Demo = {
       ],
     },
     {
-      scene: "canvas",
-      node: "createLineItemRecord",
-      via: [
-        "createRequestRecord",
-        "splitLineItems",
-        "loopOverItems1",
-        "searchMatchedProductRecord",
-        "tagMatchResult",
-        "hasCatalogMatch",
-      ],
-      duration: 5800,
+      scene: "sheet",
+      table: "catalog",
+      label: "Product Catalog · Airtable",
+      duration: 6400,
       caption:
-        "Each item is matched to the catalog, model number first. The price always comes from the catalog, never from the AI.",
-      output: [
-        ["as written", "DE-BAL-01"],
-        ["matched", "Digital Laboratory Balance 0.01g"],
-        ["confidence", "High"],
-        ["unit price", "₦185,000, from the catalog"],
-      ],
+        "Each item is matched to the product catalog in Airtable, model number first. The price always comes from the catalog, never from the AI.",
     },
     {
       scene: "sheet",
