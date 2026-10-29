@@ -85,16 +85,16 @@
       "ms": 4859
     },
     {
-      "text": "Her name, email and phone are checked, and the number is cleaned into international format before any text goes out.",
-      "ms": 5538
-    },
-    {
-      "text": "She's added to HubSpot, and a welcome text goes out through Termii. Whether it sent is read from Termii's reply, not assumed.",
-      "ms": 7367
+      "text": "In n eight n, her details are checked and her number is cleaned into international format. Then she's added to HubSpot, and a welcome text goes out through Termii.",
+      "ms": 9352
     },
     {
       "text": "Less than 3 seconds after she pressed the button, the text is on her phone.",
       "ms": 4258
+    },
+    {
+      "text": "In Termii, the text shows as delivered. Whether it sent is read from Termii's reply, never assumed.",
+      "ms": 6531
     },
     {
       "text": "The sales team sees her in Slack, with the SMS confirmed and her HubSpot contact already made.",
@@ -109,12 +109,16 @@
       "ms": 5669
     },
     {
-      "text": "When she pays through Stripe, her HubSpot contact is looked up. If HubSpot is briefly down, it tries again, up to 3 times.",
-      "ms": 6478
+      "text": "When she pays through Stripe, the payment workflow starts on its own.",
+      "ms": 3474
     },
     {
-      "text": "Her plan and last payment date are updated, and the payment is logged. A payer missing from HubSpot would email the team instead.",
-      "ms": 7027
+      "text": "n eight n finds her in HubSpot, trying again up to three times if HubSpot is busy. Her plan and last payment date are updated, and the payment is logged.",
+      "ms": 9430
+    },
+    {
+      "text": "Every payment gets a clean row in the payment log. That's what the Monday report is built from.",
+      "ms": 4728
     },
     {
       "text": "Every Monday at eight thirty in the morning, the payment log becomes a weekly report, sent by email and Slack.",
@@ -273,20 +277,24 @@
       "ms": 5460
     },
     {
-      "text": "Bots are quietly ignored, and broken forms are sent back to be fixed. This one is valid, so it gets its reference.",
-      "ms": 7079
+      "text": "In n eight n, bots are quietly ignored, and broken forms are sent back to be fixed. This one is valid, so it gets its reference.",
+      "ms": 7576
     },
     {
-      "text": "Emails and staff notes join the same path. The request is saved before the AI runs, so nothing is lost if the AI fails.",
-      "ms": 7314
-    },
-    {
-      "text": "AI picks a category and urgency from approved options only, suggests the next step and drafts a reply. Code checks every answer.",
-      "ms": 7236
+      "text": "The request is saved before the AI runs, so nothing is lost. AI then picks a category and urgency from approved options only, and drafts a reply. Code checks every answer.",
+      "ms": 9456
     },
     {
       "text": "Only Critical and High requests ping the team, with the next step and a link to the record.",
       "ms": 4963
+    },
+    {
+      "text": "The link opens her record in Airtable, with the next step for the advisor and a drafted reply that gives no advice.",
+      "ms": 6687
+    },
+    {
+      "text": "Requests come by email too. Quoted earlier messages and signatures are removed, so only the new request is kept.",
+      "ms": 5851
     },
     {
       "text": "Website, email and staff notes all land in one table. A reply to an earlier email is marked as a follow-up.",
@@ -307,16 +315,12 @@
       "ms": 6165
     },
     {
-      "text": "One AI step reads it, attachment included. The invoice decides the lane, and the deadline and the meeting become flags.",
-      "ms": 7262
+      "text": "In n eight n, one AI step reads it, attachment included. The invoice decides the lane, the deadline and the meeting become flags, and code checks the answer.",
+      "ms": 10214
     },
     {
-      "text": "Code checks the answer first. A lane it doesn't know would stop the run, instead of filing the email in the wrong place.",
-      "ms": 5878
-    },
-    {
-      "text": "Acme already has a folder, so the invoice is filed there. The email is starred, and a reminder is set.",
-      "ms": 5695
+      "text": "Acme already has a folder in Google Drive, so the invoice is filed there. One vendor, one folder.",
+      "ms": 5512
     },
     {
       "text": "The follow-up goes in the calendar at the next 9am or 2pm slot: 9am, well before the 2pm deadline.",
@@ -475,8 +479,8 @@
       "ms": 6896
     },
     {
-      "text": "Each item is matched to the catalog, model number first. The price always comes from the catalog, never from the AI.",
-      "ms": 5982
+      "text": "Each item is matched to the product catalog in Airtable, model number first. The price always comes from the catalog, never from the AI.",
+      "ms": 7210
     },
     {
       "text": "Every line is saved in Airtable: the customer's words, the file it came from, the match and the price.",
@@ -617,16 +621,16 @@
       "ms": 5094
     },
     {
-      "text": "Plain rules answer greetings, menus and YES for free. This message is a real order, so it goes on to the AI.",
-      "ms": 6949
+      "text": "In n eight n, plain rules answer greetings, menus and YES for free. This message is a real order, so it goes on to the AI.",
+      "ms": 8647
     },
     {
       "text": "The AI reads it against the real menu and the bakery's calendar, and finds three orders.",
       "ms": 4754
     },
     {
-      "text": "Then code checks every detail. Prices come from the menu, never from the AI.",
-      "ms": 4807
+      "text": "Then code checks each item against the bakery's menu in Airtable. All three match, and every price comes from the menu, never from the AI.",
+      "ms": 7758
     },
     {
       "text": "One message becomes three orders, each with its own day and price.",
@@ -641,8 +645,16 @@
       "ms": 3553
     },
     {
-      "text": "Voice notes work too. Ask for bread it doesn't sell, on a day it's closed, and it says so instead of guessing.",
-      "ms": 5538
+      "text": "Voice notes work too. This one asks for a sardine loaf and two sourdough, for Sunday.",
+      "ms": 5486
+    },
+    {
+      "text": "Sourdough is on the menu. A sardine loaf isn't, so it's left off, not swapped for something else.",
+      "ms": 5747
+    },
+    {
+      "text": "The bakery is closed on Sundays, so it offers Monday instead, and waits for a YES.",
+      "ms": 4676
     },
     {
       "text": "No number given? It asks, instead of guessing a quantity.",
