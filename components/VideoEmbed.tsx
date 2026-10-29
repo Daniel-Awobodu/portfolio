@@ -152,7 +152,9 @@ export default function VideoEmbed({
               <button
                 type="button"
                 onClick={full ? exitFull : enterFull}
-                aria-label={full ? "Exit full screen video" : "Full screen video"}
+                aria-label={
+                  full ? "Exit full screen video" : "Full screen video"
+                }
                 className="absolute top-0 right-0 z-10 flex h-14 w-14 items-center justify-center rounded-bl-md bg-black/80 text-white transition-colors duration-150 hover:bg-black"
               >
                 <svg
