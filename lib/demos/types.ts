@@ -35,6 +35,72 @@ export type NodeKind =
   | "file"
   | "slack";
 
+export type SiteMark = "ok" | "no" | "pick" | "new";
+
+/** One part of a platform's page ("site" scenes). */
+export type SiteBlock =
+  | {
+      kind: "list";
+      title?: string;
+      rows: {
+        title: string;
+        sub?: string;
+        tags?: string[];
+        /** What the workflow decides on this row, shown after a moment. */
+        mark?: SiteMark;
+        note?: string;
+        avatar?: string;
+      }[];
+    }
+  | {
+      kind: "fields";
+      title?: string;
+      rows: { label: string; value: string; mark?: SiteMark; note?: string }[];
+    }
+  | {
+      kind: "text";
+      title?: string;
+      meta?: string;
+      lines: string[];
+      /** A quote searched for on the page, and whether it's there. */
+      find?: { text: string; found: boolean };
+    }
+  | { kind: "stats"; items: { label: string; value: string }[] }
+  | {
+      kind: "table";
+      title?: string;
+      columns: string[];
+      rows: string[][];
+      /** Rows the workflow picks. */
+      highlight?: number[];
+      /** A column drawn as a pill. */
+      pill?: number;
+    }
+  | { kind: "map"; label: string; note: string }
+  | {
+      kind: "bars";
+      title: string;
+      labels: string[];
+      values: number[];
+      note?: string;
+    };
+
+/** A platform's page: its brand, and what's on it. */
+export type Site = {
+  name: string;
+  /** One or two letters for the logo badge. */
+  logo: string;
+  color: string;
+  /** A dark top bar. */
+  dark?: boolean;
+  nav?: string[];
+  search?: string;
+  title: string;
+  /** Wide screens: the first block on the left, the rest on the right. */
+  columns?: boolean;
+  blocks: SiteBlock[];
+};
+
 export type SlackMessage = {
   time: string;
   title: string;
@@ -212,6 +278,11 @@ export type Beat = BeatBase &
     | { scene: "webform" }
     | { scene: "post"; mode: "article" | "social" }
     | {
+        scene: "site";
+        /** A key of `sites`. */
+        site: string;
+      }
+    | {
         scene: "inbox";
         mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
         /** "thread" mode: how many of the thread's messages are shown. */
@@ -313,6 +384,8 @@ export type Demo = {
       reason: string;
     };
   };
+  /** Platforms' own pages ("site" scenes), by key. */
+  sites?: Record<string, Site>;
   /** A published article and its social posts ("post" scenes). */
   post?: {
     site: string;

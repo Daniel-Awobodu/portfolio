@@ -22,6 +22,10 @@ const STAGE_PILL: Record<string, string> = {
   Responded: "bg-[#00bda5] text-white",
   Enriched: "bg-[#00bda5] text-white",
   "Needs Manual Review": "bg-[#f2545b] text-white",
+  New: "bg-[#eaf0f6] text-[#33475b]",
+  HOT: "bg-[#ff5c35] text-white",
+  WARM: "bg-[#f5c26b] text-[#213343]",
+  REVIEW: "bg-[#7c5cbf] text-white",
 };
 
 /** Blurred placeholder, the way the real screenshots hide contact details. */
@@ -53,7 +57,7 @@ export default function CrmScene({
 }) {
   const crm = demo.crm!;
   const responded = mode === "responded";
-  const showTasks = responded && t >= 0.5;
+  const showTasks = responded && t >= 0.5 && !!crm.task.title;
   const arrive = responded ? 1 : easeOut(span(t, 0.12, 0.3));
   const changed = responded && t >= 0.22;
   const taskIn = easeOut(span(t, 0.58, 0.7));

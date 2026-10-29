@@ -3,7 +3,8 @@ import type { Demo } from "@/lib/demos/types";
 /*
  * The job shortlist, as it really runs (see content/automation/
  * opportunity-feed.mdx and its screenshots). The canvas is drawn from the
- * workflow's export: real node names, connections and layout. The run follows
+ * workflow's export: real node names, connections and layout, shown briefly;
+ * the job board, Airtable and Slack carry the story. The run follows
  * the real digest and the write-up's tests: a fit backed by a quote found word
  * for word, a fit whose quote was invented (sent to a person, never posted),
  * a pitch idea, and a job board that is down. Every company here is sample
@@ -254,7 +255,114 @@ export const opportunityFeed: Demo = {
         ],
         footer: "Jobs via Remotive · full log in Airtable",
       },
+      {
+        time: "10:01 AM",
+        title: "⚠️ Job board check failed",
+        meta: [
+          [
+            "",
+            "Remotive answered with no jobs, so today's jobs were NOT checked.",
+          ],
+          ["", "This isn't a quiet day. Check the source, then run it again."],
+        ],
+        items: [],
+        footer: "Job Shortlist · source health check",
+      },
     ],
+  },
+  sites: {
+    board: {
+      name: "Remotive",
+      logo: "R",
+      color: "#5b3fd9",
+      nav: ["Remote jobs", "Companies", "Post a job"],
+      search: "Software development · posted in the last day",
+      title: "Remote jobs · 17 new today",
+      blocks: [
+        {
+          kind: "list",
+          rows: [
+            {
+              title: "n8n Automation Partner for Clinic Booking + HubSpot",
+              sub: "Brightline Dental Group",
+              tags: ["Contract", "$4,000 - $6,000"],
+              avatar: "BD",
+            },
+            {
+              title: "Zapier Expert for CRM Sync",
+              sub: "Ledgerline",
+              tags: ["Contract"],
+              avatar: "LL",
+            },
+            {
+              title: "Remote Office Assistant",
+              sub: "Harbor & Pine",
+              tags: ["Full-time"],
+              avatar: "HP",
+            },
+            {
+              title: "Inside Sales Contractor",
+              sub: "Brightwave Media",
+              tags: ["Commission only"],
+              avatar: "BM",
+            },
+            {
+              title: "Senior AI Engineer",
+              sub: "Talentloop",
+              tags: ["Talent network"],
+              avatar: "TL",
+            },
+            {
+              title: "Senior Shopify Developer",
+              sub: "Northstar Goods",
+              tags: ["Full-time"],
+              avatar: "NG",
+            },
+          ],
+        },
+      ],
+    },
+    fit: {
+      name: "Remotive",
+      logo: "R",
+      color: "#5b3fd9",
+      nav: ["Remote jobs", "Companies", "Post a job"],
+      title: "n8n Automation Partner for Clinic Booking + HubSpot",
+      blocks: [
+        {
+          kind: "text",
+          meta: "Brightline Dental Group · Contract · $4,000 - $6,000 fixed project",
+          lines: [
+            "We run three dental clinics and want our bookings to flow into our CRM without anyone copying them over.",
+            `${fitQuote}, and alerts our front desk in Slack when a new patient books.`,
+            "You'll own the build end to end and hand it over with clear notes.",
+          ],
+          find: { text: fitQuote, found: true },
+        },
+      ],
+    },
+    noProof: {
+      name: "Remotive",
+      logo: "R",
+      color: "#5b3fd9",
+      nav: ["Remote jobs", "Companies", "Post a job"],
+      title: "Zapier Expert for CRM Sync",
+      blocks: [
+        {
+          kind: "text",
+          meta: "Ledgerline · Contract",
+          lines: [
+            "Ledgerline is growing fast and our tools don't talk to each other.",
+            "We're looking for someone experienced with Zapier to help our operations team.",
+            "Tell us about a project you're proud of.",
+          ],
+          find: {
+            text: "We need daily syncs between our CRM and billing tool",
+            found: false,
+          },
+        },
+      ],
+    },
   },
   end: {
     headline: "A daily shortlist, with proof for every fit.",
@@ -269,70 +377,50 @@ export const opportunityFeed: Demo = {
   },
   beats: [
     {
+      scene: "site",
+      site: "board",
+      label: "Remotive · remote job board",
+      duration: 6400,
+      caption:
+        "Every morning at 10am, it reads the new posts on Remotive, a remote job board. Upwork or Indeed can be plugged in the same way.",
+    },
+    {
       scene: "canvas",
-      node: "isSourceHealthy",
+      node: "scoreJobFitAI",
       via: [
         "runDailyAt10am",
         "setAgencyProfileSettings",
         "fetchRemotiveJobs",
         "checkSourceHealth",
+        "isSourceHealthy",
+        "findAlreadySeenJobs",
+        "cleanKeepNewJobs",
+        "anyNewJobs",
+        "logJobsAsNew",
       ],
       duration: 5600,
       caption:
-        "Every morning at 10am, it pulls the new job posts, and first checks the job board is working.",
+        "In n8n, posts it has seen before are dropped. AI scores the rest, and must copy one line from each post as proof.",
       output: [
-        ["job board", "working"],
-        ["posts", "17"],
+        ["new posts", "17"],
+        ["proof", "one line, word for word"],
       ],
     },
     {
-      scene: "canvas",
-      node: "logJobsAsNew",
-      via: ["findAlreadySeenJobs", "cleanKeepNewJobs", "anyNewJobs"],
-      duration: 5000,
+      scene: "site",
+      site: "fit",
+      label: "Remotive · the job post",
+      duration: 6400,
       caption:
-        "Posts it has already seen are dropped, so nothing is scored or posted twice.",
-      output: [
-        ["seen before", "0"],
-        ["new today", "17"],
-      ],
+        "Code then searches the real post for that line. It's there, word for word, so this job is a fit: 10 out of 10.",
     },
     {
-      scene: "canvas",
-      node: "scoreJobFitAI",
-      duration: 6000,
+      scene: "site",
+      site: "noProof",
+      label: "Remotive · the job post",
+      duration: 6400,
       caption:
-        "AI scores each post against the agency's services. Before scoring, it must copy one line from the post, word for word, as proof.",
-      output: [
-        ["job", "n8n Automation Partner"],
-        ["skills match", "6 of 6"],
-        ["pay", "$4,000 - $6,000 fixed"],
-        ["proof", "Build an n8n workflow that sends…"],
-      ],
-    },
-    {
-      scene: "canvas",
-      node: "verifyQuoteFinalScore",
-      duration: 5400,
-      caption:
-        "Code, not the AI, checks the quote is really in the post, and adds up the final score.",
-      output: [
-        ["quote found?", "yes, word for word"],
-        ["final score", "10 of 10: a fit"],
-      ],
-    },
-    {
-      scene: "canvas",
-      node: "verifyQuoteFinalScore",
-      duration: 6000,
-      caption:
-        "Another post scores as a fit, but its quote isn't in the post. No proof, no post: a person checks it instead.",
-      output: [
-        ["job", "Zapier Expert for CRM Sync"],
-        ["AI score", "8 of 10"],
-        ["quote found?", "no: invented"],
-        ["result", "needs a human check"],
-      ],
+        "Another post also scored as a fit, but the AI's line isn't in the post at all. No proof, no post: a person checks it instead.",
     },
     {
       scene: "sheet",
@@ -348,23 +436,11 @@ export const opportunityFeed: Demo = {
         "One message each morning: the fit with its proof, the post to check, and a pitch idea for a company still doing data entry by hand.",
     },
     {
-      scene: "canvas",
-      run: 1,
-      node: "alertSourceDown",
-      via: [
-        "runDailyAt10am",
-        "setAgencyProfileSettings",
-        "fetchRemotiveJobs",
-        "checkSourceHealth",
-        "isSourceHealthy",
-      ],
-      duration: 5800,
+      scene: "slack",
+      message: 1,
+      duration: 6000,
       caption:
-        "If the job board is down or empty, the team is told today's jobs weren't checked, not a misleading \"no jobs today\".",
-      output: [
-        ["job board", "empty response"],
-        ["Slack alert", "today's jobs were not checked"],
-      ],
+        "If Remotive is down or empty, the team is told today's jobs weren't checked, not a misleading \"no jobs today\".",
     },
     {
       scene: "end",

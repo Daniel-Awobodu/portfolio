@@ -2,8 +2,10 @@ import type { Demo } from "@/lib/demos/types";
 
 /*
  * The AI outreach system, as it really runs (see content/automation/
- * ai-outreach.mdx and its screenshots). Both canvases are drawn from the
- * workflow's export: real node names, connections and layout. The run follows
+ * ai-outreach.mdx and its screenshots). The canvas is drawn from the
+ * research workflow's export: real node names, connections and layout, shown
+ * briefly; HubSpot, Apollo, Hunter.io, the news search, Slack and Gmail carry
+ * the story. The run follows
  * the write-up's test: a draft opening with real news, its subject rejected in
  * Slack and rewritten, then approved and sent; a draft that reaches the
  * rewrite limit; companies flagged instead of guessed. The real test reached
@@ -237,204 +239,6 @@ export const aiOutreach: Demo = {
         { from: "updateACompany", to: "mergeDataForDraft" },
       ],
     },
-    approval: {
-      label: "Slack approval · n8n",
-      nodes: [
-        {
-          id: "checkRevisionCap",
-          label: "Check Revision Cap",
-          kind: "if",
-          x: 1020,
-          y: 291,
-        },
-        {
-          id: "saveRejectionSetRevising",
-          label: "Save Rejection & Set Revising",
-          kind: "hubspot",
-          x: 1190,
-          y: 364,
-        },
-        {
-          id: "markContactAsSENT",
-          label: "Mark contact as SENT",
-          kind: "hubspot",
-          x: 1190,
-          y: 0,
-        },
-        {
-          id: "markContactForReview",
-          label: "Mark Contact for Review",
-          kind: "hubspot",
-          x: 1190,
-          y: 219,
-        },
-        { id: "webhook", label: "Webhook", kind: "webhook", x: 0, y: 146 },
-        {
-          id: "parseSlackPayload",
-          label: "Parse Slack Payload",
-          kind: "code",
-          x: 170,
-          y: 146,
-        },
-        {
-          id: "routeSlackEvent",
-          label: "Route Slack Event",
-          kind: "switch",
-          x: 510,
-          y: 121,
-        },
-        {
-          id: "buildRejectionModal",
-          label: "Build Rejection Modal",
-          kind: "code",
-          x: 680,
-          y: 146,
-        },
-        {
-          id: "openReasonModal",
-          label: "Open Reason Modal",
-          kind: "http",
-          x: 850,
-          y: 146,
-        },
-        {
-          id: "respondToWebhook",
-          label: "Respond to Webhook",
-          kind: "respond",
-          x: 340,
-          y: 146,
-        },
-        {
-          id: "incrementRevisionCount",
-          label: "Increment Revision Count",
-          kind: "code",
-          x: 850,
-          y: 291,
-        },
-        {
-          id: "getFullContactDetails",
-          label: "Get Full Contact Details",
-          kind: "http",
-          x: 680,
-          y: 291,
-        },
-        {
-          id: "draftOutreachMessage1",
-          label: "Draft Outreach Message1",
-          kind: "ai",
-          x: 1870,
-          y: 364,
-        },
-        {
-          id: "prepareDraftContext1",
-          label: "Prepare Draft Context1",
-          kind: "code",
-          x: 1700,
-          y: 364,
-        },
-        {
-          id: "getAssociatedCompany",
-          label: "Get Associated Company",
-          kind: "hubspot",
-          x: 1530,
-          y: 364,
-        },
-        {
-          id: "parseDraftMessage1",
-          label: "Parse Draft Message1",
-          kind: "code",
-          x: 2137,
-          y: 364,
-        },
-        {
-          id: "updateContactToPendingDraft1",
-          label: 'Update contact to "Pending" + Draft1',
-          kind: "hubspot",
-          x: 2307,
-          y: 364,
-        },
-        {
-          id: "updateOriginalMessageRevising",
-          label: "Update Original Message: Revising",
-          kind: "http",
-          x: 1360,
-          y: 364,
-        },
-        {
-          id: "buildSlackBlocks1",
-          label: "Build Slack Blocks1",
-          kind: "code",
-          x: 2477,
-          y: 364,
-        },
-        {
-          id: "sendNewApprovalMessage",
-          label: "Send New Approval Message",
-          kind: "slack",
-          x: 2647,
-          y: 364,
-        },
-        {
-          id: "updateOriginalMessageCapExceeded",
-          label: "Update Original Message: Cap Exceeded",
-          kind: "http",
-          x: 1360,
-          y: 219,
-        },
-        {
-          id: "updateSlackMessage",
-          label: "Update slack message",
-          kind: "http",
-          x: 680,
-          y: 0,
-        },
-        {
-          id: "getRelatedContact",
-          label: "Get related contact",
-          kind: "hubspot",
-          x: 850,
-          y: 0,
-        },
-        {
-          id: "sendMessageToContact",
-          label: "Send message to contact",
-          kind: "gmail",
-          x: 1020,
-          y: 0,
-        },
-      ],
-      edges: [
-        { from: "checkRevisionCap", to: "markContactForReview" },
-        { from: "checkRevisionCap", to: "saveRejectionSetRevising" },
-        {
-          from: "saveRejectionSetRevising",
-          to: "updateOriginalMessageRevising",
-        },
-        { from: "webhook", to: "parseSlackPayload" },
-        { from: "parseSlackPayload", to: "respondToWebhook" },
-        { from: "routeSlackEvent", to: "updateSlackMessage" },
-        { from: "routeSlackEvent", to: "buildRejectionModal" },
-        { from: "routeSlackEvent", to: "getFullContactDetails" },
-        { from: "buildRejectionModal", to: "openReasonModal" },
-        { from: "respondToWebhook", to: "routeSlackEvent" },
-        { from: "incrementRevisionCount", to: "checkRevisionCap" },
-        { from: "getFullContactDetails", to: "incrementRevisionCount" },
-        { from: "getAssociatedCompany", to: "prepareDraftContext1" },
-        { from: "prepareDraftContext1", to: "draftOutreachMessage1" },
-        { from: "draftOutreachMessage1", to: "parseDraftMessage1" },
-        { from: "parseDraftMessage1", to: "updateContactToPendingDraft1" },
-        { from: "updateContactToPendingDraft1", to: "buildSlackBlocks1" },
-        { from: "updateOriginalMessageRevising", to: "getAssociatedCompany" },
-        { from: "buildSlackBlocks1", to: "sendNewApprovalMessage" },
-        {
-          from: "markContactForReview",
-          to: "updateOriginalMessageCapExceeded",
-        },
-        { from: "updateSlackMessage", to: "getRelatedContact" },
-        { from: "getRelatedContact", to: "sendMessageToContact" },
-        { from: "sendMessageToContact", to: "markContactAsSENT" },
-      ],
-    },
   },
   slack: {
     workspace: "StackedHQ",
@@ -470,6 +274,128 @@ export const aiOutreach: Demo = {
       },
     ],
   },
+  sites: {
+    apollo: {
+      name: "Apollo",
+      logo: "A",
+      color: "#e8b100",
+      dark: true,
+      nav: ["Search", "Companies", "Enrich"],
+      search: "northwind.ai",
+      title: "Northwind Robotics",
+      columns: true,
+      blocks: [
+        {
+          kind: "fields",
+          title: "Company",
+          rows: [
+            { label: "Industry", value: "Robotics", mark: "ok" },
+            { label: "Employees", value: "210", mark: "ok" },
+            { label: "Annual revenue", value: "$38M", mark: "ok" },
+            { label: "Founded", value: "2017" },
+            { label: "Headquarters", value: "Austin, Texas" },
+          ],
+        },
+        {
+          kind: "text",
+          title: "About",
+          lines: [
+            "Northwind builds autonomous robots for mid-size warehouses, from picking to packing.",
+          ],
+        },
+      ],
+    },
+    hunter: {
+      name: "Hunter.io",
+      logo: "H",
+      color: "#ff5722",
+      nav: ["Domain Search", "Email Finder", "Verifier"],
+      search: "northwind.ai",
+      title: "14 people at northwind.ai",
+      blocks: [
+        {
+          kind: "list",
+          rows: [
+            {
+              title: "Priya Nair",
+              sub: "VP of Operations",
+              avatar: "PN",
+              mark: "pick",
+              note: "can act on it",
+            },
+            {
+              title: "Daniel Osei",
+              sub: "Executive Assistant",
+              avatar: "DO",
+              mark: "no",
+              note: "assistant",
+            },
+            {
+              title: "Ana Lopez",
+              sub: "Operations Coordinator",
+              avatar: "AL",
+              mark: "no",
+              note: "coordinator",
+            },
+            {
+              title: "Jay Park",
+              sub: "Marketing Intern",
+              avatar: "JP",
+              mark: "no",
+              note: "intern",
+            },
+            {
+              title: "Sam Cole",
+              sub: "Recruiter",
+              avatar: "SC",
+              mark: "no",
+              note: "wrong team",
+            },
+          ],
+        },
+      ],
+    },
+    news: {
+      name: "Google News",
+      logo: "G",
+      color: "#1a73e8",
+      nav: ["All", "News", "Images"],
+      search: "Northwind Robotics",
+      title: "News · past month",
+      blocks: [
+        {
+          kind: "list",
+          rows: [
+            {
+              title:
+                "Northwind Robotics raises $40M Series B to scale warehouse robots",
+              sub: "TechWire · 12 days ago",
+              mark: "pick",
+              note: "a real reason",
+            },
+            {
+              title: "Northwind named a 'Top Logistics Startup to Watch'",
+              sub: "Logistics Weekly · 3 weeks ago",
+              mark: "no",
+              note: "an award",
+            },
+            {
+              title: "Northwind to host a webinar on warehouse automation",
+              sub: "Press release · 2 weeks ago",
+              mark: "no",
+              note: "a press release",
+            },
+            {
+              title: "5 robotics companies hiring this month",
+              sub: "JobsDaily · 4 days ago",
+              mark: "no",
+              note: "not about them",
+            },
+          ],
+        },
+      ],
+    },
+  },
   inbox: {
     count: "1",
     emails: [],
@@ -491,32 +417,32 @@ export const aiOutreach: Demo = {
   },
   crm: {
     object: "Companies",
-    middle: ["Company domain", "Industry"],
+    middle: ["Company domain", "Create date"],
     stageLabel: "Enrichment Status",
     contacts: [
       {
         name: "Brightpath Logistics",
         initials: "BL",
         stage: "Enriched",
-        cells: ["brightpath.io", "logistics"],
+        cells: ["brightpath.io", "Yesterday"],
       },
       {
         name: "Corvid Analytics",
         initials: "CA",
         stage: "Enriched",
-        cells: ["corvid.ai", "software"],
+        cells: ["corvid.ai", "Yesterday"],
       },
       {
         name: "Halcyon Foods",
         initials: "HF",
         stage: "Needs Manual Review",
-        cells: ["--", "--"],
+        cells: ["--", "Yesterday"],
       },
       {
         name: "Tessel Labs",
         initials: "TL",
         stage: "Needs Manual Review",
-        cells: ["tessel.dev", "--"],
+        cells: ["tessel.dev", "Yesterday"],
       },
     ],
     lead: {
@@ -524,9 +450,9 @@ export const aiOutreach: Demo = {
       initials: "NR",
       email: "",
       phone: "",
-      cells: ["northwind.ai", "robotics"],
+      cells: ["northwind.ai", "Today"],
     },
-    stages: { lead: "Enriched", sequence: "Enriched", responded: "Enriched" },
+    stages: { lead: "New", sequence: "New", responded: "Enriched" },
     task: { title: "", stage: "" },
   },
   end: {
@@ -541,60 +467,53 @@ export const aiOutreach: Demo = {
   },
   beats: [
     {
+      scene: "crm",
+      mode: "lead",
+      duration: 4800,
+      caption:
+        "Every day, up to 20 new prospect companies are picked up from HubSpot.",
+    },
+    {
       scene: "canvas",
       flow: "research",
-      node: "updateCompanyDetails",
+      node: "enrichAnOrganization",
       via: [
         "scheduleTrigger",
         "fetchNewCompanies",
         "splitOutCompanies",
         "checkDomainExists",
-        "enrichAnOrganization",
-        "doesOrganisationEsists",
-        "formatCompanyData",
       ],
-      duration: 6000,
-      caption:
-        "Every day, new prospect companies are picked up from HubSpot, and Apollo fills in what they do, their size and revenue.",
-      output: [
-        ["company", "Northwind Robotics"],
-        ["industry", "robotics"],
-        ["employees", "210"],
-      ],
+      duration: 4200,
+      caption: "In n8n, each company with a website goes to Apollo.",
+      output: [["company", "Northwind Robotics"]],
     },
     {
-      scene: "canvas",
-      flow: "research",
-      node: "createAssociatedContact",
-      via: ["agentSearch", "scoreSelectBestAgent", "checkAgentFound"],
-      duration: 5800,
+      scene: "site",
+      site: "apollo",
+      duration: 5400,
       caption:
-        "It finds the people there and picks the one who can act: operations, IT or leadership. Never an assistant or an intern.",
-      output: [
-        ["found", "14 people"],
-        ["picked", "VP of Operations"],
-        ["skipped", "assistants, coordinators, interns"],
-      ],
+        "Apollo fills in what the company does, its size and revenue, and HubSpot is updated.",
     },
     {
-      scene: "canvas",
-      flow: "research",
-      node: "parsePersonalizationHook",
-      via: ["httpRequest1", "formatNewsForPrompt", "getPersonalizationHook"],
+      scene: "site",
+      site: "hunter",
       duration: 6400,
       caption:
-        "It searches the last month of news for a real reason to write. Stock news, awards and press releases don't count, and if there's nothing real, it says so.",
-      output: [
-        ["stories", "6 in the last month"],
-        ["ignored", "a stock update, an award"],
-        ["the reason", "raised a $40M Series B"],
-      ],
+        "Hunter.io lists the people there. The one who can act is picked: operations, IT or leadership, never an assistant or an intern.",
+    },
+    {
+      scene: "site",
+      site: "news",
+      duration: 6600,
+      caption:
+        "Then the last month of news is searched for a real reason to write. Awards and press releases don't count. A $40M Series B does.",
     },
     {
       scene: "canvas",
       flow: "research",
       node: "sendAMessage1",
       via: [
+        "parsePersonalizationHook",
         "updateACompany",
         "mergeDataForDraft",
         "prepareDraftContext",
@@ -603,13 +522,12 @@ export const aiOutreach: Demo = {
         "updateContactToPendingDraft",
         "buildSlackBlocks",
       ],
-      duration: 6000,
+      duration: 5000,
       caption:
-        "The email is drafted in under 120 words, opening with that news. Invented case studies and stock lines are banned.",
+        "AI drafts the email in under 120 words, opening with that news. Invented results and stock lines are banned.",
       output: [
         ["opens with", "the Series B"],
         ["length", "96 words"],
-        ["banned", "made-up results, stock openers"],
       ],
     },
     {
@@ -621,42 +539,12 @@ export const aiOutreach: Demo = {
         "Nothing is sent until a person says yes in Slack. Here the reviewer rejects the draft, and says why.",
     },
     {
-      scene: "canvas",
-      flow: "approval",
-      node: "sendNewApprovalMessage",
-      via: [
-        "webhook",
-        "parseSlackPayload",
-        "respondToWebhook",
-        "routeSlackEvent",
-        "getFullContactDetails",
-        "incrementRevisionCount",
-        "checkRevisionCap",
-        "saveRejectionSetRevising",
-        "updateOriginalMessageRevising",
-        "getAssociatedCompany",
-        "prepareDraftContext1",
-        "draftOutreachMessage1",
-        "parseDraftMessage1",
-        "updateContactToPendingDraft1",
-        "buildSlackBlocks1",
-      ],
-      duration: 6400,
-      caption:
-        "The rewrite fixes only what the reviewer flagged. The subject changes, and the rest is left alone.",
-      output: [
-        ["rewrite", "1 of 2"],
-        ["fixed", "the subject"],
-        ["new subject", subject2],
-      ],
-    },
-    {
       scene: "slack",
       message: 1,
       approve: true,
-      duration: 5600,
+      duration: 6000,
       caption:
-        "This time the reviewer approves, and the email goes out through Gmail.",
+        "The rewrite fixes only what was flagged: the subject. This time the reviewer approves, and it goes out through Gmail.",
     },
     {
       scene: "inbox",
@@ -666,33 +554,11 @@ export const aiOutreach: Demo = {
         "The prospect gets an email about their own news, sent to the person who can act on it.",
     },
     {
-      scene: "canvas",
-      flow: "approval",
-      run: 1,
-      node: "markContactForReview",
-      via: [
-        "webhook",
-        "parseSlackPayload",
-        "respondToWebhook",
-        "routeSlackEvent",
-        "getFullContactDetails",
-        "incrementRevisionCount",
-        "checkRevisionCap",
-      ],
-      duration: 5800,
-      caption:
-        "A draft still rejected after two rewrites goes to a person, instead of looping forever.",
-      output: [
-        ["rewrites used", "2 of 2"],
-        ["status", "Needs Manual Review"],
-      ],
-    },
-    {
       scene: "crm",
-      mode: "lead",
-      duration: 5200,
+      mode: "responded",
+      duration: 6000,
       caption:
-        "In HubSpot, a company with no website, or none Apollo can find, is marked for a person, not guessed.",
+        "Back in HubSpot, a company with no website, or none Apollo can find, is marked for a person, never guessed. So is a draft rejected twice.",
     },
     {
       scene: "end",

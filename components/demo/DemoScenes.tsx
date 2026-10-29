@@ -8,6 +8,7 @@ import InboxScene from "@/components/demo/InboxScene";
 import PhoneScene from "@/components/demo/PhoneScene";
 import CrmScene from "@/components/demo/CrmScene";
 import PostScene from "@/components/demo/PostScene";
+import SiteScene from "@/components/demo/SiteScene";
 import SlackScene from "@/components/demo/SlackScene";
 import WebFormScene from "@/components/demo/WebFormScene";
 import ZapScene from "@/components/demo/ZapScene";
@@ -19,6 +20,7 @@ export function sceneLabel(demo: Demo, beat: Beat): string {
   if (beat.scene === "canvas") {
     return flowOf(demo, beat).label ?? demo.sceneLabels.canvas ?? "";
   }
+  if (beat.scene === "site") return demo.sites![beat.site].name;
   return demo.sceneLabels[beat.scene] ?? "";
 }
 
@@ -27,6 +29,7 @@ function sceneKey(beat: Beat): string {
   if (beat.scene === "canvas") return `canvas-${beat.flow ?? ""}`;
   if (beat.scene === "chat") return `chat-${beat.thread ?? ""}`;
   if (beat.scene === "call") return `call-${beat.mode === "live"}`;
+  if (beat.scene === "site") return `site-${beat.site}`;
   return beat.scene;
 }
 
@@ -131,6 +134,9 @@ export default function DemoScenes({
       ) : null}
       {beat.scene === "crm" ? (
         <CrmScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
+      ) : null}
+      {beat.scene === "site" ? (
+        <SiteScene demo={demo} beatIndex={beatIndex} t={t} narrow={narrow} />
       ) : null}
       {beat.scene === "post" ? (
         <PostScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />

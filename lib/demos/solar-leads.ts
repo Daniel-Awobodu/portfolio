@@ -3,7 +3,9 @@ import type { Demo } from "@/lib/demos/types";
 /*
  * The solar lead system, as it really runs (see content/automation/
  * solar-leads.mdx and its screenshots). The canvas is drawn from the
- * workflow's export: real node names, connections and layout. The run follows
+ * workflow's export: real node names, connections and layout, shown briefly;
+ * the data sources, HubSpot, Gmail and WhatsApp carry the story. The power
+ * price and monthly sunlight are sample figures. The run follows
  * the write-up's tests: a HOT lead researched and emailed with trusted facts
  * only, a lead whose deed and roof contradict the form sent to a person, and
  * an address that can't be verified, never researched. The first email
@@ -39,6 +41,7 @@ export const solarLeads: Demo = {
   sceneLabels: {
     webform: "Homeowner’s browser · company website",
     canvas: "The lead workflow · n8n",
+    crm: "HubSpot",
     inbox: "Homeowner’s inbox · Gmail",
     chat: "Sales team · WhatsApp",
     end: "Done",
@@ -287,6 +290,173 @@ export const solarLeads: Demo = {
       initials: "SA",
     },
   },
+  sites: {
+    geo: {
+      name: "Geoapify",
+      logo: "G",
+      color: "#2f7bbd",
+      nav: ["Geocoding", "Places", "Maps"],
+      search: "1100 Congress Avenue, Austin, TX 78701",
+      title: "Address match",
+      columns: true,
+      blocks: [
+        {
+          kind: "map",
+          label: "1100 Congress Avenue, Austin, TX 78701",
+          note: "Building · match 0.98",
+        },
+        {
+          kind: "fields",
+          rows: [
+            { label: "Matched to", value: "a building", mark: "ok" },
+            {
+              label: "Confidence",
+              value: "0.98",
+              mark: "ok",
+              note: "needs 0.90",
+            },
+            { label: "State", value: "Texas" },
+            { label: "Next", value: "research the property" },
+          ],
+        },
+      ],
+    },
+    property: {
+      name: "RentCast",
+      logo: "RC",
+      color: "#1f6feb",
+      nav: ["Property data", "Rent estimates", "Market data"],
+      search: "1100 Congress Avenue, Austin, TX",
+      title: "Property record",
+      blocks: [
+        {
+          kind: "fields",
+          title: "Public record vs the form",
+          rows: [
+            {
+              label: "Owner on the deed",
+              value: "Robert Hayes",
+              mark: "ok",
+              note: "matches the form",
+            },
+            {
+              label: "Roof",
+              value: "Metal",
+              mark: "ok",
+              note: "matches the form",
+            },
+            { label: "Home size", value: "3,291 sq ft" },
+            { label: "Property type", value: "Single family" },
+          ],
+        },
+      ],
+    },
+    sun: {
+      name: "NREL PVWatts",
+      logo: "N",
+      color: "#0079c2",
+      nav: ["Calculator", "Results", "Help"],
+      title: "Solar resource for this roof",
+      blocks: [
+        {
+          kind: "stats",
+          items: [
+            { label: "Sun hours a day", value: "5.38" },
+            { label: "Location", value: "Austin" },
+            { label: "Source", value: "NREL" },
+          ],
+        },
+        {
+          kind: "bars",
+          title: "Sunlight by month",
+          labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+          values: [4.1, 4.7, 5.3, 5.8, 6.1, 6.6, 6.8, 6.5, 5.9, 5.2, 4.4, 3.9],
+        },
+      ],
+    },
+    price: {
+      name: "U.S. EIA",
+      logo: "E",
+      color: "#0b6e4f",
+      nav: ["Electricity", "Data", "Analysis"],
+      title: "Average residential electricity price",
+      blocks: [
+        {
+          kind: "table",
+          columns: ["State", "Cents per kWh", "Saved for"],
+          rows: [
+            ["Texas", "15.2", "30 days"],
+            ["California", "31.0", "30 days"],
+            ["Florida", "15.0", "30 days"],
+          ],
+          highlight: [0],
+        },
+      ],
+    },
+    review: {
+      name: "RentCast",
+      logo: "RC",
+      color: "#1f6feb",
+      nav: ["Property data", "Rent estimates", "Market data"],
+      search: "2207 Riverside Drive, Austin, TX",
+      title: "Property record",
+      blocks: [
+        {
+          kind: "fields",
+          title: "Public record vs the form",
+          rows: [
+            {
+              label: "Owner on the deed",
+              value: "Riverside Family Trust",
+              mark: "no",
+              note: "form says Dana Brooks",
+            },
+            {
+              label: "Roof",
+              value: "Metal",
+              mark: "no",
+              note: "form says flat",
+            },
+            { label: "Home size", value: "2,480 sq ft" },
+            { label: "Property type", value: "Single family" },
+          ],
+        },
+      ],
+    },
+  },
+  crm: {
+    contacts: [
+      {
+        name: "Dana Brooks",
+        initials: "DB",
+        stage: "REVIEW",
+        cells: ["60", "Open"],
+      },
+      {
+        name: "Linda Park",
+        initials: "LP",
+        stage: "WARM",
+        cells: ["71", "Open"],
+      },
+      {
+        name: "Mark Ellis",
+        initials: "ME",
+        stage: "New",
+        cells: ["--", "Unverified address"],
+      },
+    ],
+    lead: {
+      name: "Robert Hayes",
+      initials: "RH",
+      email: "",
+      phone: "",
+      cells: ["88", "Open"],
+    },
+    middle: ["Lead score", "Lead status"],
+    stageLabel: "Tier",
+    stages: { lead: "HOT", sequence: "HOT", responded: "HOT" },
+    task: { title: "", stage: "" },
+  },
   end: {
     headline: "Every lead researched, scored and followed up in minutes.",
     points: [
@@ -303,136 +473,94 @@ export const solarLeads: Demo = {
     },
     {
       scene: "canvas",
-      node: "checkGeocodePrecision",
+      node: "geocodeLeadAddress",
       via: [
         "receiveLeadFormSubmission",
         "normalizeAndValidateLead",
         "routeValidVsRejected",
         "findExistingContact",
         "routeNewVsReturning",
-        "geocodeLeadAddress",
       ],
-      duration: 6200,
+      duration: 5000,
       caption:
-        "The form is checked, returning leads are spotted, and the address must match a real building with at least 90% confidence.",
+        "In n8n, the form is checked and returning leads are spotted. Then the address is looked up.",
       output: [
         ["owns home?", "yes"],
         ["returning?", "no: new"],
-        ["address match", "0.98: verified"],
       ],
     },
     {
-      scene: "canvas",
-      node: "assembleEnrichmentProfile",
-      via: [
-        "lookupPropertyOwnership",
-        "fetchRoofSolarPotential",
-        "resolveStateElectricityRate",
-      ],
-      duration: 6200,
+      scene: "site",
+      site: "geo",
+      duration: 5400,
       caption:
-        "Then the property is researched in public records: the owner on the deed, the roof, the sunlight and the state's power price.",
-      output: [
-        ["owner on deed", "Robert Hayes: matches"],
-        ["roof", "metal: matches the county"],
-        ["sunlight", "5.4 hours a day"],
-        ["power price", "Texas, from the EIA"],
-      ],
+        "Geoapify matches it to a real building, 98% sure. Anything under 90% stops here, and nothing is researched.",
+    },
+    {
+      scene: "site",
+      site: "property",
+      duration: 5200,
+      caption:
+        "The public property record confirms the owner on the deed, the roof and the size of the home.",
+    },
+    {
+      scene: "site",
+      site: "sun",
+      duration: 4800,
+      caption: "NREL gives the sunlight on that exact roof, month by month.",
+    },
+    {
+      scene: "site",
+      site: "price",
+      duration: 4800,
+      caption:
+        "And the EIA gives the state's power price, saved for a month so Texas isn't looked up twice.",
     },
     {
       scene: "canvas",
       node: "parseScoringOutput",
-      via: ["scoreLeadWithAI"],
-      duration: 5600,
-      caption:
-        "AI scores the lead from 0 to 100, with its reasons, its concerns and the next step.",
-      output: [
-        ["score", "88 of 100"],
-        ["tier", "HOT"],
-        ["why", "high bill, ready now, owner verified"],
-        ["next step", "call within a day"],
-      ],
-    },
-    {
-      scene: "canvas",
-      node: "writeFirstTouchEmail",
-      via: ["upsertQualifiedLead", "switch"],
-      duration: 6000,
-      caption:
-        "It's saved in HubSpot, and a HOT lead gets a first email. It may only use facts the system is sure of.",
-      say: "It's saved in HubSpot, and a hot lead gets a first email. It may only use facts the system is sure of.",
-      output: [
-        ["may use", "bill, timeline, roof, sunlight"],
-        ["never uses", "savings, system size: estimates"],
-        ["tone", "HOT: ask for a quick call"],
-      ],
-    },
-    {
-      scene: "inbox",
-      mode: "open",
-      duration: 6000,
-      caption:
-        "Minutes after the form, the homeowner has a personal email. No promised savings, because those would only be estimates.",
-    },
-    {
-      scene: "canvas",
-      run: 1,
-      node: "alertHumanReviewer",
       via: [
-        "receiveLeadFormSubmission",
-        "normalizeAndValidateLead",
-        "routeValidVsRejected",
-        "findExistingContact",
-        "routeNewVsReturning",
-        "geocodeLeadAddress",
-        "checkGeocodePrecision",
         "lookupPropertyOwnership",
         "fetchRoofSolarPotential",
         "resolveStateElectricityRate",
         "assembleEnrichmentProfile",
         "scoreLeadWithAI",
-        "parseScoringOutput",
-        "upsertQualifiedLead",
-        "switch",
       ],
-      duration: 7000,
+      duration: 5000,
       caption:
-        "Another lead scores 60, but the name isn't on the deed, and the roof the form calls flat is metal on the county record. A person reviews it, whatever the score.",
+        "AI scores the lead from 0 to 100, with its reasons and concerns.",
       output: [
-        ["name on deed", "no"],
-        ["roof", "form: flat · county: metal"],
-        ["tier", "REVIEW: to a person"],
+        ["score", "88: HOT"],
+        ["why", "high bill, ready now, owner verified"],
       ],
     },
     {
-      scene: "canvas",
-      run: 2,
-      node: "alertSalesOnBadAddress",
-      via: [
-        "receiveLeadFormSubmission",
-        "normalizeAndValidateLead",
-        "routeValidVsRejected",
-        "findExistingContact",
-        "routeNewVsReturning",
-        "geocodeLeadAddress",
-        "checkGeocodePrecision",
-        "logUnverifiedLead",
-      ],
+      scene: "crm",
+      mode: "lead",
+      duration: 4800,
+      caption:
+        "In HubSpot, the lead lands scored and tiered, before anyone picks up the phone.",
+    },
+    {
+      scene: "inbox",
+      mode: "open",
+      duration: 6200,
+      caption:
+        "A hot lead gets a first email within minutes. It only uses facts the system is sure of, so no promised savings.",
+    },
+    {
+      scene: "site",
+      site: "review",
       duration: 6000,
       caption:
-        "An address that can't be matched isn't researched at all. Nothing is looked up on a guessed address.",
-      output: [
-        ["address match", "0.25: below 0.90"],
-        ["researched?", "no"],
-        ["sales", "asked to confirm by phone"],
-      ],
+        "Another lead looks strong, but the deed shows a different owner, and the county says the roof is metal, not flat.",
     },
     {
       scene: "chat",
       thread: "wa",
       duration: 7000,
       caption:
-        "Sales get both on WhatsApp with the reasons, so only the calls that need a person go to a person.",
+        "So it goes to a person on WhatsApp, whatever its score. So does an address that can't be verified.",
       messages: [
         { from: "me", at: 0.08, time: "1:20 PM", text: reviewAlert },
         { from: "me", at: 0.42, time: "1:23 PM", text: addressAlert },

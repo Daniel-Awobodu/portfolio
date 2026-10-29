@@ -2,12 +2,12 @@ import type { Demo } from "@/lib/demos/types";
 
 /*
  * The content pipeline, as it really runs (see content/automation/
- * content-pipeline.mdx and its screenshots). Both canvases are drawn from the
- * workflow's export: real node names, connections and layout. The keywords,
- * the article and the social posts follow the real test on a live blog,
- * including the keyword caught as a duplicate. The illustration is the one
- * the workflow made. The weekly scan was tested with sample Search Console
- * results.
+ * content-pipeline.mdx and its screenshots). The canvas is drawn from the
+ * workflow's export and shown briefly; the sheet, WordPress, Slack, Buffer,
+ * the blog, X, LinkedIn and Search Console carry the story. The keywords, the
+ * article and the social posts follow the real test on a live blog, including
+ * the keyword caught as a duplicate. The illustration is the one the workflow
+ * made. The weekly scan was tested with sample Search Console results.
  */
 
 const title = "Signs your rabbit is sick: Warning signs to watch";
@@ -263,85 +263,6 @@ export const contentPipeline: Demo = {
         { from: "queueLinkedInPost1", to: "markStatusAsPublished" },
       ],
     },
-    weekly: {
-      label: "Weekly keyword scan · n8n",
-      nodes: [
-        {
-          id: "scheduleTrigger1",
-          label: "Schedule Trigger1",
-          kind: "schedule",
-          x: 0,
-          y: 73,
-        },
-        {
-          id: "fetchGSCQueries",
-          label: "Fetch GSC Queries",
-          kind: "http",
-          x: 170,
-          y: 73,
-        },
-        {
-          id: "fetchPublishedPostIndex1",
-          label: "Fetch Published Post Index1",
-          kind: "http",
-          x: 328,
-          y: 73,
-        },
-        {
-          id: "fetchExistingQueue",
-          label: "Fetch Existing Queue",
-          kind: "sheets",
-          x: 474,
-          y: 73,
-        },
-        {
-          id: "classifyTrueContentGaps",
-          label: "Classify True Content Gaps",
-          kind: "code",
-          x: 644,
-          y: 73,
-        },
-        {
-          id: "routeEmptyScan",
-          label: "Route Empty Scan",
-          kind: "if",
-          x: 814,
-          y: 73,
-        },
-        {
-          id: "splitSelectedKeywords",
-          label: "Split Selected Keywords",
-          kind: "code",
-          x: 984,
-          y: 0,
-        },
-        {
-          id: "appendRowInSheet",
-          label: "Append row in sheet",
-          sub: "append: sheet",
-          kind: "sheets",
-          x: 1154,
-          y: 0,
-        },
-        {
-          id: "notifyWeeklyScanSuccess",
-          label: "Notify Weekly Scan Success",
-          kind: "slack",
-          x: 1324,
-          y: 0,
-        },
-      ],
-      edges: [
-        { from: "scheduleTrigger1", to: "fetchGSCQueries" },
-        { from: "fetchGSCQueries", to: "fetchPublishedPostIndex1" },
-        { from: "fetchPublishedPostIndex1", to: "fetchExistingQueue" },
-        { from: "fetchExistingQueue", to: "classifyTrueContentGaps" },
-        { from: "classifyTrueContentGaps", to: "routeEmptyScan" },
-        { from: "routeEmptyScan", to: "splitSelectedKeywords" },
-        { from: "splitSelectedKeywords", to: "appendRowInSheet" },
-        { from: "appendRowInSheet", to: "notifyWeeklyScanSuccess" },
-      ],
-    },
   },
   sheet: {
     title: "Keywords",
@@ -406,6 +327,129 @@ export const contentPipeline: Demo = {
       },
     ],
   },
+  sites: {
+    draft: {
+      name: "WordPress",
+      logo: "W",
+      color: "#2271b1",
+      dark: true,
+      nav: ["Dashboard", "Posts", "Media", "Pages"],
+      title: "Posts",
+      blocks: [
+        {
+          kind: "table",
+          columns: ["Title", "Status", "Featured image", "Date"],
+          rows: [
+            [title, "Draft", "rabbit.webp", "Sep 5, 2026"],
+            [
+              "Cat Scratching Furniture Solutions That Work",
+              "Published",
+              "cat-scratcher.webp",
+              "Sep 5, 2026",
+            ],
+            [
+              "DIY Enrichment Toys for Indoor Cats",
+              "Published",
+              "cat-toys.webp",
+              "Sep 4, 2026",
+            ],
+            [
+              "How to Introduce a New Cat to Your Home",
+              "Published",
+              "new-cat.webp",
+              "Sep 4, 2026",
+            ],
+          ],
+          highlight: [0],
+          pill: 1,
+        },
+      ],
+    },
+    buffer: {
+      name: "Buffer",
+      logo: "B",
+      color: "#2c4bff",
+      nav: ["Publish", "Analyze", "Engage"],
+      title: "Sent posts",
+      blocks: [
+        {
+          kind: "list",
+          rows: [
+            {
+              title:
+                "Rabbits hide illness. Watch appetite, droppings and posture…",
+              sub: "X · @Deemhorn · with the article link",
+              avatar: "𝕏",
+              mark: "ok",
+              note: "sent",
+            },
+            {
+              title:
+                "The quiet rabbit isn't necessarily healthy. It may be the clearest sign…",
+              sub: "LinkedIn · Daniel Awobodu · with the article link",
+              avatar: "in",
+              mark: "ok",
+              note: "sent",
+            },
+          ],
+        },
+      ],
+    },
+    duplicate: {
+      name: "WordPress",
+      logo: "W",
+      color: "#2271b1",
+      dark: true,
+      nav: ["Dashboard", "Posts", "Media", "Pages"],
+      search: "signs your dog needs to see a vet immediately",
+      title: "Is it already on the blog?",
+      blocks: [
+        {
+          kind: "list",
+          rows: [
+            {
+              title: "Your dog might need to see a Vet, if you see these signs",
+              sub: "Published · title overlap with the keyword: 83%",
+              mark: "no",
+              note: "already covered: Duplicate",
+            },
+          ],
+        },
+        {
+          kind: "fields",
+          rows: [
+            {
+              label: "Keyword",
+              value: "signs your dog needs to see a vet immediately",
+            },
+            { label: "Status in the sheet", value: "Duplicate", mark: "ok" },
+            { label: "Words written", value: "0" },
+          ],
+        },
+      ],
+    },
+    console: {
+      name: "Search Console",
+      logo: "GSC",
+      color: "#1a73e8",
+      nav: ["Overview", "Performance", "Pages"],
+      title: "Performance · searches where the blog sits just off page one",
+      blocks: [
+        {
+          kind: "table",
+          columns: ["Search", "Impressions", "Position", "Already covered?"],
+          rows: [
+            ["care for pregnant cats", "85", "22.4", "no"],
+            ["cat litter box smell", "45", "18.3", "no"],
+            ["hamster cage size", "40", "19.7", "no"],
+            ["signs your rabbit is sick", "31", "24.1", "yes: just published"],
+            ["rabbit", "12", "61.0", "too broad"],
+          ],
+          highlight: [0, 1, 2],
+        },
+      ],
+    },
+  },
   post: {
     site: "quality-buy.online",
     title,
@@ -449,7 +493,7 @@ export const contentPipeline: Demo = {
     {
       scene: "canvas",
       flow: "write",
-      node: "routeDuplicateKeywords",
+      node: "validateArticleAndStripBadLinks",
       via: [
         "scheduleTrigger",
         "fetchNewKeywordRows",
@@ -458,51 +502,23 @@ export const contentPipeline: Demo = {
         "fetchPublishedPostIndex",
         "extractRelatedPostURLs",
         "buildInternalLinkAllowlist",
+        "routeDuplicateKeywords",
+        "generateArticle",
       ],
       duration: 6000,
       caption:
-        "Every hour, it takes the next keyword, locks it so it's never picked twice, and checks the blog hasn't covered it already.",
-      output: [
-        ["keyword", "signs your rabbit is sick"],
-        ["status", "Processing"],
-        ["on the blog?", "no: a new topic"],
-      ],
-    },
-    {
-      scene: "canvas",
-      flow: "write",
-      node: "validateArticleAndStripBadLinks",
-      via: ["generateArticle"],
-      duration: 6000,
-      caption:
-        "AI writes the article, an image prompt, and a post each for X and LinkedIn. Then code checks all of it.",
+        "Every hour, n8n takes the next keyword. AI writes the article and both social posts, and code checks the length, the links and the limits.",
       output: [
         ["length", "over 800 words"],
-        ["links", "only to real posts on the blog"],
-        ["X post", "fits the limit"],
-        ["LinkedIn post", "longer, conversational"],
+        ["links", "real posts only"],
       ],
     },
     {
-      scene: "canvas",
-      flow: "write",
-      node: "requestPublishApproval",
-      via: [
-        "if",
-        "generateAnImage",
-        "editImage",
-        "uploadImageToWPMedia",
-        "createWPDraftPost",
-        "markStatusAsDRAFTED",
-      ],
-      duration: 5800,
+      scene: "site",
+      site: "draft",
+      duration: 5400,
       caption:
-        "AI makes the featured image, and the article is saved in WordPress as a draft. Nothing is live yet.",
-      output: [
-        ["image", "made, saved as light WebP"],
-        ["WordPress", "saved as a draft"],
-        ["Slack", "approval asked"],
-      ],
+        "The article and its AI-made image are saved in WordPress as a draft. Nothing is live yet.",
     },
     {
       scene: "slack",
@@ -512,27 +528,11 @@ export const contentPipeline: Demo = {
       caption: "A person reads the preview and presses Publish in Slack.",
     },
     {
-      scene: "canvas",
-      flow: "write",
-      node: "markStatusAsPublished",
-      via: [
-        "routeApprovalDecision",
-        "checkDraftStatus",
-        "routeDraftStatus",
-        "publishPost",
-        "notifyAborted",
-        "queueXPost",
-        "queueLinkedInPost1",
-      ],
-      duration: 6400,
+      scene: "site",
+      site: "buffer",
+      duration: 5600,
       caption:
-        "Before publishing, it checks the draft is still a draft, in case someone published or deleted it by hand. Then it goes live and is shared.",
-      output: [
-        ["draft intact?", "yes"],
-        ["WordPress", "published"],
-        ["shared", "X and LinkedIn, via Buffer"],
-        ["sheet", "Published"],
-      ],
+        "It checks nobody published it by hand, puts it live, and Buffer sends the X and LinkedIn posts.",
     },
     {
       scene: "post",
@@ -551,53 +551,18 @@ export const contentPipeline: Demo = {
         "On X it's short and direct. On LinkedIn it's longer and conversational.",
     },
     {
-      scene: "canvas",
-      flow: "write",
-      run: 1,
-      node: "markKeywordAsDuplicate",
-      via: [
-        "scheduleTrigger",
-        "fetchNewKeywordRows",
-        "stripToOneItem",
-        "lockRowToProcessing",
-        "fetchPublishedPostIndex",
-        "extractRelatedPostURLs",
-        "buildInternalLinkAllowlist",
-        "routeDuplicateKeywords",
-      ],
+      scene: "site",
+      site: "duplicate",
       duration: 6400,
       caption:
         "Another keyword overlaps 83% with a post the blog already has. It's marked Duplicate, and nothing is written.",
-      output: [
-        ["keyword", "signs your dog needs to see a vet"],
-        ["existing post", "Your dog might need to see a Vet…"],
-        ["title overlap", "83%"],
-        ["result", "Duplicate: not written"],
-      ],
     },
     {
-      scene: "canvas",
-      flow: "weekly",
-      node: "notifyWeeklyScanSuccess",
-      via: [
-        "scheduleTrigger1",
-        "fetchGSCQueries",
-        "fetchPublishedPostIndex1",
-        "fetchExistingQueue",
-        "classifyTrueContentGaps",
-        "routeEmptyScan",
-        "splitSelectedKeywords",
-        "appendRowInSheet",
-      ],
-      duration: 6200,
+      scene: "site",
+      site: "console",
+      duration: 6400,
       caption:
-        "Every Monday, Search Console shows what people search for where the blog sits just off page one. The best become new keywords.",
-      output: [
-        ["top pick", "care for pregnant cats"],
-        ["search data", "position 22.4, 85 impressions"],
-        ["dropped", "covered, queued or too rare"],
-        ["added", "up to 5 a week"],
-      ],
+        "Every Monday, Search Console shows searches where the blog sits just off page one. The best become new keywords.",
     },
     {
       scene: "end",
