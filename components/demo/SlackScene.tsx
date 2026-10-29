@@ -37,6 +37,8 @@ export default function SlackScene({
   const arrive = easeOut(span(t, 0.06, 0.2));
   const pressed = beat.approve && t >= 0.62;
   const done = beat.approve ? easeOut(span(t, 0.68, 0.8)) : 0;
+  const rejected = !!beat.reject && t >= 0.55;
+  const reason = beat.reject ? easeOut(span(t, 0.6, 0.72)) : 0;
   const items = msg.items.slice(0, narrow ? 2 : 3);
 
   return (
@@ -135,6 +137,27 @@ export default function SlackScene({
                     ))}
                   </div>
                 ) : null}
+                {msg.sections?.map((sec, i) => (
+                  <div
+                    key={sec.heading}
+                    className="mt-1.5"
+                    style={{
+                      opacity: easeOut(
+                        span(t, 0.18 + i * 0.12, 0.3 + i * 0.12),
+                      ),
+                    }}
+                  >
+                    <p className="font-bold text-white">{sec.heading}</p>
+                    {sec.lines.map((line) => (
+                      <p
+                        key={line}
+                        className={`${line.startsWith("Proof:") ? "text-[#c5c6c8] italic" : ""} ${narrow ? "truncate" : ""}`}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                ))}
                 {msg.quote ? (
                   <p className="mt-1.5 border-l-4 border-white/30 pl-2.5 text-[#d1d2d3]">
                     {msg.quote}
@@ -146,42 +169,58 @@ export default function SlackScene({
                     {msg.link[1]}
                   </p>
                 ) : null}
-                {msg.footer ? (
+                {msg.footer && !(narrow && msg.sections) ? (
                   <p className="text-[0.92em] text-[#9a9b9e] italic">
                     {msg.footer}
                   </p>
                 ) : null}
                 {msg.buttons ? (
                   <>
-                    {!narrow ? (
-                      <>
-                        <p className="mt-1.5 text-[#1d9bd1]">
-                          🔗 Open Gmail Draft to Edit
-                        </p>
-                        <p className="truncate text-[0.92em] text-[#9a9b9e]">
-                          No reply in 2 days? The draft is not sent.
-                        </p>
-                      </>
-                    ) : null}
+                    {!narrow && msg.notes
+                      ? msg.notes.map((note, i) => (
+                          <p
+                            key={note}
+                            className={
+                              i === 0
+                                ? "mt-1.5 text-[#1d9bd1]"
+                                : "truncate text-[0.92em] text-[#9a9b9e]"
+                            }
+                          >
+                            {note}
+                          </p>
+                        ))
+                      : null}
                     <div className="mt-1.5 flex gap-2">
-                      <span className="rounded border border-white/30 px-2.5 py-0.5 font-semibold">
-                        Reject
+                      <span
+                        className={`rounded border px-2.5 py-0.5 font-semibold transition-transform duration-150 ${rejected ? "scale-95 border-[#e01e5a] bg-[#e01e5a]/20 text-white ring-2 ring-[#e01e5a]" : "border-white/30"}`}
+                      >
+                        {msg.buttonLabels?.[0] ?? "Reject"}
                       </span>
                       <span
                         className={`rounded px-2.5 py-0.5 font-semibold text-white transition-transform duration-150 ${pressed ? "scale-95 bg-[#005e46] ring-2 ring-[#2bac76]" : "bg-[#007a5a]"}`}
                       >
-                        Approve
+                        {msg.buttonLabels?.[1] ?? "Approve"}
                       </span>
                     </div>
                   </>
+                ) : null}
+                {beat.reject ? (
+                  <p
+                    className="mt-1.5 font-semibold text-[#ecb22e]"
+                    style={{ opacity: reason }}
+                  >
+                    ↩ Rejected by {slack.approvedBy}: &ldquo;{beat.reject}
+                    &rdquo;
+                  </p>
                 ) : null}
                 {beat.approve ? (
                   <p
                     className="mt-1.5 font-semibold text-[#2bac76]"
                     style={{ opacity: done }}
                   >
-                    ✅ Approved by {slack.approvedBy}. Reply sent in the
-                    customer&apos;s thread.
+                    ✅ Approved by {slack.approvedBy}.{" "}
+                    {slack.approvedNote ??
+                      "Reply sent in the customer's thread."}
                   </p>
                 ) : null}
               </div>

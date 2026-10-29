@@ -35,6 +35,72 @@ export type NodeKind =
   | "file"
   | "slack";
 
+export type SiteMark = "ok" | "no" | "pick" | "new";
+
+/** One part of a platform's page ("site" scenes). */
+export type SiteBlock =
+  | {
+      kind: "list";
+      title?: string;
+      rows: {
+        title: string;
+        sub?: string;
+        tags?: string[];
+        /** What the workflow decides on this row, shown after a moment. */
+        mark?: SiteMark;
+        note?: string;
+        avatar?: string;
+      }[];
+    }
+  | {
+      kind: "fields";
+      title?: string;
+      rows: { label: string; value: string; mark?: SiteMark; note?: string }[];
+    }
+  | {
+      kind: "text";
+      title?: string;
+      meta?: string;
+      lines: string[];
+      /** A quote searched for on the page, and whether it's there. */
+      find?: { text: string; found: boolean };
+    }
+  | { kind: "stats"; items: { label: string; value: string }[] }
+  | {
+      kind: "table";
+      title?: string;
+      columns: string[];
+      rows: string[][];
+      /** Rows the workflow picks. */
+      highlight?: number[];
+      /** A column drawn as a pill. */
+      pill?: number;
+    }
+  | { kind: "map"; label: string; note: string }
+  | {
+      kind: "bars";
+      title: string;
+      labels: string[];
+      values: number[];
+      note?: string;
+    };
+
+/** A platform's page: its brand, and what's on it. */
+export type Site = {
+  name: string;
+  /** One or two letters for the logo badge. */
+  logo: string;
+  color: string;
+  /** A dark top bar. */
+  dark?: boolean;
+  nav?: string[];
+  search?: string;
+  title: string;
+  /** Wide screens: the first block on the left, the rest on the right. */
+  columns?: boolean;
+  blocks: SiteBlock[];
+};
+
 export type SlackMessage = {
   time: string;
   title: string;
@@ -49,6 +115,8 @@ export type SlackMessage = {
   items: { asked: string; matched: string }[];
   /** A quoted block, like the suggested next step. */
   quote?: string;
+  /** Headed groups of lines, like a daily digest. */
+  sections?: { heading: string; lines: string[] }[];
   /** A link line, like "Open the record · SHQ-…". */
   link?: [string, string];
   footer?: string;
@@ -57,6 +125,10 @@ export type SlackMessage = {
   preview?: string[];
   /** Ask for a decision, with the buttons. */
   buttons?: boolean;
+  /** The two buttons: Reject and Approve unless set. */
+  buttonLabels?: [string, string];
+  /** Lines above the buttons: a link first, then a small note. */
+  notes?: string[];
 };
 
 export type Attachment = {
@@ -204,6 +276,12 @@ export type Beat = BeatBase &
     | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
     | { scene: "webform" }
+    | { scene: "post"; mode: "article" | "social" }
+    | {
+        scene: "site";
+        /** A key of `sites`. */
+        site: string;
+      }
     | {
         scene: "inbox";
         mode: "arrive" | "match" | "pile" | "open" | "thread" | "sort";
@@ -226,6 +304,8 @@ export type Beat = BeatBase &
         message: number;
         /** Someone presses Approve. */
         approve?: boolean;
+        /** Someone presses Reject, giving this reason. */
+        reject?: string;
       }
     | { scene: "end" }
   );
@@ -303,6 +383,19 @@ export type Demo = {
       failed: number;
       reason: string;
     };
+  };
+  /** Platforms' own pages ("site" scenes), by key. */
+  sites?: Record<string, Site>;
+  /** A published article and its social posts ("post" scenes). */
+  post?: {
+    site: string;
+    title: string;
+    image: string;
+    byline: string;
+    /** Body text; a "## " start marks a heading. */
+    paragraphs: string[];
+    x: { name: string; handle: string; time: string; text: string };
+    linkedin: { name: string; headline: string; time: string; text: string };
   };
   /** A request form on a website, in a browser ("webform" scenes). */
   webform?: {
@@ -396,13 +489,31 @@ export type Demo = {
     channels: string[];
     bot: string;
     approvedBy: string;
+    /** After "Approved by …"; defaults to the reply being sent. */
+    approvedNote?: string;
     messages: SlackMessage[];
   };
   /** HubSpot's Contacts and Tasks tables ("crm" scenes). */
   crm?: {
     /** Contacts already in the table, under the new lead. */
-    contacts: { name: string; initials: string; stage: string }[];
-    lead: { name: string; initials: string; email: string; phone: string };
+    contacts: {
+      name: string;
+      initials: string;
+      stage: string;
+      /** Shown in the two middle columns instead of blurred details. */
+      cells?: [string, string];
+    }[];
+    lead: {
+      name: string;
+      initials: string;
+      email: string;
+      phone: string;
+      cells?: [string, string];
+    };
+    /** The HubSpot object shown: "Contacts" unless set. */
+    object?: string;
+    /** Headings of the two middle columns: Email and Phone number unless set. */
+    middle?: [string, string];
     /** The lead's lifecycle stage: on arrival, during the sequence, after
      *  the reply. */
     stages: { lead: string; sequence: string; responded: string };
