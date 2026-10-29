@@ -2,11 +2,13 @@ import type { CallLine, Demo } from "@/lib/demos/types";
 
 /*
  * The phone receptionist, as it really runs (see content/automation/
- * voice-receptionist.mdx and its workflow screenshot). The node names and
- * branches match the n8n canvas, which the voice agent calls twice: once to
- * check availability, once to book. The run shown is the one tested in the
- * write-up: the chosen slot is taken mid-call, the recheck catches it, and the
- * caller picks another time. Every name, number and time here is sample data.
+ * voice-receptionist.mdx and its screenshots). The node names and branches
+ * match the n8n canvas, which the voice agent calls twice: once to check
+ * availability, once to book. It's shown in four short moments with their
+ * data; the call, Vapi, the branch sheet, the calendar and Termii carry the
+ * rest. The run shown is the one tested in the write-up: the chosen slot is
+ * taken mid-call, the recheck catches it, and the caller picks another time.
+ * Every name, number and time here is sample data.
  */
 
 const greeting: CallLine[] = [
@@ -288,6 +290,88 @@ export const voiceReceptionist: Demo = {
       ],
     },
   },
+  sites: {
+    vapi: {
+      name: "Vapi",
+      logo: "V",
+      color: "#14b8a6",
+      dark: true,
+      nav: ["Assistant", "Logs", "Tools", "Analysis"],
+      title: "Stacked HQ Dentals · live call",
+      columns: true,
+      blocks: [
+        {
+          kind: "list",
+          title: "What happens on the call",
+          rows: [
+            {
+              title: "Hears her",
+              sub: "Deepgram · Nova 3 Medical",
+              mark: "ok",
+            },
+            { title: "Understands her", sub: "OpenAI · GPT-4.1", mark: "ok" },
+            { title: "Speaks back", sub: "ElevenLabs · Turbo v2", mark: "ok" },
+            {
+              title: "Tool call: check availability",
+              sub: "Abuja · Monday afternoon → the n8n workflow",
+              mark: "new",
+            },
+          ],
+        },
+        {
+          kind: "stats",
+          items: [
+            { label: "Cost a minute", value: "~$0.12" },
+            { label: "Answers", value: "24/7" },
+            { label: "Branches", value: "10" },
+          ],
+        },
+      ],
+    },
+    branches: {
+      name: "Google Sheets",
+      logo: "S",
+      color: "#0f9d58",
+      nav: ["File", "Edit", "View"],
+      title: "Branches",
+      blocks: [
+        {
+          kind: "table",
+          columns: ["Branch", "City", "Calendar", "Open"],
+          rows: [
+            ["Lekki", "Lagos", "Lekki branch", "9am - 6pm"],
+            ["Ikeja", "Lagos", "Ikeja branch", "9am - 6pm"],
+            ["Abuja", "Abuja", "Abuja branch", "9am - 6pm"],
+            ["Port Harcourt", "Rivers", "PH branch", "9am - 5pm"],
+            ["Ibadan", "Oyo", "Ibadan branch", "9am - 5pm"],
+          ],
+          highlight: [2],
+        },
+      ],
+    },
+    termii: {
+      name: "Termii",
+      logo: "T",
+      color: "#1f8f5f",
+      dark: true,
+      nav: ["Overview", "Messaging", "Sender IDs"],
+      title: "Message log",
+      blocks: [
+        {
+          kind: "list",
+          rows: [
+            {
+              title: "Outgoing message from STACKEDHQ",
+              sub: "Today 10:42 · Hi Ada Okafor, your appointment at STACKEDHQ Dentals, Abuja, has been…",
+              mark: "ok",
+              note: "Delivered",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  outputUnder: true,
   end: {
     headline: "Every call answered, and booked in the right diary.",
     points: [
@@ -312,13 +396,19 @@ export const voiceReceptionist: Demo = {
       lines: greeting,
     },
     {
+      scene: "site",
+      site: "vapi",
+      duration: 6200,
+      caption:
+        "The voice runs on Vapi: Deepgram hears her, OpenAI understands her, and ElevenLabs speaks. For open times, it asks the n8n workflow.",
+    },
+    {
       scene: "canvas",
       run: 0,
-      node: "switch",
-      via: ["webhook", "code0"],
-      duration: 3800,
-      caption:
-        "The agent asks the workflow for open times. A switch sends it down the availability path.",
+      node: "calId",
+      via: ["webhook", "code0", "switch"],
+      duration: 4600,
+      caption: "In n8n, a switch sends the request down the availability path.",
       output: [
         ["action", "check availability"],
         ["branch", "Abuja"],
@@ -326,27 +416,24 @@ export const voiceReceptionist: Demo = {
       ],
     },
     {
-      scene: "canvas",
-      run: 0,
-      node: "events",
-      via: ["calId"],
-      duration: 4000,
+      scene: "site",
+      site: "branches",
+      duration: 5000,
       caption:
-        "A sheet points it to the Abuja branch’s own calendar, and it reads that day’s bookings.",
-      output: [
-        ["calendar", "Abuja branch"],
-        ["booked", "2pm"],
-      ],
+        "A Google Sheet gives each branch its own calendar, so one phone line serves ten branches.",
     },
     {
       scene: "canvas",
       run: 0,
       node: "respond",
-      via: ["code1", "code2"],
-      duration: 4200,
+      via: ["events", "code1", "code2"],
+      duration: 5000,
       caption:
         "It finds the free one-hour slots, never the lunch hour, and sends back the first three.",
-      output: [["open", "3pm, 4pm, 5pm"]],
+      output: [
+        ["booked", "2pm"],
+        ["sent back", "3pm, 4pm, 5pm"],
+      ],
     },
     {
       scene: "call",
@@ -367,24 +454,25 @@ export const voiceReceptionist: Demo = {
     {
       scene: "canvas",
       run: 1,
-      node: "ifFree",
-      via: ["webhook", "code0", "switch", "calId1", "avail"],
-      duration: 4600,
-      caption:
-        "Before booking, the workflow checks 5pm again. It has just been taken.",
-      output: [
-        ["slot", "Monday 5pm"],
-        ["still free", "no"],
-      ],
-    },
-    {
-      scene: "canvas",
-      run: 1,
       node: "respond2",
-      via: ["events1", "code3", "code4"],
-      duration: 4000,
-      caption: "So it finds three new times and sends those back instead.",
-      output: [["new times", "3pm, 4pm, Tue 2pm"]],
+      via: [
+        "webhook",
+        "code0",
+        "switch",
+        "calId1",
+        "avail",
+        "ifFree",
+        "events1",
+        "code3",
+        "code4",
+      ],
+      duration: 6200,
+      caption:
+        "Before booking, the workflow checks 5pm again. It's just been taken, so it sends three new times instead.",
+      output: [
+        ["5pm", "just taken"],
+        ["new times", "3pm, 4pm, Tue 2pm"],
+      ],
     },
     {
       scene: "call",
@@ -417,24 +505,18 @@ export const voiceReceptionist: Demo = {
       ],
     },
     {
-      scene: "canvas",
-      run: 2,
-      node: "sms",
-      via: ["code5", "respond1", "wait"],
-      duration: 4600,
-      caption:
-        "The agent confirms on the call. A short while later, a text goes out through Termii.",
-      output: [
-        ["to", "0803 ••• 4821"],
-        ["sent", "booking confirmation"],
-      ],
-    },
-    {
       scene: "calendar",
       mode: "booked",
       duration: 5200,
       caption:
         "The booking sits in the Abuja calendar, with her name, number and the reason for the visit.",
+    },
+    {
+      scene: "site",
+      site: "termii",
+      duration: 5000,
+      caption:
+        "The agent confirms on the call. A short while later, a text goes out through Termii.",
     },
     {
       scene: "chat",

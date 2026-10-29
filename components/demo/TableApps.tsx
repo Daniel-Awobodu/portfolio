@@ -202,7 +202,15 @@ export function AirtableScene({
             </thead>
             <tbody>
               {sheet.rows.map((row, r) => (
-                <tr key={r}>
+                <tr
+                  key={r}
+                  className="transition-colors duration-300"
+                  style={
+                    sheet.highlight?.includes(r) && t >= 0.4
+                      ? { background: "#fff1c2" }
+                      : undefined
+                  }
+                >
                   <td className="border-b border-[#e1e1e1] text-center text-[#8a8f98] tabular-nums">
                     {r + 1}
                   </td>
