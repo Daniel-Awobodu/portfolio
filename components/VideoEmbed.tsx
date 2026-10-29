@@ -155,7 +155,7 @@ export default function VideoEmbed({
                 aria-label={
                   full ? "Exit full screen video" : "Full screen video"
                 }
-                className="absolute top-0 right-0 z-10 flex h-14 w-14 items-center justify-center rounded-bl-md bg-black/80 text-white transition-colors duration-150 hover:bg-black"
+                className="absolute top-0 right-0 z-10 flex h-14 w-14 items-center justify-center rounded-bl-md bg-accent-strong text-on-accent shadow-lg transition-opacity duration-150 hover:opacity-90"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -175,6 +175,25 @@ export default function VideoEmbed({
                 </svg>
               </button>
             </div>
+            <button
+              type="button"
+              onClick={enterFull}
+              className="mt-3 inline-flex items-center gap-2 rounded-sm border border-accent-strong px-3 py-2 text-sm font-semibold text-accent-strong transition-colors duration-150 hover:bg-accent-strong hover:text-on-accent"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+              </svg>
+              Watch full screen
+            </button>
             <figcaption className="mt-3 text-sm text-muted">
               A walkthrough of the build, showing how it runs from start to
               finish. For a quicker watch, set the speed to 1.5x or 2x with the
