@@ -191,8 +191,7 @@ const handoffGuide = {
 /** A real build, explained the way the thesis promises. */
 const workedExample = {
   slug: "whatsapp-receipts",
-  video:
-    "https://drive.google.com/file/d/1Ms8CrEDk3Yv--q1XOGvp7fcsWXnlj8fm/view?usp=sharing",
+  video: "https://youtu.be/7x4y35JuGaI",
   image: "/case-studies/whatsapp-receipts/workflow.png",
   alt: "The receipt workflow in n8n, from the incoming WhatsApp message to the Drive upload, the expense sheet row and the reply to the driver",
   sentences: [

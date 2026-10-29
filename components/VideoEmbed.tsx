@@ -1,13 +1,26 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+
+/** A YouTube video's id, from a watch, share, Shorts, live or embed link. */
+function youtubeId(src: string): string | null {
+  const m = src.match(
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)([\w-]{11})/,
+  );
+  return m ? m[1] : null;
+}
 
 /**
  * Google Drive share links (…/file/d/<id>/view?usp=sharing) can't be framed;
- * the same file's /preview URL can. Every other URL (Loom, YouTube embed,
- * Vimeo) is passed through untouched.
+ * the same file's /preview URL can. YouTube links become a privacy-enhanced
+ * embed that plays in the page on phones. Every other URL (Loom, Vimeo) is
+ * passed through untouched.
  */
 function toEmbedUrl(src: string): string {
+  const yt = youtubeId(src);
+  if (yt) {
+    return `https://www.youtube-nocookie.com/embed/${yt}?rel=0&playsinline=1&modestbranding=1`;
+  }
   const drive = src.match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
   return drive ? `https://drive.google.com/file/d/${drive[1]}/preview` : src;
 }
@@ -27,9 +40,55 @@ export default function VideoEmbed({
 }) {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [full, setFull] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
 
+  const exitFull = useCallback(() => {
+    setFull(false);
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }, []);
+
+  // Full screen stays on this page. Where the browser allows it, the player
+  // goes truly full screen and the phone turns to landscape; elsewhere (an
+  // iPhone, say) it fills the window instead.
+  async function enterFull() {
+    setFull(true);
+    const box = boxRef.current;
+    try {
+      if (box?.requestFullscreen) await box.requestFullscreen();
+      const orientation = screen.orientation as ScreenOrientation & {
+        lock?: (o: string) => Promise<void>;
+      };
+      await orientation.lock?.("landscape");
+    } catch {
+      // The window-filling layout is already showing.
+    }
+  }
+
+  useEffect(() => {
+    if (!full) return;
+    const onChange = () => {
+      if (!document.fullscreenElement) setFull(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") exitFull();
+    };
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("fullscreenchange", onChange);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      document.removeEventListener("fullscreenchange", onChange);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [full, exitFull]);
+
   if (!src) return null;
+  // YouTube's player has its own full-screen button and phone controls; the
+  // page's buttons are for players that lack them (Google Drive).
+  const ownFullScreen = !youtubeId(src);
 
   function toggle() {
     setLoaded(true);
@@ -87,7 +146,14 @@ export default function VideoEmbed({
       >
         <div className="overflow-hidden" inert={!open}>
           <figure className="pt-6">
-            <div className="relative w-full overflow-hidden rounded-md border border-hairline bg-ink pt-[56.25%]">
+            <div
+              ref={boxRef}
+              className={
+                full
+                  ? "fixed inset-0 z-[100] bg-black"
+                  : "relative w-full overflow-hidden rounded-md border border-hairline bg-ink pt-[56.25%]"
+              }
+            >
               {loaded ? (
                 <iframe
                   src={toEmbedUrl(src)}
@@ -97,7 +163,59 @@ export default function VideoEmbed({
                   className="absolute inset-0 h-full w-full"
                 />
               ) : null}
+              {ownFullScreen ? (
+                <>
+                  {/* Sits over the player's own "open in a new tab" corner, so the
+                  full-screen tap keeps visitors on this page. */}
+                  <button
+                    type="button"
+                    onClick={full ? exitFull : enterFull}
+                    aria-label={
+                      full ? "Exit full screen video" : "Full screen video"
+                    }
+                    className="absolute top-0 right-0 z-10 flex h-14 w-14 items-center justify-center rounded-bl-md bg-accent-strong text-on-accent shadow-lg transition-opacity duration-150 hover:opacity-90"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-6 w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      {full ? (
+                        <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+                      ) : (
+                        <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+                      )}
+                    </svg>
+                  </button>
+                </>
+              ) : null}
             </div>
+            {ownFullScreen ? (
+              <button
+                type="button"
+                onClick={enterFull}
+                className="mt-3 inline-flex items-center gap-2 rounded-sm border border-accent-strong px-3 py-2 text-sm font-semibold text-accent-strong transition-colors duration-150 hover:bg-accent-strong hover:text-on-accent"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+                </svg>
+                Watch full screen
+              </button>
+            ) : null}
             <figcaption className="mt-3 text-sm text-muted">
               A walkthrough of the build, showing how it runs from start to
               finish. For a quicker watch, set the speed to 1.5x or 2x with the
