@@ -508,6 +508,7 @@ export const solarLeads: Demo = {
       site: "sun",
       duration: 4800,
       caption: "NREL gives the sunlight on that exact roof, month by month.",
+      say: "N. R. E. L. gives the sunlight on that exact roof, month by month.",
     },
     {
       scene: "site",
@@ -539,7 +540,7 @@ export const solarLeads: Demo = {
       mode: "lead",
       duration: 4800,
       caption:
-        "In HubSpot, the lead lands scored and tiered, before anyone picks up the phone.",
+        "In HubSpot, the lead arrives scored and tiered, before anyone picks up the phone.",
     },
     {
       scene: "inbox",

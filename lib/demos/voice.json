@@ -1,44 +1,44 @@
 {
   "ai-outreach": [
     {
-      "text": "Every day, new prospect companies are picked up from HubSpot, and Apollo fills in what they do, their size and revenue.",
-      "ms": 6113
+      "text": "Every day, up to 20 new prospect companies are picked up from HubSpot.",
+      "ms": 3579
     },
     {
-      "text": "It finds the people there and picks the one who can act: operations, IT or leadership. Never an assistant or an intern.",
-      "ms": 7628
+      "text": "In n8n, each company with a website goes to Apollo.",
+      "ms": 3840
     },
     {
-      "text": "It searches the last month of news for a real reason to write. Stock news, awards and press releases don't count, and if there's nothing real, it says so.",
-      "ms": 9038
+      "text": "Apollo fills in what the company does, its size and revenue, and HubSpot is updated.",
+      "ms": 5277
     },
     {
-      "text": "The email is drafted in under 120 words, opening with that news. Invented case studies and stock lines are banned.",
-      "ms": 7445
+      "text": "Hunter.io lists the people there. The one who can act is picked: operations, IT or leadership, never an assistant or an intern.",
+      "ms": 8464
+    },
+    {
+      "text": "Then the last month of news is searched for a real reason to write. Awards and press releases don't count. A $40M Series B does.",
+      "ms": 7497
+    },
+    {
+      "text": "AI drafts the email in under 120 words, opening with that news. Invented results and stock lines are banned.",
+      "ms": 6661
     },
     {
       "text": "Nothing is sent until a person says yes in Slack. Here the reviewer rejects the draft, and says why.",
       "ms": 5878
     },
     {
-      "text": "The rewrite fixes only what the reviewer flagged. The subject changes, and the rest is left alone.",
-      "ms": 5538
-    },
-    {
-      "text": "This time the reviewer approves, and the email goes out through Gmail.",
-      "ms": 4389
+      "text": "The rewrite fixes only what was flagged: the subject. This time the reviewer approves, and it goes out through Gmail.",
+      "ms": 6060
     },
     {
       "text": "The prospect gets an email about their own news, sent to the person who can act on it.",
       "ms": 4754
     },
     {
-      "text": "A draft still rejected after two rewrites goes to a person, instead of looping forever.",
-      "ms": 5747
-    },
-    {
-      "text": "In HubSpot, a company with no website, or none Apollo can find, is marked for a person, not guessed.",
-      "ms": 6087
+      "text": "Back in HubSpot, a company with no website, or none Apollo can find, is marked for a person, never guessed. So is a draft rejected twice.",
+      "ms": 7993
     },
     {
       "text": "Research, a real reason to write, and a person's yes before every send.",
@@ -135,24 +135,20 @@
       "ms": 4232
     },
     {
-      "text": "Every hour, it takes the next keyword, locks it so it's never picked twice, and checks the blog hasn't covered it already.",
-      "ms": 6113
+      "text": "Every hour, n8n takes the next keyword. AI writes the article and both social posts, and code checks the length, the links and the limits.",
+      "ms": 8229
     },
     {
-      "text": "AI writes the article, an image prompt, and a post each for X and LinkedIn. Then code checks all of it.",
-      "ms": 7654
-    },
-    {
-      "text": "AI makes the featured image, and the article is saved in WordPress as a draft. Nothing is live yet.",
-      "ms": 5590
+      "text": "The article and its AI-made image are saved in WordPress as a draft. Nothing is live yet.",
+      "ms": 5120
     },
     {
       "text": "A person reads the preview and presses Publish in Slack.",
       "ms": 4049
     },
     {
-      "text": "Before publishing, it checks the draft is still a draft, in case someone published or deleted it by hand. Then it goes live and is shared.",
-      "ms": 7758
+      "text": "It checks nobody published it by hand, puts it live, and Buffer sends the X and LinkedIn posts.",
+      "ms": 5721
     },
     {
       "text": "The article is live, with its own illustration and links to related posts on the blog.",
@@ -167,8 +163,8 @@
       "ms": 7393
     },
     {
-      "text": "Every Monday, Search Console shows what people search for where the blog sits just off page one. The best become new keywords.",
-      "ms": 7288
+      "text": "Every Monday, Search Console shows searches where the blog sits just off page one. The best become new keywords.",
+      "ms": 6949
     },
     {
       "text": "One keyword becomes a published, illustrated, shared article, with one approval in between.",
@@ -345,24 +341,20 @@
   ],
   "opportunity-feed": [
     {
-      "text": "Every morning at 10am, it pulls the new job posts, and first checks the job board is working.",
-      "ms": 4963
+      "text": "Every morning at 10am, it reads the new posts on Remotive, a remote job board. Upwork or Indeed can be plugged in the same way.",
+      "ms": 7784
     },
     {
-      "text": "Posts it has already seen are dropped, so nothing is scored or posted twice.",
-      "ms": 4780
+      "text": "In n8n, posts it has seen before are dropped. AI scores the rest, and must copy one line from each post as proof.",
+      "ms": 8020
     },
     {
-      "text": "AI scores each post against the agency's services. Before scoring, it must copy one line from the post, word for word, as proof.",
-      "ms": 8882
+      "text": "Code then searches the real post for that line. It's there, word for word, so this job is a fit: 10 out of 10.",
+      "ms": 6269
     },
     {
-      "text": "Code, not the AI, checks the quote is really in the post, and adds up the final score.",
-      "ms": 5172
-    },
-    {
-      "text": "Another post scores as a fit, but its quote isn't in the post. No proof, no post: a person checks it instead.",
-      "ms": 6452
+      "text": "Another post also scored as a fit, but the AI's line isn't in the post at all. No proof, no post: a person checks it instead.",
+      "ms": 7706
     },
     {
       "text": "Every post is logged in Airtable with its score and the quote behind it.",
@@ -373,8 +365,8 @@
       "ms": 7184
     },
     {
-      "text": "If the job board is down or empty, the team is told today's jobs weren't checked, not a misleading \"no jobs today\".",
-      "ms": 6844
+      "text": "If Remotive is down or empty, the team is told today's jobs weren't checked, not a misleading \"no jobs today\".",
+      "ms": 6975
     },
     {
       "text": "An hour of scrolling becomes one short message, and every fit comes with its proof.",
@@ -513,36 +505,44 @@
       "ms": 3709
     },
     {
-      "text": "The form is checked, returning leeds are spotted, and the address must match a real building with at least 90% confidence.",
-      "ms": 6818
+      "text": "In n8n, the form is checked and returning leeds are spotted. Then the address is looked up.",
+      "ms": 5773
     },
     {
-      "text": "Then the property is researched in public records: the owner on the deed, the roof, the sunlight and the state's power price.",
-      "ms": 7340
+      "text": "Geoapify matches it to a real building, 98% sure. Anything under 90% stops here, and nothing is researched.",
+      "ms": 7497
     },
     {
-      "text": "AI scores the leed from 0 to 100, with its reasons, its concerns and the next step.",
-      "ms": 6060
+      "text": "The public property record confirms the owner on the deed, the roof and the size of the home.",
+      "ms": 5251
     },
     {
-      "text": "It's saved in HubSpot, and a hot leed gets a first email. It may only use facts the system is sure of.",
-      "ms": 5904
+      "text": "N. R. E. L. gives the sunlight on that exact roof, month by month.",
+      "ms": 4833
     },
     {
-      "text": "Minutes after the form, the homeowner has a personal email. No promised savings, because those would only be estimates.",
-      "ms": 7184
+      "text": "And the EIA gives the state's power price, saved for a month so Texas isn't looked up twice.",
+      "ms": 5251
     },
     {
-      "text": "Another leed scores 60, but the name isn't on the deed, and the roof the form calls flat is metal on the county record. A person reviews it, whatever the score.",
-      "ms": 9169
+      "text": "AI scores the leed from 0 to 100, with its reasons and concerns.",
+      "ms": 4415
     },
     {
-      "text": "An address that can't be matched isn't researched at all. Nothing is looked up on a guessed address.",
-      "ms": 6322
+      "text": "In HubSpot, the leed arrives scored and tiered, before anyone picks up the phone.",
+      "ms": 3971
     },
     {
-      "text": "Sales get both on WhatsApp with the reasons, so only the calls that need a person go to a person.",
-      "ms": 5355
+      "text": "A hot leed gets a first email within minutes. It only uses facts the system is sure of, so no promised savings.",
+      "ms": 6531
+    },
+    {
+      "text": "Another leed looks strong, but the deed shows a different owner, and the county says the roof is metal, not flat.",
+      "ms": 6740
+    },
+    {
+      "text": "So it goes to a person on WhatsApp, whatever its score. So does an address that can't be verified.",
+      "ms": 5381
     },
     {
       "text": "Researched before anyone calls, checked against public records, and followed up in minutes.",
