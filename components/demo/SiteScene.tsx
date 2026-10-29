@@ -286,7 +286,7 @@ function Block({
                 {item.label}
               </p>
               <p
-                className="truncate text-[1.45em] font-semibold"
+                className={`truncate font-semibold ${narrow ? "text-[1.05em]" : "text-[1.45em]"}`}
                 style={{ color: site.color }}
               >
                 {item.value}

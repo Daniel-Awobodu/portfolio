@@ -107,7 +107,10 @@ function Bubble({
       >
         {message.image ? (
           <div className="overflow-hidden rounded-[1.6cqw] bg-[#2b2f2d] p-[2.5cqw] text-[3cqw]">
-            <div className="origin-top -rotate-2">
+            <div
+              className="origin-top -rotate-2"
+              style={message.blurry ? { filter: "blur(2.2px)" } : undefined}
+            >
               <Receipt receipt={demo.receipt!} />
             </div>
           </div>

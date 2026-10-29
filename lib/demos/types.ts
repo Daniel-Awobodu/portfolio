@@ -181,6 +181,8 @@ export type ChatMessage = {
   until?: number;
   /** A photo of the demo's receipt. */
   image?: boolean;
+  /** The photo is too blurry to read. */
+  blurry?: boolean;
   /** A voice note, with its length ("0:07"). */
   voice?: string;
   text?: string;
@@ -272,7 +274,12 @@ export type Beat = BeatBase &
         output?: Output;
       }
     | { scene: "drive" }
-    | { scene: "sheet"; mode?: "type" | "stream" | "invalid" | "filter" }
+    | {
+        scene: "sheet";
+        mode?: "type" | "stream" | "invalid" | "filter";
+        /** A key of `sheets`; the demo's `sheet` when omitted. */
+        table?: string;
+      }
     | { scene: "extract"; mode: "read" | "check" | "invalid" }
     | { scene: "form"; mode: "fill" | "thanks" }
     | { scene: "webform" }
@@ -368,6 +375,8 @@ export type Demo = {
     tables?: string[];
     /** n8n: each row's createdAt. */
     createdAt?: string[];
+    /** Airtable: rows the workflow finds, highlighted after a moment. */
+    highlight?: number[];
   };
   /** The AI reading an email into a clean record ("extract" scenes). The
    *  email is `inbox.open`; each row lines up with one of its body lines. */
@@ -384,6 +393,9 @@ export type Demo = {
       reason: string;
     };
   };
+  /** More tables, for demos that show more than one ("sheet" beats name
+   *  them with `table`). */
+  sheets?: Record<string, NonNullable<Demo["sheet"]>>;
   /** Platforms' own pages ("site" scenes), by key. */
   sites?: Record<string, Site>;
   /** A published article and its social posts ("post" scenes). */

@@ -3,9 +3,11 @@ import type { ChatMessage, Demo } from "@/lib/demos/types";
 /*
  * The receipt build, as it really runs (see content/automation/
  * whatsapp-receipts.mdx and its workflow screenshot). The node names and the
- * branches match the n8n canvas. The run shown is the everyday one: a clear
- * photo from a known driver, with this month's folder already in Drive.
- * Every name, number and amount here is sample data.
+ * branches match the n8n canvas, shown in four short moments with their data;
+ * WhatsApp, Airtable, Drive and Sheets carry the rest. The runs shown are the
+ * everyday one, a clear photo from a known driver, and the unclear one, which
+ * is logged for review and asked again. Every name, number and amount here is
+ * sample data.
  */
 
 const welcome: ChatMessage = {
@@ -25,7 +27,7 @@ export const whatsappReceipts: Demo = {
     chat: "Driver’s phone",
     canvas: "The automation · n8n",
     drive: "Google Drive",
-    sheet: "Google Sheets",
+    sheet: "Expense sheet · Google Sheets",
     end: "Done",
   },
   chat: { contact: "Expenses Desk", status: "online", initials: "ED" },
@@ -313,6 +315,25 @@ export const whatsappReceipts: Demo = {
     wideColumns: [0, 2, 3, 4, 5, 6, 7, 8],
     narrowColumns: [0, 2, 4, 6],
   },
+  sheets: {
+    drivers: {
+      title: "Drivers",
+      app: "airtable",
+      tables: ["Drivers", "Vehicles"],
+      columns: ["Driver Name", "Phone Number", "Vehicle", "Status"],
+      fieldKinds: ["text", "text", "text", "select"],
+      rows: [
+        ["Ada Okafor", "0812 ••• 0937", "Toyota Hiace · LSD 451 AA", "Active"],
+        ["Chinedu Eze", "0706 ••• 2210", "Ford Transit · KJA 118 BC", "Active"],
+        ["Tunde Bello", "0803 ••• 4821", "Toyota Hiace · EKY 902 AB", "Active"],
+        ["Musa Ibrahim", "0905 ••• 7764", "Isuzu NPR · AGL 337 CD", "Active"],
+      ],
+      highlight: [2],
+      wideColumns: [0, 1, 2, 3],
+      narrowColumns: [0, 1, 3],
+    },
+  },
+  outputUnder: true,
   end: {
     headline: "Nobody in the office typed a thing.",
     points: [
@@ -339,108 +360,51 @@ export const whatsappReceipts: Demo = {
     },
     {
       scene: "canvas",
-      node: "receive",
-      duration: 3000,
-      caption: "The photo reaches the workflow in n8n, and it starts.",
-      output: [
-        ["from", "Tunde · 0803 ••• 4821"],
-        ["message", "photo (image/jpeg)"],
-      ],
-    },
-    {
-      scene: "canvas",
-      node: "filter",
-      duration: 2600,
-      caption:
-        "It checks the message is a photo or a PDF before going any further.",
-      output: [["passes", "yes, it’s a photo"]],
-    },
-    {
-      scene: "canvas",
-      node: "download",
-      duration: 2400,
-      caption: "The receipt file is downloaded from WhatsApp.",
-      output: [
-        ["file", "receipt.jpg"],
-        ["size", "214 KB"],
-      ],
-    },
-    {
-      scene: "canvas",
-      node: "switch",
-      duration: 2400,
-      caption: "Photos and PDFs are read differently. This one is a photo.",
-      output: [["route", "photo"]],
-    },
-    {
-      scene: "canvas",
       node: "analyzeImage",
-      duration: 4200,
+      via: ["receive", "filter", "download", "switch"],
+      duration: 6200,
       caption:
-        "AI reads the vendor, date, total, tax and category, and flags anything it isn’t sure of.",
+        "In n8n, the photo is checked and downloaded. Then AI reads the vendor, date, total, tax and category.",
+      say: "In n eight n, the photo is checked and downloaded. Then AI reads the vendor, date, total, tax and category.",
       output: [
         ["vendor", "MAINLAND FUEL STATION"],
         ["date", "14/10/2026"],
         ["total", "15000"],
-        ["tax", "0"],
         ["category", "Fuel"],
         ["unsure of", "nothing"],
       ],
     },
     {
-      scene: "canvas",
-      node: "lookup",
-      duration: 2800,
-      caption: "The sender’s number is matched to the driver list in Airtable.",
-      output: [["driver", "Tunde Bello (found)"]],
-    },
-    {
-      scene: "canvas",
-      node: "resolve",
-      duration: 2800,
+      scene: "sheet",
+      table: "drivers",
+      label: "Driver list · Airtable",
+      duration: 6000,
       caption:
-        "His name is attached. An unknown number would be saved as Unknown Driver, never dropped.",
-      output: [["driver name", "Tunde Bello"]],
-    },
-    {
-      scene: "canvas",
-      node: "parse",
-      duration: 2400,
-      caption: "The reading and the driver are put together as one record.",
+        "His number is matched to the driver list in Airtable. An unknown number would be saved as Unknown Driver, never dropped.",
     },
     {
       scene: "canvas",
       node: "confidence",
-      duration: 3200,
+      via: ["lookup", "resolve", "parse"],
+      duration: 5200,
       caption:
         "Every field was read clearly, so it carries on. An unclear receipt would go to a review log instead.",
-      output: [["result", "clear"]],
-    },
-    {
-      scene: "canvas",
-      node: "findFolder",
-      duration: 2400,
-      caption: "It looks for this month’s folder in Google Drive.",
-      output: [["folder", "October 2026"]],
-    },
-    {
-      scene: "canvas",
-      node: "folderFound",
-      duration: 2400,
-      caption: "The folder already exists, so no duplicate is made.",
-      output: [["route", "found"]],
-    },
-    {
-      scene: "canvas",
-      node: "setTarget",
-      duration: 2200,
-      caption: "The receipt is pointed at the October 2026 folder.",
+      output: [
+        ["driver", "Tunde Bello"],
+        ["every field", "read clearly"],
+      ],
     },
     {
       scene: "canvas",
       node: "upload",
-      duration: 2400,
-      caption: "The photo is uploaded, named by date, vendor and driver.",
+      via: ["findFolder", "folderFound", "setTarget"],
+      duration: 5400,
+      caption:
+        "It finds this month's folder in Google Drive, without making a duplicate, and uploads the photo.",
+      output: [
+        ["folder", "October 2026: found"],
+        ["named by", "date, vendor, driver"],
+      ],
     },
     {
       scene: "drive",
@@ -449,22 +413,10 @@ export const whatsappReceipts: Demo = {
         "In Google Drive, it lands in October 2026, easy to find without opening it.",
     },
     {
-      scene: "canvas",
-      node: "append",
-      duration: 2400,
-      caption: "Next, a row is added to the expense sheet.",
-    },
-    {
       scene: "sheet",
       duration: 5200,
       caption:
         "Driver, vendor, date, total, tax, category and a link to the file, all in one row.",
-    },
-    {
-      scene: "canvas",
-      node: "confirm",
-      duration: 2400,
-      caption: "Finally, the driver gets a WhatsApp reply.",
     },
     {
       scene: "chat",
@@ -480,6 +432,47 @@ export const whatsappReceipts: Demo = {
           at: 0.32,
           time: "08:43",
           text: "✅ Receipt logged\nMAINLAND FUEL STATION\n14/10/2026 · ₦15,000 · Fuel\nFiled in October 2026",
+        },
+      ],
+    },
+    {
+      scene: "canvas",
+      run: 1,
+      node: "askResend",
+      via: [
+        "receive",
+        "filter",
+        "download",
+        "switch",
+        "analyzeImage",
+        "lookup",
+        "resolve",
+        "parse",
+        "confidence",
+        "logFlagged",
+      ],
+      duration: 6400,
+      caption:
+        "Another driver's photo is too blurry to read the total. It isn't guessed: it's logged for review, and she's asked to resend.",
+      output: [
+        ["driver", "Ada Okafor"],
+        ["total", "unclear"],
+        ["logged in", "the review log"],
+      ],
+    },
+    {
+      scene: "chat",
+      label: "Another driver’s phone",
+      duration: 5600,
+      caption: "Ada gets a reply straight away, asking for a clearer photo.",
+      messages: [
+        { from: "me", image: true, blurry: true, time: "09:15" },
+        { from: "them", typing: true, at: 0.1, until: 0.32, time: "09:16" },
+        {
+          from: "them",
+          at: 0.32,
+          time: "09:16",
+          text: "⚠️ I couldn't read this receipt clearly, so it hasn't been logged yet. Please send a clearer photo.",
         },
       ],
     },

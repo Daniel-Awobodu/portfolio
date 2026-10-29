@@ -95,7 +95,14 @@ export default function DemoScenes({
         <DriveScene demo={demo} t={t} narrow={narrow} />
       ) : null}
       {beat.scene === "sheet" ? (
-        <SheetScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />
+        <SheetScene
+          demo={
+            beat.table ? { ...demo, sheet: demo.sheets![beat.table] } : demo
+          }
+          t={t}
+          narrow={narrow}
+          mode={beat.mode}
+        />
       ) : null}
       {beat.scene === "extract" ? (
         <ExtractScene demo={demo} t={t} narrow={narrow} mode={beat.mode} />

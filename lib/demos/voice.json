@@ -559,12 +559,16 @@
       "ms": 3631
     },
     {
-      "text": "The agent asks the workflow for open times. A switch sends it down the availability path.",
-      "ms": 5486
+      "text": "The voice runs on Vapi: Deepgram hears her, OpenAI understands her, and ElevenLabs speaks. For open times, it asks the n eight n workflow.",
+      "ms": 8594
     },
     {
-      "text": "A sheet points it to the Abuja branch\u2019s own calendar, and it reads that day\u2019s bookings.",
-      "ms": 5042
+      "text": "In n eight n, a switch sends the request down the availability path.",
+      "ms": 4728
+    },
+    {
+      "text": "A Google Sheet gives each branch its own calendar, so one phone line serves ten branches.",
+      "ms": 5224
     },
     {
       "text": "It finds the free one-hour slots, never the lunch hour, and sends back the first three.",
@@ -579,12 +583,8 @@
       "ms": 3422
     },
     {
-      "text": "Before booking, the workflow checks 5pm again. It has just been taken.",
-      "ms": 4310
-    },
-    {
-      "text": "So it finds three new times and sends those back instead.",
-      "ms": 3840
+      "text": "Before booking, the workflow checks 5pm again. It's just been taken, so it sends three new times instead.",
+      "ms": 5773
     },
     {
       "text": "The agent tells Ada 5pm has gone and offers the new times.",
@@ -595,12 +595,12 @@
       "ms": 3709
     },
     {
-      "text": "The agent confirms on the call. A short while later, a text goes out through Termii.",
-      "ms": 4180
-    },
-    {
       "text": "The booking sits in the Abuja calendar, with her name, number and the reason for the visit.",
       "ms": 4859
+    },
+    {
+      "text": "The agent confirms on the call. A short while later, a text goes out through Termii.",
+      "ms": 4180
     },
     {
       "text": "Ada gets a text with the branch, date and time.",
@@ -679,76 +679,40 @@
       "ms": 3082
     },
     {
-      "text": "The photo reaches the workflow in n8n, and it starts.",
-      "ms": 3448
+      "text": "In n eight n, the photo is checked and downloaded. Then AI reads the vendor, date, total, tax and category.",
+      "ms": 8411
     },
     {
-      "text": "It checks the message is a photo or a PDF before going any further.",
-      "ms": 4232
-    },
-    {
-      "text": "The receipt file is downloaded from WhatsApp.",
-      "ms": 2847
-    },
-    {
-      "text": "Photos and PDFs are read differently. This one is a photo.",
-      "ms": 3553
-    },
-    {
-      "text": "AI reads the vendor, date, total, tax and category, and flags anything it isn\u2019t sure of.",
-      "ms": 5512
-    },
-    {
-      "text": "The sender\u2019s number is matched to the driver list in Airtable.",
-      "ms": 3605
-    },
-    {
-      "text": "His name is attached. An unknown number would be saved as Unknown Driver, never dropped.",
-      "ms": 5564
-    },
-    {
-      "text": "The reading and the driver are put together as one record.",
-      "ms": 3396
+      "text": "His number is matched to the driver list in Airtable. An unknown number would be saved as Unknown Driver, never dropped.",
+      "ms": 7210
     },
     {
       "text": "Every field was read clearly, so it carries on. An unclear receipt would go to a review log instead.",
       "ms": 5538
     },
     {
-      "text": "It looks for this month\u2019s folder in Google Drive.",
-      "ms": 2743
-    },
-    {
-      "text": "The folder already exists, so no duplicate is made.",
-      "ms": 2482
-    },
-    {
-      "text": "The receipt is pointed at the October 2026 folder.",
-      "ms": 3135
-    },
-    {
-      "text": "The photo is uploaded, named by date, vendor and driver.",
-      "ms": 3056
+      "text": "It finds this month's folder in Google Drive, without making a duplicate, and uploads the photo.",
+      "ms": 5486
     },
     {
       "text": "In Google Drive, it lands in October 2026, easy to find without opening it.",
       "ms": 4780
     },
     {
-      "text": "Next, a row is added to the expense sheet.",
-      "ms": 2508
-    },
-    {
       "text": "Driver, vendor, date, total, tax, category and a link to the file, all in one row.",
       "ms": 5825
     },
     {
-      "text": "Finally, the driver gets a WhatsApp reply.",
-      "ms": 2377
-    },
-    {
       "text": "Tunde sees exactly what was logged, about a minute after sending it.",
       "ms": 3370
+    },
+    {
+      "text": "Another driver's photo is too blurry to read the total. It isn't guessed: it's logged for review, and she's asked to resend.",
+      "ms": 6687
+    },
+    {
+      "text": "Ada gets a reply straight away, asking for a clearer photo.",
+      "ms": 3030
     },
     {
       "text": "From a photo on WhatsApp to a filed, logged expense.",
