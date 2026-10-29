@@ -365,6 +365,7 @@ export const whatsappReceipts: Demo = {
       duration: 6200,
       caption:
         "In n8n, the photo is checked and downloaded. Then AI reads the vendor, date, total, tax and category.",
+      say: "In n eight n, the photo is checked and downloaded. Then AI reads the vendor, date, total, tax and category.",
       output: [
         ["vendor", "MAINLAND FUEL STATION"],
         ["date", "14/10/2026"],

@@ -401,6 +401,7 @@ export const voiceReceptionist: Demo = {
       duration: 6200,
       caption:
         "The voice runs on Vapi: Deepgram hears her, OpenAI understands her, and ElevenLabs speaks. For open times, it asks the n8n workflow.",
+      say: "The voice runs on Vapi: Deepgram hears her, OpenAI understands her, and ElevenLabs speaks. For open times, it asks the n eight n workflow.",
     },
     {
       scene: "canvas",
@@ -409,6 +410,7 @@ export const voiceReceptionist: Demo = {
       via: ["webhook", "code0", "switch"],
       duration: 4600,
       caption: "In n8n, a switch sends the request down the availability path.",
+      say: "In n eight n, a switch sends the request down the availability path.",
       output: [
         ["action", "check availability"],
         ["branch", "Abuja"],
