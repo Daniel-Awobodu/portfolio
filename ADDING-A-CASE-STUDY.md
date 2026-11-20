@@ -59,8 +59,24 @@ Two rules worth remembering:
 - **Put your strongest number first** in `metrics`. That first one is what gets
   pulled onto the lane card and the home page proof strip.
 
-Everything optional (`cover`, `video`, `metrics`) can be left out entirely. The
-page still looks right — no gaps, no broken images.
+Everything optional (`cover`, `video`, `metrics` and the fields below) can be
+left out entirely. The page still looks right — no gaps, no broken images.
+
+The optional fields the real case studies use:
+
+| Field | What it does |
+| --- | --- |
+| `live: true` | Shows the Live badge. Use it only for builds running every day in a real business. Without it, the page labels the client as the "Industry". |
+| `alsoAt` | A second business running the same build, shown beside the client. |
+| `canvas` | The workflow screenshot. The card slides from the cover to it. |
+| `resultCaption` | Shows the result image under the title, with this caption. No caption, no image. |
+| `result` | The result image, when it should differ from the cover. |
+| `resultFull` | The full-size screenshot the result image opens. |
+
+**Automation builds also get a "Watch it run" demo:** one data file in
+`lib/demos/`, registered in `lib/demos/index.ts`. Its narration is made with
+`node --experimental-strip-types scripts/demo-voice.mjs <slug>`, which needs an
+ElevenLabs plan that allows the voice over the API.
 
 Below the settings block, write the four sections. **Keep them, and keep them in
 this order** — that consistency is the point:
@@ -123,11 +139,14 @@ higher. Files sharing the same `order` fall back to newest `date` first.
 **Want to hide something without deleting it?** Rename the file to start with an
 underscore — `_draft-idea.mdx`. Files starting with `_` are never published.
 
-**Adding a walkthrough video?** Use the *embed* URL, not the share URL:
+**Adding a walkthrough video?** YouTube and Google Drive share links work as
+they are. For Loom, use the *embed* URL, not the share URL:
 
 ```yaml
-video: "https://www.loom.com/embed/abc123"   # ✅ /embed/
-# not  https://www.loom.com/share/abc123     # ❌
+video: "https://youtu.be/abc123"                         # ✅
+video: "https://drive.google.com/file/d/abc123/view"     # ✅
+video: "https://www.loom.com/embed/abc123"               # ✅ /embed/
+# not  https://www.loom.com/share/abc123                 # ❌
 ```
 
 **Nothing showed up?** Check three things, in this order: the file ends in
