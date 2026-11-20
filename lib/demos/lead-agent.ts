@@ -3,19 +3,21 @@ import type { Demo } from "@/lib/demos/types";
 /*
  * The lead agent, as it really runs (see content/automation/lead-agent.mdx
  * and its screenshots). Both canvases are drawn from the workflow exports:
- * real node names, connections and layout, scaled like the other demos. The
- * run follows the real tests: a new lead from a salon drafted at a fit score
- * of 90, a returning lead with an open deal, and a mistyped email caught
- * before any AI runs (shown in the Lead Log). The Lead Log rows mirror the
- * tested outcomes, including a lead sent to a person for review. Every name
- * and address here is sample data.
+ * real node names, connections and layout, scaled like the other demos.
+ * Most of the walkthrough shows what a person would see doing this by hand:
+ * the form, the HubSpot search, the contact's record and deals, the fit
+ * rules in Airtable, the draft in Gmail and the team's alert. The run follows
+ * the real tests: a returning lead with an open deal, a new lead who clears
+ * the fit rules, and a lead sent to a person for review (in the Lead Log).
+ * Every name, address and amount here is sample data.
  */
 
 const subject = "Re: your message to DAA Marketing";
 
 export const leadAgent: Demo = {
   slug: "lead-agent",
-  journey: "from a website form to a checked reply waiting in Gmail Drafts",
+  journey:
+    "from a website form, through HubSpot, to a reply waiting in Gmail Drafts",
   sceneLabels: {
     webform: "Lead’s browser · website form",
     canvas: "The lead workflow · n8n",
@@ -36,7 +38,14 @@ export const leadAgent: Demo = {
           x: 0,
           y: 219,
         },
-        { id: "config", label: "Config", sub: "manual", kind: "edit", x: 170, y: 219 },
+        {
+          id: "config",
+          label: "Config",
+          sub: "manual",
+          kind: "edit",
+          x: 170,
+          y: 219,
+        },
         {
           id: "validateLead",
           label: "Validate Lead",
@@ -289,64 +298,137 @@ export const leadAgent: Demo = {
     heading: "Tell us about your business",
     intro: "A few lines is enough. Here is what happens next.",
     fields: [
-      ["Your name", "Ronke Bello"],
-      ["Work email", "ronke@•••••.ng"],
-      ["Company", "Glow & Co"],
-      ["Monthly budget (USD)", "1500"],
+      ["Your name", "Tobi Martins"],
+      ["Work email", "tobi@•••••.com"],
+      ["Company", "Corefit Gym"],
+      ["Monthly budget (USD)", "3000"],
     ],
     request: [
       "How can we help?",
-      "We run a small nail salon in Lekki and want Instagram ads that bring in more bookings.",
+      "Hello again, could the paid social proposal also include ads for our new spin classes?",
     ],
     button: "Send message",
     cta: "Get in touch",
     thanks: {
-      title: "Thanks, Ronke!",
+      title: "Thanks, Tobi!",
       body: "We got your message and a member of our team will read it.",
     },
   },
   sites: {
-    hubspot: {
+    search: {
+      name: "HubSpot",
+      logo: "H",
+      color: "#ff7a59",
+      nav: ["Contacts", "Companies", "Deals"],
+      search: "tobi@•••••.com",
+      title: "Contacts",
+      blocks: [
+        {
+          kind: "list",
+          title: "1 contact with this email",
+          rows: [
+            {
+              title: "Tobi Martins",
+              sub: "Opportunity · Corefit Gym",
+              avatar: "TM",
+              mark: "pick",
+              note: "exact email match",
+            },
+          ],
+        },
+      ],
+    },
+    record: {
+      name: "HubSpot",
+      logo: "H",
+      color: "#ff7a59",
+      nav: ["Contacts", "Companies", "Deals"],
+      title: "Tobi Martins",
+      columns: true,
+      blocks: [
+        {
+          kind: "fields",
+          title: "About this contact",
+          rows: [
+            { label: "Email", value: "tobi@•••••.com" },
+            { label: "Company", value: "Corefit Gym" },
+            { label: "Lifecycle stage", value: "Opportunity" },
+            { label: "Contact owner", value: "Kemi Adeyemi" },
+          ],
+        },
+        {
+          kind: "list",
+          title: "Deals (2)",
+          rows: [
+            {
+              title: "Corefit Gym - Paid Social Retainer",
+              sub: "Proposal sent · $3,000 a month",
+              mark: "pick",
+              note: "still open",
+            },
+            {
+              title: "Corefit Gym - Launch Promo",
+              sub: "Closed lost",
+              mark: "no",
+              note: "closed",
+            },
+          ],
+        },
+      ],
+    },
+    none: {
       name: "HubSpot",
       logo: "H",
       color: "#ff7a59",
       nav: ["Contacts", "Companies", "Deals"],
       search: "ronke@•••••.ng",
       title: "Contacts",
-      columns: true,
       blocks: [
-        {
-          kind: "list",
-          title: "All contacts",
-          rows: [
-            {
-              title: "Tobi Martins",
-              sub: "Opportunity · Corefit Gym - Paid Social Retainer",
-              avatar: "TM",
-            },
-            {
-              title: "Adaeze Okafor",
-              sub: "Customer · Palm Kitchen",
-              avatar: "AO",
-            },
-            {
-              title: "Ife Johnson",
-              sub: "Lead · Johnson Studio - Spring Campaign",
-              avatar: "IJ",
-            },
-          ],
-        },
         {
           kind: "fields",
           title: "Search by email",
           rows: [
             { label: "Email searched", value: "ronke@•••••.ng" },
             { label: "Contacts found", value: "0", mark: "new" },
+            { label: "So she is", value: "a new lead", mark: "new" },
+          ],
+        },
+      ],
+    },
+    rules: {
+      name: "Airtable",
+      logo: "A",
+      color: "#2d7ff9",
+      nav: ["Data", "Automations", "Interfaces"],
+      title: "Fit Rules · Default",
+      blocks: [
+        {
+          kind: "fields",
+          title: "The agency's rules, and her message",
+          rows: [
             {
-              label: "CRM outcome",
-              value: "NEW",
-              mark: "new",
-              note: "decided by code",
+              label: "Services we offer",
+              value: "Paid social, Google Ads, landing pages, email",
+              mark: "ok",
+              note: "“Instagram ads”",
+            },
+            {
+              label: "Ideal clients",
+              value: "Local businesses: salons, gyms, studios, cafés",
+              mark: "ok",
+              note: "“nail salon”",
+            },
+            {
+              label: "Not a fit",
+              value: "Mobile apps, website builds, SEO",
+              mark: "ok",
+              note: "none asked for",
+            },
+            {
+              label: "Minimum budget",
+              value: "$500 a month",
+              mark: "ok",
+              note: "she gave $1,500",
             },
           ],
         },
@@ -363,12 +445,12 @@ export const leadAgent: Demo = {
           from: "DAA Marketing",
           time: "9:41 PM",
           note: "draft · not sent",
-          body: "Thanks for getting in touch.",
+          body: "Thanks for the follow-up.",
           lines: [
-            "Hi Ronke,",
+            "Hi Tobi,",
             "",
-            "Thanks for getting in touch. We understand you'd like Instagram ads that bring more bookings to your nail salon.",
-            "Do you already post on Instagram, and are there quieter days you'd most like to fill? A member of our team will follow up, and we'd be happy to arrange a short call.",
+            "Thanks for the follow-up. We received your note about adding ads for your new spin classes to the paid social proposal. A member of our team will review this and follow up.",
+            "We have also shared your message with the team looking after your current proposal with us, so nothing gets missed.",
             "",
             "Kind regards,",
             "The DAA Marketing team",
@@ -378,22 +460,22 @@ export const leadAgent: Demo = {
     },
     open: {
       from: "DAA Lead Agent",
-      subject: "[DAA Lead] Draft ready to review: Ronke Bello (Glow & Co)",
+      subject: "[DAA Lead] Draft ready to review: Tobi Martins (Corefit Gym)",
       time: "9:41 PM",
       text: [
         "Decision: DRAFT - Draft ready to review",
-        "ACTION: review the reply in Gmail Drafts, edit if needed, then send it yourself.",
+        "ACTION: deal owner, please review the draft and follow up on the open deal.",
         "Nothing has been sent to the lead.",
       ],
       brief: [
-        "Decision: DRAFT. Review the reply in Gmail Drafts, then send it yourself.",
+        "Decision: DRAFT. Deal owner, please review the draft and follow up.",
         "Nothing has been sent to the lead.",
       ],
       body: [
-        ["CRM", "NEW, from HubSpot"],
-        ["Fit score", "90, by code"],
-        ["How", "service +40 · business +25 · budget +25"],
-        ["Checks", "14 of 14 passed"],
+        ["HubSpot", "open deal, checked once"],
+        ["Deal", "Corefit Gym - Paid Social Retainer"],
+        ["Reply", "thank-you, no sales pitch"],
+        ["Sent", "nothing yet"],
       ],
     },
   },
@@ -456,21 +538,21 @@ export const leadAgent: Demo = {
     ],
     newRows: [
       [
-        "Ronke Bello - Glow & Co",
-        "received",
-        "Process",
-        "",
-        "NEW",
-        "1",
-        "1",
-        "DRAFT",
-      ],
-      [
         "Tobi Martins - Corefit Gym",
         "received",
         "Process",
         "",
         "EXISTING_OPEN_DEAL",
+        "1",
+        "1",
+        "DRAFT",
+      ],
+      [
+        "Ronke Bello - Glow & Co",
+        "received",
+        "Process",
+        "",
+        "NEW",
         "1",
         "1",
         "DRAFT",
@@ -500,10 +582,13 @@ export const leadAgent: Demo = {
     narrowColumns: [0, 4, 7],
   },
   end: {
-    headline: "The AI drafts. Code checks every step. A person sends.",
+    headline: "The right reply for every lead. A person always sends it.",
     points: [
-      { value: "14", label: "checks on the AI's work before a draft is saved" },
-      { value: "0", label: "emails sent to a lead without a person" },
+      {
+        value: "5 of 5",
+        label: "test leads matched to the right HubSpot record",
+      },
+      { value: "0", label: "replies sent without a person" },
     ],
   },
   beats: [
@@ -511,116 +596,45 @@ export const leadAgent: Demo = {
       scene: "webform",
       duration: 6400,
       caption:
-        "A salon owner fills in the agency's website form, and is thanked on screen straight away.",
+        "A lead already in talks with the agency sends a new request through its website form.",
     },
     {
       scene: "canvas",
       flow: "main",
       node: "chooseFormReply",
-      via: ["receiveLead", "config", "validateLead", "lookupPreviousSubmission"],
-      duration: 5800,
+      via: [
+        "receiveLead",
+        "config",
+        "validateLead",
+        "lookupPreviousSubmission",
+      ],
+      duration: 5400,
       caption:
-        "Code checks the form first, for free: spam, a mistyped email, a repeat. This one is real.",
+        "Code screens it first, for free. Spam, typos and repeats never reach the AI.",
       output: [
         ["spam checks", "passed"],
         ["email", "looks right"],
-        ["sent before?", "no: new lead"],
+        ["sent before?", "no"],
         ["route", "Process"],
       ],
     },
     {
-      scene: "canvas",
-      flow: "main",
-      node: "buildAgentBrief",
-      via: ["replyToForm", "routeLead", "createLeadLogRow", "loadFitRules"],
-      duration: 5800,
+      scene: "site",
+      site: "search",
+      duration: 5600,
       caption:
-        "She's logged, the agency's fit rules are loaded, and her words are fenced off as data.",
-      output: [
-        ["Lead Log", "row created"],
-        ["fit rules", "loaded from Airtable"],
-        ["min. budget", "$500 a month"],
-        ["her message", "fenced as DATA"],
-      ],
-    },
-    {
-      scene: "canvas",
-      flow: "crm",
-      node: "decideCrmOutcome",
-      via: [
-        "startCrmCheck",
-        "searchContactByEmail",
-        "readContactResult",
-        "hasLinkedDeals",
-      ],
-      duration: 5800,
-      caption:
-        "The agent's first tool checks HubSpot. Code decides the outcome, not the AI.",
-      output: [
-        ["searched", "ronke@•••••.ng"],
-        ["found", "0 contacts"],
-        ["outcome", "NEW"],
-      ],
+        "Then the agent does what a person would: it searches HubSpot for his email.",
     },
     {
       scene: "site",
-      site: "hubspot",
-      duration: 5400,
+      site: "record",
+      duration: 6400,
       caption:
-        "She isn't in HubSpot, so she's a new lead.",
-    },
-    {
-      scene: "canvas",
-      flow: "main",
-      node: "guardrailLedger",
-      via: ["leadAgent"],
-      duration: 6600,
-      caption:
-        "The AI quotes her words as proof. Code checks its tool record and every quote.",
-      output: [
-        ["service", "clear: “Instagram ads”"],
-        ["business", "ideal: “nail salon”"],
-        ["quotes", "2 of 2, in her words"],
-        ["tool calls", "CRM 1, draft 1"],
-        ["checks", "14 of 14 passed"],
-      ],
-    },
-    {
-      scene: "canvas",
-      flow: "main",
-      node: "createGmailDraft",
-      via: ["isDraftApproved"],
-      duration: 5800,
-      caption:
-        "Code works out the fit score. 90 clears the bar, so a Gmail draft is saved, never sent.",
-      say: "Code works out the fit score. Ninety clears the bar, so a Gmail draft is saved, never sent.",
-      output: [
-        ["fit score", "40 + 25 + 25 = 90"],
-        ["draft at", "60 or more"],
-        ["decision", "DRAFT"],
-        ["sent", "nothing"],
-      ],
-    },
-    {
-      scene: "inbox",
-      mode: "thread",
-      show: 1,
-      duration: 6000,
-      caption:
-        "The draft sums up her need and asks two short questions.",
-    },
-    {
-      scene: "inbox",
-      mode: "open",
-      label: "Team inbox · Gmail",
-      duration: 5800,
-      caption:
-        "The team gets one alert: the decision, the reason and every check.",
+        "It opens his record. He's an opportunity, with a paid social proposal still open.",
     },
     {
       scene: "canvas",
       flow: "crm",
-      run: 1,
       node: "decideCrmOutcome",
       via: [
         "startCrmCheck",
@@ -629,26 +643,78 @@ export const leadAgent: Demo = {
         "hasLinkedDeals",
         "searchContactDeals",
       ],
-      duration: 6000,
+      duration: 5600,
       caption:
-        "A lead with an open deal gets a short thank-you, with no pitch.",
+        "Code turns what HubSpot says into the outcome, so the AI never has to guess.",
       output: [
-        ["contact", "Tobi Martins"],
-        ["open deal", "Corefit Gym - Paid Social Retainer"],
+        ["contact", "found"],
+        ["open deals", "1"],
         ["outcome", "EXISTING_OPEN_DEAL"],
       ],
+    },
+    {
+      scene: "canvas",
+      flow: "main",
+      node: "guardrailLedger",
+      via: [
+        "replyToForm",
+        "routeLead",
+        "createLeadLogRow",
+        "loadFitRules",
+        "buildAgentBrief",
+        "leadAgent",
+      ],
+      duration: 6000,
+      caption:
+        "The AI drafts a reply. Code checks every step it took before anything is kept.",
+      output: [
+        ["HubSpot", "checked once, his email"],
+        ["outcome used", "matches HubSpot"],
+        ["quotes", "all in his words"],
+        ["decision", "DRAFT, no pitch"],
+      ],
+    },
+    {
+      scene: "inbox",
+      mode: "thread",
+      show: 1,
+      duration: 6000,
+      caption:
+        "The draft notes his spin classes, and doesn't pitch someone who's already buying.",
+    },
+    {
+      scene: "inbox",
+      mode: "open",
+      label: "Team inbox · Gmail",
+      duration: 5600,
+      caption:
+        "His deal owner gets an alert to review it. Nothing has been sent to Tobi.",
+    },
+    {
+      scene: "site",
+      site: "none",
+      duration: 5200,
+      caption: "A brand-new lead, Ronke, isn't in HubSpot at all.",
+    },
+    {
+      scene: "site",
+      site: "rules",
+      label: "Fit Rules · Airtable",
+      duration: 6400,
+      caption:
+        "So she's checked against the agency's own fit rules. Her salon, Instagram ads and budget all match.",
     },
     {
       scene: "sheet",
       duration: 6000,
       caption:
-        "Every lead is logged, with one call to each tool and the decision.",
+        "Every lead is logged. Unclear fits go to a person, never straight to Gmail.",
     },
     {
       scene: "end",
       duration: 3200,
       caption:
-        "The AI drafts, code checks every step, and a person always sends.",
+        "The right reply drafted for every lead, and a person always sends it.",
     },
   ],
 };
