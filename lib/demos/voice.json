@@ -403,7 +403,7 @@
       "ms": 5642
     },
     {
-      "text": "He calls Chioma to confirm while she\u2019s still keen to buy.",
+      "text": "He calls Chioma to confirm while she’s still keen to buy.",
       "ms": 3736
     },
     {
@@ -607,7 +607,7 @@
       "ms": 3135
     },
     {
-      "text": "Every call answered, every booking in the right branch\u2019s diary.",
+      "text": "Every call answered, every booking in the right branch’s diary.",
       "ms": 3370
     }
   ],
@@ -671,11 +671,11 @@
       "ms": 3344
     },
     {
-      "text": "He opens the company\u2019s WhatsApp chat and snaps a photo of it.",
+      "text": "He opens the company’s WhatsApp chat and snaps a photo of it.",
       "ms": 3892
     },
     {
-      "text": "He sends the photo. That\u2019s all he has to do.",
+      "text": "He sends the photo. That’s all he has to do.",
       "ms": 3082
     },
     {
@@ -717,6 +717,56 @@
     {
       "text": "From a photo on WhatsApp to a filed, logged expense.",
       "ms": 3605
+    }
+  ],
+  "lead-agent": [
+    {
+      "text": "A leed already in talks with the agency sends a new request through its website form.",
+      "ms": 5094
+    },
+    {
+      "text": "Code screens it first, for free. Spam, typos and repeats never reach the AI.",
+      "ms": 5695
+    },
+    {
+      "text": "Then the agent does what a person would: it searches HubSpot for his email.",
+      "ms": 4963
+    },
+    {
+      "text": "It opens his record. He's an opportunity, with a paid social proposal still open.",
+      "ms": 5460
+    },
+    {
+      "text": "Code turns what HubSpot says into the outcome, so the AI never has to guess.",
+      "ms": 4911
+    },
+    {
+      "text": "The AI drafts a reply. Code checks every step it took before anything is kept.",
+      "ms": 5799
+    },
+    {
+      "text": "The draft notes his spin classes, and doesn't pitch someone who's already buying.",
+      "ms": 4780
+    },
+    {
+      "text": "His deal owner gets an alert to review it. Nothing has been sent to Tobi.",
+      "ms": 4911
+    },
+    {
+      "text": "A brand-new leed, Ronke, isn't in HubSpot at all.",
+      "ms": 4180
+    },
+    {
+      "text": "So she's checked against the agency's own fit rules. Her salon, Instagram ads and budget all match.",
+      "ms": 6713
+    },
+    {
+      "text": "Every leed is logged. Unclear fits go to a person, never straight to Gmail.",
+      "ms": 5616
+    },
+    {
+      "text": "The right reply drafted for every leed, and a person always sends it.",
+      "ms": 3997
     }
   ]
 }

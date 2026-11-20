@@ -81,6 +81,15 @@ const PILLS: Record<string, string> = {
   Critical: "bg-[#ffdce5] text-[#7a1230]",
   Normal: "bg-[#cfdfff] text-[#102046]",
   Low: "bg-[#eeeeee] text-[#41454d]",
+  invalid: "bg-[#ffdce5] text-[#7a1230]",
+  received: "bg-[#d1f7c4] text-[#0b4f1a]",
+  Junk: "bg-[#eeeeee] text-[#41454d]",
+  Process: "bg-[#cfdfff] text-[#102046]",
+  NEW: "bg-[#cfdfff] text-[#102046]",
+  EXISTING_OPEN_DEAL: "bg-[#ffe0cc] text-[#6b2f00]",
+  EXISTING_CLIENT: "bg-[#ede2fe] text-[#3b1a73]",
+  DRAFT: "bg-[#d1f7c4] text-[#0b4f1a]",
+  HUMAN_REVIEW: "bg-[#ffeab6] text-[#5c4300]",
 };
 
 /**
@@ -103,7 +112,7 @@ export function AirtableScene({
   const tables = sheet.tables ?? [sheet.title];
   const count = sheet.rows.length + fresh.filter((f) => f.p > 0.5).length;
   const value = (row: string[], c: number) =>
-    kinds[c] === "select" ? (
+    kinds[c] === "select" && row[c] ? (
       <span
         className={`rounded-full px-2 py-0.5 text-[0.92em] ${PILLS[row[c]] ?? "bg-[#cfdfff] text-[#102046]"}`}
       >
@@ -414,7 +423,7 @@ export function N8nTableScene({
                         key={c}
                         className={`${cell} ${isNew ? "font-medium" : ""}`}
                       >
-                        {kinds[c] === "select" ? (
+                        {kinds[c] === "select" && row[c] ? (
                           <span
                             className={`rounded px-1.5 py-0.5 text-[0.92em] ${PILLS[row[c]] ?? "bg-[#eef0f4]"}`}
                           >
