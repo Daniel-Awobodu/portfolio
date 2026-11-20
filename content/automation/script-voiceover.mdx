@@ -1,0 +1,113 @@
+---
+title: "Type a topic, get a sourced script and voiceover in minutes"
+client: "YouTube creator"
+lane: "automation"
+summary: "A faceless YouTube creator types a topic into a sheet. About 2 minutes later, a sourced script and its voiceover are waiting in Drive."
+role: "Designed and built"
+year: "2026"
+date: "2026-11-20"
+order: 18
+featured: false
+cover: "/case-studies/script-voiceover/result.png"
+canvas: "/case-studies/script-voiceover/canvas.png"
+resultCaption: "Top: the Shorts Queue sheet after testing, with links, estimated lengths and sources filled in. Below: a finished script, saved to Drive."
+video: "https://drive.google.com/file/d/1qYMKShdZeLrQHhwv_7OeKtweKZsORfHB/view?usp=drive_link"
+tools: ["n8n", "OpenAI", "ElevenLabs", "Google Sheets", "Google Drive", "Gmail"]
+metrics:
+  - label: "per test run, from a topic in the sheet to the creator's email"
+    value: "~2 min"
+  - label: "finished shorts with every fact's source linked in the sheet"
+    value: "3 of 3"
+  - label: "scripts lost when the voiceover step failed"
+    value: "0"
+---
+
+## The problem
+
+A faceless YouTube creator was spending hours on every Short: researching,
+writing the script, then recording the voiceover. That capped how much they
+could publish. They still wanted to edit the videos themselves.
+
+Handing the writing to AI has a catch on a channel built on facts: one wrong
+stat read out loud, and viewers stop trusting it.
+
+## What I built
+
+An n8n workflow that turns one line in a Google Sheet into a script and a
+voiceover, saved together in Drive.
+
+1. **One line starts it.** The creator types a topic, plus any facts they
+   trust, and leaves Status empty. On schedule, the workflow claims the next
+   row and gives it a tag, so it's never made twice.
+2. **The AI researches, then writes.** OpenAI searches trusted sources only,
+   such as FIFA, BBC Sport and the clubs' own sites, then writes a 100 to 130
+   word script with a strong first line. Every fact comes back with its link.
+3. **Code checks the script before any voice credits are spent.** It must be
+   the right length and plain spoken text, and every number in it must match
+   a sourced fact. A failing script gets one rewrite. If that fails too, the
+   row is marked Needs Review and nothing is spent on voice.
+4. **ElevenLabs reads it out.** The MP3 is saved beside the script in a Drive
+   folder for that topic, both named with the tag.
+5. **The sheet and inbox catch up.** The row is marked Done with both links,
+   an estimated length and the sources, and the creator gets an email.
+
+![The Shorts Queue sheet: each topic with its status, tag, script and audio links, estimated length and sources](/case-studies/script-voiceover/queue-sheet.png)
+
+*The Shorts Queue. The creator only fills in the Topic. The rest is written
+by the workflow. The Facts column is hidden here.*
+
+![The whole n8n workflow: claim a row, write the script, check it, rewrite once if needed, save it to Drive, make the voiceover, then update the sheet and send an email](/case-studies/script-voiceover/workflow.png)
+
+*The workflow. Left: claim the row and write. Middle: the checks and one
+rewrite. Right: save, voice, finish, with a branch for a failed voiceover.*
+
+## How it works, explained simply
+
+Think of a small team: a researcher and a writer, a fact-checker, then a
+voice actor. The AI researches and writes. Code is the fact-checker.
+ElevenLabs is the voice.
+
+- **No number without a source.** Every number in the script must appear in
+  the topic, the creator's own facts, or a fact the AI found with a link. If
+  not, the script is sent back.
+- **Voice credits go only on approved scripts.** The checks run first, so a
+  bad script never costs a voiceover.
+- **Nothing gets lost.** The script is saved before the voice step. If
+  ElevenLabs fails, the row says Voice Failed and the creator is emailed.
+  Clearing the Status cell tries again.
+- **Everything is easy to find.** Each short gets its own folder, and both
+  files carry the tag, so one search finds them.
+- **A crash never goes quiet.** If any step breaks, a separate error workflow
+  emails the step that failed with plain advice, and marks the stuck row as
+  Failed.
+
+![The error workflow in n8n: Error Trigger, Alert Settings, Build Alert, send the email, find rows still processing, mark them failed](/case-studies/script-voiceover/error-workflow.png)
+
+## The outcome
+
+Here is a voiceover it made, for a short on Rogério Ceni:
+
+<audio controls preload="none" src="/case-studies/script-voiceover/voiceover.mp3" className="my-4 w-full">
+  Your browser can't play this audio.
+</audio>
+
+![The finished script for the Rogério Ceni short: 113 words, with every number backed by a sourced fact](/case-studies/script-voiceover/script.png)
+
+*The script behind it: 113 words and 8 numbers, each one matched to a sourced
+fact. The sheet estimated 45 seconds. The real voiceover runs 44.*
+
+Five test runs took between 1 minute 35 seconds and 2 minutes 23 seconds
+each, from claiming a topic to the creator's email. The Ceni short, from topic
+to finished voiceover, took 1 minute 35 seconds. Three shorts finished, each
+with its sources linked in the sheet.
+
+The Ceni short also tested the safety net. Its first voiceover attempt
+failed, and the email said the script was safe in Drive. Clearing the Status
+cell and running it again made the voiceover.
+
+<NextStep>
+
+**Retry just the voice.** Today a retry writes a fresh script. A button to
+re-run only the voiceover would keep a script the creator already liked.
+
+</NextStep>

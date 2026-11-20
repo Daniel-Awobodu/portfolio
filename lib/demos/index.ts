@@ -12,6 +12,7 @@ import { opportunityFeed } from "@/lib/demos/opportunity-feed";
 import { orderAlerts } from "@/lib/demos/order-alerts";
 import { orderExtraction } from "@/lib/demos/order-extraction";
 import { quoteRequests } from "@/lib/demos/quote-requests";
+import { scriptVoiceover } from "@/lib/demos/script-voiceover";
 import { solarLeads } from "@/lib/demos/solar-leads";
 import type { Demo } from "@/lib/demos/types";
 import clips from "@/lib/demos/voice.json";
@@ -69,6 +70,7 @@ export const demos: Record<string, Demo> = Object.fromEntries(
     aiOutreach,
     contentPipeline,
     leadAgent,
+    scriptVoiceover,
   ].map((demo) => [demo.slug, withVoice(demo)]),
 );
 
