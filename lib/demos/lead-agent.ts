@@ -6,8 +6,9 @@ import type { Demo } from "@/lib/demos/types";
  * real node names, connections and layout, scaled like the other demos. The
  * run follows the real tests: a new lead from a salon drafted at a fit score
  * of 90, a returning lead with an open deal, and a mistyped email caught
- * before any AI runs (shown in the Lead Log). The Lead Log rows mirror the tested outcomes. Every
- * name and address here is sample data.
+ * before any AI runs (shown in the Lead Log). The Lead Log rows mirror the
+ * tested outcomes, including a lead sent to a person for review. Every name
+ * and address here is sample data.
  */
 
 const subject = "Re: your message to DAA Marketing";
@@ -483,6 +484,16 @@ export const leadAgent: Demo = {
         "1",
         "1",
         "DRAFT",
+      ],
+      [
+        "Musa Bello - Peak Fitness",
+        "received",
+        "Process",
+        "",
+        "NEW",
+        "1",
+        "1",
+        "HUMAN_REVIEW",
       ],
     ],
     wideColumns: [0, 2, 3, 4, 5, 6, 7],

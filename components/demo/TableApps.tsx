@@ -89,6 +89,7 @@ const PILLS: Record<string, string> = {
   EXISTING_OPEN_DEAL: "bg-[#ffe0cc] text-[#6b2f00]",
   EXISTING_CLIENT: "bg-[#ede2fe] text-[#3b1a73]",
   DRAFT: "bg-[#d1f7c4] text-[#0b4f1a]",
+  HUMAN_REVIEW: "bg-[#ffeab6] text-[#5c4300]",
 };
 
 /**
