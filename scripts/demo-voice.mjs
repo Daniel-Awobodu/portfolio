@@ -41,6 +41,7 @@ const DEFAULT_VOICE = "i9sr2Eu9ynYVEaDDkF8I";
 // mean volume), with a limiter so peaks never clip.
 const VOICE_BY_SLUG = {
   "lead-agent": { id: "JBFqnCBsd6RMkjVDRZzb", gainDb: 6.7 },
+  "script-voiceover": { id: "JBFqnCBsd6RMkjVDRZzb", gainDb: 6.7 },
 };
 const voiceFor = (slug) =>
   process.env.ELEVENLABS_VOICE_ID ?? VOICE_BY_SLUG[slug]?.id ?? DEFAULT_VOICE;

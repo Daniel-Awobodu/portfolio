@@ -50,14 +50,25 @@ function FolderIcon() {
   );
 }
 
+/** Drive's badge for a file: PDF, text, audio, or an image by default. */
+const FILE_BADGES: [string, string, string][] = [
+  [".pdf", "PDF", "bg-[#ea4335]"],
+  [".txt", "TXT", "bg-[#4285f4]"],
+  [".mp3", "MP3", "bg-[#5f6368]"],
+];
+
 function FileIcon({ name }: { name: string }) {
-  const pdf = name.endsWith(".pdf");
+  const [, label, colour] = FILE_BADGES.find(([ext]) => name.endsWith(ext)) ?? [
+    "",
+    "IMG",
+    "bg-[#d93025]",
+  ];
   return (
     <span
       aria-hidden="true"
-      className={`flex h-[1.25em] w-[1.25em] shrink-0 items-center justify-center rounded-[3px] text-[0.55em] font-bold text-white ${pdf ? "bg-[#ea4335]" : "bg-[#d93025]"}`}
+      className={`flex h-[1.25em] w-[1.25em] shrink-0 items-center justify-center rounded-[3px] text-[0.55em] font-bold text-white ${colour}`}
     >
-      {pdf ? "PDF" : "IMG"}
+      {label}
     </span>
   );
 }

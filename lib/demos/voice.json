@@ -768,5 +768,47 @@
       "text": "The right reply drafted for every leed, and a person always sends it.",
       "ms": 3997
     }
+  ],
+  "script-voiceover": [
+    {
+      "text": "A creator types a topic into a Google Sheet and leaves Status empty. That's the whole job.",
+      "ms": 6034
+    },
+    {
+      "text": "On schedule, the workflow claims the next queued row and tags it, so it's never made twice.",
+      "ms": 5878
+    },
+    {
+      "text": "The AI searches trusted sources only, like the club's own site, and keeps the link for every fact.",
+      "ms": 6635
+    },
+    {
+      "text": "Before any voice credits are spent, code checks the script: its length, no stray symbols, every number sourced.",
+      "ms": 7706
+    },
+    {
+      "text": "The approved script goes to ElevenLabs, which reads it out in a natural voice.",
+      "ms": 4911
+    },
+    {
+      "text": "Script and MP3 land in their own folder in Drive, named with the tag, so one search finds both.",
+      "ms": 6635
+    },
+    {
+      "text": "The row is marked Done, with both links, an estimated length and the sources.",
+      "ms": 4728
+    },
+    {
+      "text": "The creator gets an email: the short is ready, with sources to check before posting.",
+      "ms": 5094
+    },
+    {
+      "text": "If the voice step fails, the script is already saved and the row says why. Clearing it tries again.",
+      "ms": 6113
+    },
+    {
+      "text": "A topic in, a sourced script and voiceover out, in about 2 minutes.",
+      "ms": 4598
+    }
   ]
 }
