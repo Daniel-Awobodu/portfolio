@@ -7,7 +7,9 @@
  *
  * The API key comes from ELEVENLABS_API_KEY, or from the environment's
  * network secrets, which add it to requests on the way out. Set
- * ELEVENLABS_VOICE_ID to use another voice.
+ * ELEVENLABS_VOICE_ID to use another voice for every demo. A demo read in a
+ * different voice is pinned in VOICE_BY_SLUG, so re-running it never mixes
+ * two voices in one walkthrough.
  *
  * Writes public/demos/<slug>/voice/NN.mp3 and records each clip's text and
  * length in lib/demos/voice.json, which the player reads. `--fake` makes
@@ -34,7 +36,35 @@ if (process.env.HTTPS_PROXY && !process.env.NODE_USE_ENV_PROXY) {
 }
 
 const key = process.env.ELEVENLABS_API_KEY;
-const voice = process.env.ELEVENLABS_VOICE_ID ?? "i9sr2Eu9ynYVEaDDkF8I";
+const DEFAULT_VOICE = "i9sr2Eu9ynYVEaDDkF8I";
+// gainDb lifts a quieter voice to the level of the default one (about -17 dB
+// mean volume), with a limiter so peaks never clip.
+const VOICE_BY_SLUG = {
+  "lead-agent": { id: "JBFqnCBsd6RMkjVDRZzb", gainDb: 6.7 },
+};
+const voiceFor = (slug) =>
+  process.env.ELEVENLABS_VOICE_ID ?? VOICE_BY_SLUG[slug]?.id ?? DEFAULT_VOICE;
+const gainFor = (slug) =>
+  process.env.ELEVENLABS_VOICE_ID ? 0 : (VOICE_BY_SLUG[slug]?.gainDb ?? 0);
+
+function lift(file, gainDb) {
+  const tmp = file + ".tmp.mp3";
+  execFileSync("ffmpeg", [
+    "-loglevel",
+    "error",
+    "-y",
+    "-i",
+    file,
+    "-af",
+    `volume=${gainDb}dB,alimiter=limit=0.97`,
+    "-c:a",
+    "libmp3lame",
+    "-b:a",
+    "128k",
+    tmp,
+  ]);
+  fs.renameSync(tmp, file);
+}
 const model = process.env.ELEVENLABS_MODEL ?? "eleven_multilingual_v2";
 if (!fake && !key) {
   console.warn(
@@ -80,7 +110,7 @@ const seconds = (file) =>
       .trim(),
   );
 
-async function speak(text, previous, next) {
+async function speak(voice, text, previous, next) {
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`;
   const res = await fetch(url, {
     method: "POST",
@@ -141,9 +171,15 @@ for (const demo of demos) {
         file,
       ]);
     } else {
-      const audio = await speak(lines[i], lines[i - 1], lines[i + 1]);
+      const audio = await speak(
+        voiceFor(demo.slug),
+        lines[i],
+        lines[i - 1],
+        lines[i + 1],
+      );
       fs.mkdirSync(path.dirname(file), { recursive: true });
       fs.writeFileSync(file, audio);
+      if (gainFor(demo.slug)) lift(file, gainFor(demo.slug));
     }
     clips[i] = { text: lines[i], ms: Math.round(seconds(file) * 1000) };
     manifest[demo.slug] = clips.slice(0, lines.length);

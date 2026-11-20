@@ -718,5 +718,55 @@
       "text": "From a photo on WhatsApp to a filed, logged expense.",
       "ms": 3605
     }
+  ],
+  "lead-agent": [
+    {
+      "text": "A salon owner fills in the agency's website form, and is thanked on screen straight away.",
+      "ms": 5381
+    },
+    {
+      "text": "Code checks the form first, for free: spam, a mistyped email, a repeat. This one is real.",
+      "ms": 6870
+    },
+    {
+      "text": "She's logged, the agency's fit rules are loaded, and her words are fenced off as data.",
+      "ms": 5198
+    },
+    {
+      "text": "The agent's first tool checks HubSpot. Code decides the outcome, not the AI.",
+      "ms": 5094
+    },
+    {
+      "text": "She isn't in HubSpot, so she's a new leed.",
+      "ms": 2926
+    },
+    {
+      "text": "The AI quotes her words as proof. Code checks its tool record and every quote.",
+      "ms": 5564
+    },
+    {
+      "text": "Code works out the fit score. Ninety clears the bar, so a Gmail draft is saved, never sent.",
+      "ms": 6400
+    },
+    {
+      "text": "The draft sums up her need and asks two short questions.",
+      "ms": 3605
+    },
+    {
+      "text": "The team gets one alert: the decision, the reason and every check.",
+      "ms": 4676
+    },
+    {
+      "text": "A leed with an open deal gets a short thank-you, with no pitch.",
+      "ms": 4180
+    },
+    {
+      "text": "Every leed is logged, with one call to each tool and the decision.",
+      "ms": 4362
+    },
+    {
+      "text": "The AI drafts, code checks every step, and a person always sends.",
+      "ms": 4676
+    }
   ]
 }

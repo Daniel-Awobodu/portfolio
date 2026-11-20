@@ -6,7 +6,7 @@ import type { Demo } from "@/lib/demos/types";
  * real node names, connections and layout, scaled like the other demos. The
  * run follows the real tests: a new lead from a salon drafted at a fit score
  * of 90, a returning lead with an open deal, and a mistyped email caught
- * before any AI runs. The Lead Log rows mirror the tested outcomes. Every
+ * before any AI runs (shown in the Lead Log). The Lead Log rows mirror the tested outcomes. Every
  * name and address here is sample data.
  */
 
@@ -286,11 +286,10 @@ export const leadAgent: Demo = {
     brand: ["DAA", "Marketing"],
     kicker: "Work with us",
     heading: "Tell us about your business",
-    intro:
-      "Share what you need and a member of our team will read it.",
+    intro: "A few lines is enough. Here is what happens next.",
     fields: [
-      ["Name", "Ronke Bello"],
-      ["Email", "ronke@•••••.ng"],
+      ["Your name", "Ronke Bello"],
+      ["Work email", "ronke@•••••.ng"],
       ["Company", "Glow & Co"],
       ["Monthly budget (USD)", "1500"],
     ],
@@ -510,7 +509,7 @@ export const leadAgent: Demo = {
       via: ["receiveLead", "config", "validateLead", "lookupPreviousSubmission"],
       duration: 5800,
       caption:
-        "Code checks the form first, at no cost: spam, a mistyped email, the same message sent twice. This one is new and real.",
+        "Code checks the form first, for free: spam, a mistyped email, a repeat. This one is real.",
       output: [
         ["spam checks", "passed"],
         ["email", "looks right"],
@@ -525,7 +524,7 @@ export const leadAgent: Demo = {
       via: ["replyToForm", "routeLead", "createLeadLogRow", "loadFitRules"],
       duration: 5800,
       caption:
-        "She's logged, and the agency's fit rules are loaded. Her words are fenced off as data, so they can't give the AI orders.",
+        "She's logged, the agency's fit rules are loaded, and her words are fenced off as data.",
       output: [
         ["Lead Log", "row created"],
         ["fit rules", "loaded from Airtable"],
@@ -545,7 +544,7 @@ export const leadAgent: Demo = {
       ],
       duration: 5800,
       caption:
-        "The agent's first tool checks HubSpot. Code reads the answer and decides the outcome, so the AI never guesses it.",
+        "The agent's first tool checks HubSpot. Code decides the outcome, not the AI.",
       output: [
         ["searched", "ronke@•••••.ng"],
         ["found", "0 contacts"],
@@ -557,7 +556,7 @@ export const leadAgent: Demo = {
       site: "hubspot",
       duration: 5400,
       caption:
-        "She isn't in HubSpot, so she's new. Clients and open deals would get a short reply with no pitch.",
+        "She isn't in HubSpot, so she's a new lead.",
     },
     {
       scene: "canvas",
@@ -566,7 +565,7 @@ export const leadAgent: Demo = {
       via: ["leadAgent"],
       duration: 6600,
       caption:
-        "The AI answers simple questions and quotes her words as proof. Then code checks its tool record: one CRM call, her email, real quotes.",
+        "The AI quotes her words as proof. Code checks its tool record and every quote.",
       output: [
         ["service", "clear: “Instagram ads”"],
         ["business", "ideal: “nail salon”"],
@@ -582,8 +581,8 @@ export const leadAgent: Demo = {
       via: ["isDraftApproved"],
       duration: 5800,
       caption:
-        "Code, not the AI, works out the fit score. 90 clears the bar, so the reply is saved as a Gmail draft, never sent.",
-      say: "Code, not the AI, works out the fit score. Ninety clears the bar, so the reply is saved as a Gmail draft, never sent.",
+        "Code works out the fit score. 90 clears the bar, so a Gmail draft is saved, never sent.",
+      say: "Code works out the fit score. Ninety clears the bar, so a Gmail draft is saved, never sent.",
       output: [
         ["fit score", "40 + 25 + 25 = 90"],
         ["draft at", "60 or more"],
@@ -597,7 +596,7 @@ export const leadAgent: Demo = {
       show: 1,
       duration: 6000,
       caption:
-        "The draft sums up her need, asks two short questions, and promises nothing that hasn't happened.",
+        "The draft sums up her need and asks two short questions.",
     },
     {
       scene: "inbox",
@@ -605,7 +604,7 @@ export const leadAgent: Demo = {
       label: "Team inbox · Gmail",
       duration: 5800,
       caption:
-        "Every lead sends the team one alert: the decision, the reason, and every check that ran.",
+        "The team gets one alert: the decision, the reason and every check.",
     },
     {
       scene: "canvas",
@@ -621,7 +620,7 @@ export const leadAgent: Demo = {
       ],
       duration: 6000,
       caption:
-        "A lead with an open deal gets a short thank-you and no pitch. Code adds a fixed line telling them their proposal team knows.",
+        "A lead with an open deal gets a short thank-you, with no pitch.",
       output: [
         ["contact", "Tobi Martins"],
         ["open deal", "Corefit Gym - Paid Social Retainer"],
@@ -629,26 +628,10 @@ export const leadAgent: Demo = {
       ],
     },
     {
-      scene: "canvas",
-      flow: "main",
-      run: 1,
-      node: "chooseFormReply",
-      via: ["receiveLead", "config", "validateLead", "lookupPreviousSubmission"],
-      duration: 5600,
-      caption:
-        "A typo like gmial.com never reaches the AI. The form asks the person to check it instead.",
-      say: "A typo like gmial dot com never reaches the AI. The form asks the person to check it instead.",
-      output: [
-        ["email", "kayode•••@gmial.com"],
-        ["form reply", "Did you mean …@gmail.com?"],
-        ["AI used", "no"],
-      ],
-    },
-    {
       scene: "sheet",
       duration: 6000,
       caption:
-        "Every lead is logged: junk with its reason, real ones with the CRM result, one call to each tool, and the decision.",
+        "Every lead is logged, with one call to each tool and the decision.",
     },
     {
       scene: "end",

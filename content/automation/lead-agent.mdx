@@ -9,7 +9,8 @@ date: "2026-10-22"
 order: 17
 featured: false
 cover: "/case-studies/lead-agent/result.png"
-resultCaption: "Replies the agent drafted for a new lead, a lead with an open deal and an existing client, waiting in Gmail Drafts. Nothing was sent. Email addresses are blurred."
+canvas: "/case-studies/lead-agent/canvas.png"
+resultCaption: "Top: replies drafted for an existing client, a lead with an open deal and a new lead, waiting in Gmail Drafts, unsent. Middle: the test contacts in HubSpot. Bottom: the Lead Log after all ten tests. Email addresses are blurred."
 video: "https://drive.google.com/file/d/1OUY9_8dr98M7F_vm6x4WRI8pbiALdMMU/view?usp=drive_link"
 tools: ["n8n", "OpenAI", "HubSpot", "Airtable", "Gmail"]
 metrics:
@@ -48,6 +49,12 @@ step around it. The agent drafts. It never sends.
 2. **The person on the form gets an honest answer straight away.** A real
    lead is thanked. A fixable mistake is explained, with the form kept
    filled in. A bot gets a neutral reply that gives nothing away.
+
+![The agency's website form: name, work email, company, an optional monthly budget and a message, beside three promises about what happens next](/case-studies/lead-agent/web-form.png)
+
+*The website form. A returning lead asks to add ads for new spin classes to
+an open proposal. The email address is blurred.*
+
 3. **Every lead is logged in Airtable.** Junk is logged with its reason. A
    real lead gets a row that is filled in as it moves through the workflow.
 4. **The agency's own fit rules are loaded.** The services it offers, its
@@ -69,10 +76,10 @@ the next lead is judged by the new rules.*
    that into one of three outcomes: a new lead, a lead with an open deal, or
    an existing client. The AI is handed the answer. It never works it out.
 
-![HubSpot contacts used in testing: a lead, a contact with an open deal for a paid social retainer, and an existing customer. Emails are blurred](/case-studies/lead-agent/hubspot-contacts.png)
+![The Check CRM sub-workflow in n8n: search the contact by email, read the result, search the contact's deals if they are known, then decide the CRM outcome](/case-studies/lead-agent/crm-check.png)
 
-*The test contacts in HubSpot: one for each outcome the agent has to handle.
-Emails are blurred.*
+*The Check CRM sub-workflow. HubSpot is searched, and code decides the
+outcome before the agent ever sees it.*
 
 7. **A Guardrail Ledger checks the AI's work.** Before anything is saved,
    code reads the agent's own record of every tool call and runs up to 14
@@ -81,6 +88,12 @@ Emails are blurred.*
 8. **Only a clean result becomes a draft.** A draft lands in Gmail Drafts,
    addressed to the lead and never sent. Whatever the decision, the team
    gets one alert email saying why, with every check listed.
+
+![The whole n8n workflow: the form checks and routing on the left, the AI agent with its model, two tools and output format in the middle, then the Guardrail Ledger, the Gmail draft, the team alert and the Lead Log update](/case-studies/lead-agent/workflow.png)
+
+*The workflow. Left: free checks and routing. Middle: the agent and its two
+tools. Right: the Guardrail Ledger decides, then the draft, the alert and the
+log.*
 
 ## How it works, explained simply
 
@@ -140,6 +153,11 @@ two short questions. The lead with an open deal got a short thank-you and a
 note that the team on his proposal had been told. The existing client got a
 thank-you and word that her account manager would pick it up. The other two
 leads were not drafted, and the team's alert for each one said why.
+
+![Three replies in Gmail Drafts: a short thank-you to an existing client, a thank-you to a lead with an open proposal that says the team has been told, and a reply to a new lead that asks two questions. Email addresses are blurred](/case-studies/lead-agent/gmail-drafts.png)
+
+*The three drafts, one for each CRM outcome. None was sent: a person reads,
+edits if needed, and presses Send. Email addresses are blurred.*
 
 For the agency, every new lead now gets the same careful first pass, and the
 team starts each one with a checked draft and the reasons behind it, instead
